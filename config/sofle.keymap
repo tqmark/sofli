@@ -54,18 +54,32 @@
             bindings = <&mt LSHIFT SPACE>, <&kp DOT>;
         };
 
-        cmdcomma: cmdcomma {
+        optioncomma: optioncomma {
             compatible = "zmk,behavior-tap-dance";
-            label = "CMDCOMMA";
+            label = "OPTIONCOMMA";
             #binding-cells = <0>;
-            bindings = <&mt LEFT_COMMAND COMMA>, <&mo 1>;
+            bindings = <&mt LEFT_ALT COMMA>, <&mo 1>;
         };
 
-        enteroption: enteroption {
+        entercommand: entercommand {
             compatible = "zmk,behavior-tap-dance";
-            label = "ENTEROPTION";
+            label = "ENTERCOMMAND";
             #binding-cells = <0>;
-            bindings = <&mt HOME ENTER>;
+            bindings = <&mt LEFT_COMMAND ENTER>, <&kp DOT>;
+        };
+
+        kenter: kenter {
+            compatible = "zmk,behavior-tap-dance";
+            label = "KENTER";
+            #binding-cells = <0>;
+            bindings = <&kp K>, <&kp ENTER>;
+        };
+
+        new_behavior: new_behavior {
+            compatible = "zmk,behavior-tap-dance";
+            label = "NEW_BEHAVIOR";
+            #binding-cells = <0>;
+            bindings = <&none>;
         };
     };
 
@@ -83,11 +97,11 @@
             //               | GUI | ALT  | CTRL | LOWER|  ENTER |  | SPACE | RAISE| CTRL  | ALT   | GUI  |
 
             bindings = <
-&kp Q  &kp P  &kp F  &kp M             &kp L           &kp J                                   &kp N6     &kp N7     &kp N8     &kp N9    &kp N0    &none
-&kp B  &kp Y  &kp U  &kp R             &kp S           &kp O                                   &kp Y      &kp U      &kp I      &kp O     &kp P     &kp BSPC
-&kp C  &kp D  &kp T  &kp H             &kp E           &kp A                                   &kp H      &kp J      &kp K      &kp L     &kp SEMI  &kp SQT
-&kp X  &kp G  &kp V  &kp W             &kp N           &kp I      &enteroption      &none      &kp N      &kp M      &kp COMMA  &kp DOT   &kp FSLH  &kp RSHFT
-              &kp Z  &kp LEFT_CONTROL  &mt LEFT_ALT K  &cmdcomma  &spaceshiftdot    &kp SPACE  &mo RAISE  &kp RCTRL  &kp RALT   &kp RGUI
+&kp Q  &kp P  &kp F  &kp M                 &kp L         &kp J                                       &kp N6     &kp N7     &kp N8     &kp N9    &kp N0    &none
+&kp B  &kp Y  &kp U  &kp R                 &kp S         &kp O                                       &kp Y      &kp U      &kp I      &kp O     &kp P     &kp BSPC
+&kp C  &kp D  &kp T  &kp H                 &kp E         &kp A                                       &kp H      &kp J      &kp K      &kp L     &kp SEMI  &kp SQT
+&kp X  &kp G  &kp V  &kp W                 &kp N         &kp I          &kenter           &none      &kp N      &kp M      &kp COMMA  &kp DOT   &kp FSLH  &kp RSHFT
+              &kp Z  &mt LEFT_CONTROL ESC  &optioncomma  &entercommand  &spaceshiftdot    &kp SPACE  &mo RAISE  &kp RCTRL  &kp RALT   &kp RGUI
             >;
 
             sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp PG_UP PG_DN>;
