@@ -79,7 +79,7 @@
             compatible = "zmk,behavior-tap-dance";
             label = "KLAYER1";
             #binding-cells = <0>;
-            bindings = <&mt LCTRL K>, <&mo 1>;
+            bindings = <&mt LCTRL K>, <&to 1>;
         };
 
         zlayer2: zlayer2 {
@@ -133,11 +133,11 @@
             //               |     |      |      |      |        |  |       |      |       |       |      |
 
             bindings = <
-&kp NUMBER_1  &kp NUMBER_2  &kp NUMBER_3  &kp F3            &kp LEFT_BRACKET  &kp RIGHT_BRACKET                               &kp F6     &kp F7    &kp F8     &kp F9     &kp F10   &kp F11
-&kp NUMBER_4  &kp NUMBER_5  &kp NUMBER_6  &kp N3            &kp SLASH         &kp NON_US_BACKSLASH                            &kp N6     &kp N7    &kp N8     &kp N9     &kp N0    &kp F12
-&kp NUMBER_7  &kp NUMBER_8  &kp N9        &kp HASH          &kp COLON         &kp SINGLE_QUOTE                                &kp CARET  &kp AMPS  &kp ASTRK  &kp LPAR   &kp RPAR  &kp PIPE
-&kp EQUAL     &kp NUMBER_0  &kp MINUS     &kp PLUS          &kp LBRC          &kp RBRC              &to 0             &trans  &kp LBKT   &kp RBKT  &kp SEMI   &kp COLON  &kp BSLH  &trans
-                            &to 0         &esccontrllayer0  &optioncomma      &entercommand         &spaceshiftdot    &trans  &trans     &trans    &trans     &trans
+&kp NUMBER_1  &kp NUMBER_2  &kp NUMBER_3  &kp F3            &kp LEFT_BRACKET  &kp RIGHT_BRACKET                            &kp F6     &kp F7    &kp F8     &kp F9     &kp F10   &kp F11
+&kp NUMBER_4  &kp NUMBER_5  &kp NUMBER_6  &kp N3            &kp SLASH         &kp BACKSLASH                                &kp N6     &kp N7    &kp N8     &kp N9     &kp N0    &kp F12
+&kp NUMBER_7  &kp NUMBER_8  &kp N9        &kp HASH          &kp COLON         &kp SINGLE_QUOTE                             &kp CARET  &kp AMPS  &kp ASTRK  &kp LPAR   &kp RPAR  &kp PIPE
+&kp EQUAL     &kp NUMBER_0  &kp MINUS     &kp PLUS          &kp COMMA         &kp PERIOD         &to 0             &trans  &kp LBKT   &kp RBKT  &kp SEMI   &kp COLON  &kp BSLH  &trans
+                            &to 0         &esccontrllayer0  &optioncomma      &entercommand      &spaceshiftdot    &trans  &trans     &trans    &trans     &trans
             >;
 
             sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp PG_UP PG_DN>;
