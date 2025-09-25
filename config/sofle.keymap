@@ -79,7 +79,7 @@
             compatible = "zmk,behavior-tap-dance";
             label = "KLAYER1";
             #binding-cells = <0>;
-            bindings = <&mt LCTRL K>, <&to 1>;
+            bindings = <&kp K>, <&to 1>;
         };
 
         zlayer2: zlayer2 {
