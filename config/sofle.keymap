@@ -58,7 +58,7 @@
             compatible = "zmk,behavior-tap-dance";
             label = "OPTIONQUESTION";
             #binding-cells = <0>;
-            bindings = <&mt LEFT_ALT COMMA>, <&mo 1>;
+            bindings = <&mt LEFT_ALT SLASH>, <&mo 1>;
         };
 
         entercommand: entercommand {
