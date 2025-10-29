@@ -136,7 +136,7 @@
 &kp NUMBER_1    &kp NUMBER_2  &kp NUMBER_3  &kp NUMBER_4          &kp N5            &kp NUMBER_6                                 &kp F6     &kp F7    &kp F8     &kp F9     &kp F10   &kp F11
 &kp N7          &kp N8        &kp N9        &kp N0                &kp MINUS         &kp EQUAL                                    &kp N6     &kp N7    &kp N8     &kp N9     &kp N0    &kp F12
 &kp GRAVE       &kp NUMBER_8  &kp N9        &kp NON_US_BACKSLASH  &kp LEFT_BRACKET  &kp RIGHT_BRACKET                            &kp CARET  &kp AMPS  &kp ASTRK  &kp LPAR   &kp RPAR  &kp PIPE
-&kp LEFT_SHIFT  &kp NUMBER_0  &kp MINUS     &kp PLUS              &kp COMMA         &kp PERIOD         &kp SLASH         &trans  &kp LBKT   &kp RBKT  &kp SEMI   &kp COLON  &kp BSLH  &trans
+&kp LEFT_SHIFT  &to 2         &kp MINUS     &kp PLUS              &kp COMMA         &kp PERIOD         &kp SLASH         &trans  &kp LBKT   &kp RBKT  &kp SEMI   &kp COLON  &kp BSLH  &trans
                               &to 0         &esccontrllayer0      &optionquestion   &entercommand      &spaceshiftdot    &trans  &trans     &trans    &trans     &trans
             >;
 
@@ -157,7 +157,7 @@
 &bt BT_CLR  &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2      &bt BT_SEL 3     &bt BT_SEL 4                             &trans     &trans    &trans    &trans     &trans   &trans
 &trans      &kp INS       &kp PSCRN     &kp K_CMENU       &trans           &trans                                   &kp PG_UP  &trans    &kp UP    &trans     &kp N0   &trans
 &trans      &kp LALT      &kp LCTRL     &kp LSHFT         &trans           &kp CLCK                                 &kp PG_DN  &kp LEFT  &kp DOWN  &kp RIGHT  &kp DEL  &kp BSPC
-&trans      &kp K_UNDO    &kp K_CUT     &kp K_COPY        &kp K_PASTE      &trans         &trans            &trans  &trans     &trans    &trans    &trans     &trans   &trans
+&trans      &kp K_UNDO    &kp K_CUT     &kp K_COPY        &kp K_PASTE      &trans         &to 0             &trans  &trans     &trans    &trans    &trans     &trans   &trans
                           &to 0         &esccontrllayer0  &optionquestion  &entercommand  &spaceshiftdot    &trans  &trans     &trans    &trans    &trans
             >;
 
