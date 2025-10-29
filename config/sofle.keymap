@@ -54,9 +54,9 @@
             bindings = <&mt LSHIFT SPACE>, <&kp DOT>;
         };
 
-        optioncomma: optioncomma {
+        optionquestion: optionquestion {
             compatible = "zmk,behavior-tap-dance";
-            label = "OPTIONCOMMA";
+            label = "OPTIONQUESTION";
             #binding-cells = <0>;
             bindings = <&mt LEFT_ALT COMMA>, <&mo 1>;
         };
@@ -65,7 +65,7 @@
             compatible = "zmk,behavior-tap-dance";
             label = "ENTERCOMMAND";
             #binding-cells = <0>;
-            bindings = <&mt LEFT_COMMAND ENTER>, <&kp DOT>;
+            bindings = <&mt LEFT_COMMAND ENTER>, <&kp COMMA>;
         };
 
         Ienter: Ienter {
@@ -111,11 +111,11 @@
             //               | GUI | ALT  | CTRL | LOWER|  ENTER |  | SPACE | RAISE| CTRL  | ALT   | GUI  |
 
             bindings = <
-&kp Q  &kp P  &kp F     &kp M                 &kp L         &kp J                                       &kp N6     &kp N7     &kp N8     &kp N9    &kp N0    &none
-&kp B  &kp Y  &kp U     &kp R                 &kp S         &kp O                                       &kp Y      &kp U      &kp I      &kp O     &kp P     &kp BSPC
-&kp C  &kp D  &kp T     &kp H                 &kp E         &kp A                                       &kp H      &kp J      &kp K      &kp L     &kp SEMI  &kp SQT
-&kp X  &kp G  &kp V     &kp W                 &kp N         &Ienter        &klayer1          &none      &kp N      &kp M      &kp COMMA  &kp DOT   &kp FSLH  &kp RSHFT
-              &zlayer2  &mt LEFT_CONTROL ESC  &optioncomma  &entercommand  &spaceshiftdot    &kp SPACE  &mo RAISE  &kp RCTRL  &kp RALT   &kp RGUI
+&kp Q  &kp P  &kp F    &kp M                 &kp L            &kp J                                       &kp N6     &kp N7     &kp N8     &kp N9    &kp N0    &none
+&kp B  &kp Y  &kp U    &kp R                 &kp S            &kp O                                       &kp Y      &kp U      &kp I      &kp O     &kp P     &kp BSPC
+&kp C  &kp D  &kp T    &kp H                 &kp E            &kp A                                       &kp H      &kp J      &kp K      &kp L     &kp SEMI  &kp SQT
+&kp X  &kp G  &kp V    &kp W                 &lt 1 N          &kp I          &klayer1          &none      &kp N      &kp M      &kp COMMA  &kp DOT   &kp FSLH  &kp RSHFT
+              &lt 1 Z  &mt LEFT_CONTROL ESC  &optionquestion  &entercommand  &spaceshiftdot    &kp SPACE  &mo RAISE  &kp RCTRL  &kp RALT   &kp RGUI
             >;
 
             sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp PG_UP PG_DN>;
@@ -133,11 +133,11 @@
             //               |     |      |      |      |        |  |       |      |       |       |      |
 
             bindings = <
-&kp NUMBER_1  &kp NUMBER_2  &kp NUMBER_3  &kp F3            &kp LEFT_BRACKET  &kp RIGHT_BRACKET                            &kp F6     &kp F7    &kp F8     &kp F9     &kp F10   &kp F11
-&kp NUMBER_4  &kp NUMBER_5  &kp NUMBER_6  &kp N3            &kp SLASH         &kp BACKSLASH                                &kp N6     &kp N7    &kp N8     &kp N9     &kp N0    &kp F12
-&kp NUMBER_7  &kp NUMBER_8  &kp N9        &kp HASH          &kp COLON         &kp SINGLE_QUOTE                             &kp CARET  &kp AMPS  &kp ASTRK  &kp LPAR   &kp RPAR  &kp PIPE
-&kp EQUAL     &kp NUMBER_0  &kp MINUS     &kp PLUS          &kp COMMA         &kp PERIOD         &to 0             &trans  &kp LBKT   &kp RBKT  &kp SEMI   &kp COLON  &kp BSLH  &trans
-                            &to 0         &esccontrllayer0  &optioncomma      &entercommand      &spaceshiftdot    &trans  &trans     &trans    &trans     &trans
+&kp NUMBER_1    &kp NUMBER_2  &kp NUMBER_3  &kp NUMBER_4          &kp N5            &kp NUMBER_6                                 &kp F6     &kp F7    &kp F8     &kp F9     &kp F10   &kp F11
+&kp N7          &kp N8        &kp N9        &kp N0                &kp MINUS         &kp EQUAL                                    &kp N6     &kp N7    &kp N8     &kp N9     &kp N0    &kp F12
+&kp GRAVE       &kp NUMBER_8  &kp N9        &kp NON_US_BACKSLASH  &kp LEFT_BRACKET  &kp RIGHT_BRACKET                            &kp CARET  &kp AMPS  &kp ASTRK  &kp LPAR   &kp RPAR  &kp PIPE
+&kp LEFT_SHIFT  &kp NUMBER_0  &kp MINUS     &kp PLUS              &kp COMMA         &kp PERIOD         &kp SLASH         &trans  &kp LBKT   &kp RBKT  &kp SEMI   &kp COLON  &kp BSLH  &trans
+                              &to 0         &esccontrllayer0      &optionquestion   &entercommand      &spaceshiftdot    &trans  &trans     &trans    &trans     &trans
             >;
 
             sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp PG_UP PG_DN>;
@@ -154,11 +154,11 @@
             //                |      |       |       |      |      |  |      |      |      |       |      |
 
             bindings = <
-&bt BT_CLR  &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2      &bt BT_SEL 3  &bt BT_SEL 4                             &trans     &trans    &trans    &trans     &trans   &trans
-&trans      &kp INS       &kp PSCRN     &kp K_CMENU       &trans        &trans                                   &kp PG_UP  &trans    &kp UP    &trans     &kp N0   &trans
-&trans      &kp LALT      &kp LCTRL     &kp LSHFT         &trans        &kp CLCK                                 &kp PG_DN  &kp LEFT  &kp DOWN  &kp RIGHT  &kp DEL  &kp BSPC
-&trans      &kp K_UNDO    &kp K_CUT     &kp K_COPY        &kp K_PASTE   &trans         &trans            &trans  &trans     &trans    &trans    &trans     &trans   &trans
-                          &to 0         &esccontrllayer0  &optioncomma  &entercommand  &spaceshiftdot    &trans  &trans     &trans    &trans    &trans
+&bt BT_CLR  &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2      &bt BT_SEL 3     &bt BT_SEL 4                             &trans     &trans    &trans    &trans     &trans   &trans
+&trans      &kp INS       &kp PSCRN     &kp K_CMENU       &trans           &trans                                   &kp PG_UP  &trans    &kp UP    &trans     &kp N0   &trans
+&trans      &kp LALT      &kp LCTRL     &kp LSHFT         &trans           &kp CLCK                                 &kp PG_DN  &kp LEFT  &kp DOWN  &kp RIGHT  &kp DEL  &kp BSPC
+&trans      &kp K_UNDO    &kp K_CUT     &kp K_COPY        &kp K_PASTE      &trans         &trans            &trans  &trans     &trans    &trans    &trans     &trans   &trans
+                          &to 0         &esccontrllayer0  &optionquestion  &entercommand  &spaceshiftdot    &trans  &trans     &trans    &trans    &trans
             >;
 
             sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp PG_UP PG_DN>;
