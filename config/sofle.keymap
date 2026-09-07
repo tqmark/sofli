@@ -129,14 +129,14 @@
             // | 7 | 8 | 9 | 0 | - | = |
             // | ' | " | ; | : | [ | ] |
             // Hold Z to use this layer; release to return to Base.
-            // | \ | + | / | ? | , | . | ` |
+            // | \ | _ | / | ? | , | . | ` |
             //     | BASE | sticky CTRL | sticky ALT | sticky CMD | sticky SHIFT |
 
             bindings = <
 &kp NUMBER_1    &kp NUMBER_2  &kp NUMBER_3  &kp NUMBER_4          &kp N5            &kp NUMBER_6                                 &kp F6     &kp F7    &kp F8     &kp F9     &kp F10   &kp F11
 &kp N7          &kp N8        &kp N9        &kp N0                &kp MINUS         &kp EQUAL                                    &kp N6     &kp N7    &kp N8     &kp N9     &kp N0    &kp F12
 &kp SQT         &kp DQT       &kp SEMI      &kp COLON             &kp LEFT_BRACKET  &kp RIGHT_BRACKET                            &kp CARET  &kp AMPS  &kp ASTRK  &kp LPAR   &kp RPAR  &kp PIPE
-&kp BSLH        &kp PLUS      &kp SLASH     &kp LS(SLASH)         &kp COMMA         &kp PERIOD         &kp GRAVE        &trans  &kp LBKT   &kp RBKT  &kp SEMI   &kp COLON  &kp BSLH  &trans
+&kp BSLH        &kp LS(MINUS) &kp SLASH     &kp LS(SLASH)         &kp COMMA         &kp PERIOD         &kp GRAVE        &trans  &kp LBKT   &kp RBKT  &kp SEMI   &kp COLON  &kp BSLH  &trans
                               &to BASE      &sk LCTRL              &sk LALT           &sk LGUI           &sk LSHIFT       &trans  &trans     &trans    &trans     &trans
             >;
 
