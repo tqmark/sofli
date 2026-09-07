@@ -81,6 +81,13 @@
             bindings = <&kp I>, <&kp ENTER>;
         };
 
+        klayer1: klayer1 {
+            compatible = "zmk,behavior-tap-dance";
+            label = "KLAYER1";
+            #binding-cells = <0>;
+            bindings = <&kp K>, <&to LOWER>;
+        };
+
         esccontrllayer0: esccontrllayer0 {
             compatible = "zmk,behavior-tap-dance";
             label = "ESCCONTRLLAYER0";
@@ -99,14 +106,14 @@
             // | Q | P | F | M | L | J |
             // | B | Y | U | R | S | O |
             // | C | D | T | H | E | A |
-            // | X | G | V | W | N | I | K/RAISE |
+            // | X | G | V | W | N | I | K (double-tap locks LOWER) |
             //     | Z/LOWER | ESC/CTRL | SLASH/ALT | ENTER/CMD | SPACE/SHIFT |
 
             bindings = <
 &kp Q  &kp P  &kp F    &kp M                 &kp L            &kp J                                       &kp N6     &kp N7     &kp N8     &kp N9    &kp N0    &none
 &kp B  &kp Y  &kp U    &kp R                 &kp S            &kp O                                       &kp Y      &kp U      &kp I      &kp O     &kp P     &kp BSPC
 &kp C  &kp D  &kp T    &kp H                 &kp E            &kp A                                       &kp H      &kp J      &kp K      &kp L     &kp SEMI  &kp SQT
-&kp X  &kp G  &kp V    &kp W                 &kp N             &kp I          &lt RAISE K       &none      &kp N      &kp M      &kp COMMA  &kp DOT   &kp FSLH  &kp RSHFT
+&kp X  &kp G  &kp V    &kp W                 &kp N             &kp I          &klayer1          &none      &kp N      &kp M      &kp COMMA  &kp DOT   &kp FSLH  &kp RSHFT
               &lt LOWER Z  &mt LEFT_CONTROL ESC  &optionquestion  &entercommand  &spaceshiftdot    &kp SPACE  &mo RAISE  &kp RCTRL  &kp RALT   &kp RGUI
             >;
 
@@ -120,15 +127,15 @@
             // | 1 | 2 | 3 | 4 | 5 | 6 |
             // | 7 | 8 | 9 | 0 | - | = |
             // | ' | " | ; | : | [ | ] |
-            // Hold Z to use this layer; release to return to Base.
-            // | \ | + | / | ? | , | . | ` |
+            // Hold Z temporarily or double-tap K to lock this layer; tap Z to return.
+            // | \ | RAISE | / | ? | , | . | ` |
             //     | BASE | sticky CTRL | sticky ALT | sticky CMD | sticky SHIFT |
 
             bindings = <
 &kp NUMBER_1    &kp NUMBER_2  &kp NUMBER_3  &kp NUMBER_4          &kp N5            &kp NUMBER_6                                 &kp F6     &kp F7    &kp F8     &kp F9     &kp F10   &kp F11
 &kp N7          &kp N8        &kp N9        &kp N0                &kp MINUS         &kp EQUAL                                    &kp N6     &kp N7    &kp N8     &kp N9     &kp N0    &kp F12
 &kp SQT         &kp DQT       &kp SEMI      &kp COLON             &kp LEFT_BRACKET  &kp RIGHT_BRACKET                            &kp CARET  &kp AMPS  &kp ASTRK  &kp LPAR   &kp RPAR  &kp PIPE
-&kp BSLH        &kp PLUS      &kp SLASH     &kp LS(SLASH)         &kp COMMA         &kp PERIOD         &kp GRAVE        &trans  &kp LBKT   &kp RBKT  &kp SEMI   &kp COLON  &kp BSLH  &trans
+&kp BSLH        &to RAISE     &kp SLASH     &kp LS(SLASH)         &kp COMMA         &kp PERIOD         &kp GRAVE        &trans  &kp LBKT   &kp RBKT  &kp SEMI   &kp COLON  &kp BSLH  &trans
                               &to BASE      &sk LCTRL              &sk LALT           &sk LGUI           &sk LSHIFT       &trans  &trans     &trans    &trans     &trans
             >;
 
@@ -138,7 +145,7 @@
         raise_layer {
             display-name = "raise";
 
-            // Hold K to use this layer; release to return to Base.
+            // From Lower, tap G to lock this layer; tap Z to return to Base.
             // V+W activates it for one keypress, normally to launch an app.
             // Q+J together clears all Bluetooth pairings.
             // | BT1      | BT2 | FINDER   | MESSAGES | BT3    | BOOTLOADER |
