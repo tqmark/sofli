@@ -127,16 +127,16 @@
             // Left half:
             // | 1 | 2 | 3 | 4 | 5 | 6 |
             // | 7 | 8 | 9 | 0 | - | = |
-            // | ' | " | ; | : | [ | ] |
+            // | ' | UNDO | ; | CUT | [ | ] |
             // Hold Z to use this layer; release to return to Base.
-            // | \ | _ | / | ? | , | . | ` |
+            // | \ | COPY | / | PASTE | , | . | ` |
             //     | same thumb behaviors as Base: Z/LOWER | ESC/CTRL | SLASH/ALT | ENTER/CMD | SPACE/SHIFT |
 
             bindings = <
 &kp NUMBER_1    &kp NUMBER_2  &kp NUMBER_3  &kp NUMBER_4          &kp N5            &kp NUMBER_6                                 &kp F6     &kp F7    &kp F8     &kp F9     &kp F10   &kp F11
 &kp N7          &kp N8        &kp N9        &kp N0                &kp MINUS         &kp EQUAL                                    &kp N6     &kp N7    &kp N8     &kp N9     &kp N0    &kp F12
-&kp SQT         &kp DQT       &kp SEMI      &kp COLON             &kp LEFT_BRACKET  &kp RIGHT_BRACKET                            &kp CARET  &kp AMPS  &kp ASTRK  &kp LPAR   &kp RPAR  &kp PIPE
-&kp BSLH        &kp LS(MINUS) &kp SLASH     &kp LS(SLASH)         &kp COMMA         &kp PERIOD         &kp GRAVE        &trans  &kp LBKT   &kp RBKT  &kp SEMI   &kp COLON  &kp BSLH  &trans
+&kp SQT         &kp LG(Z)     &kp SEMI      &kp LG(X)             &kp LEFT_BRACKET  &kp RIGHT_BRACKET                            &kp CARET  &kp AMPS  &kp ASTRK  &kp LPAR   &kp RPAR  &kp PIPE
+&kp BSLH        &kp LG(C)     &kp SLASH     &kp LG(V)             &kp COMMA         &kp PERIOD         &kp GRAVE        &trans  &kp LBKT   &kp RBKT  &kp SEMI   &kp COLON  &kp BSLH  &trans
                               &trans        &trans                 &trans             &trans             &trans           &trans  &trans     &trans    &trans     &trans
             >;
 
