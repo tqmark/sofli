@@ -14,6 +14,7 @@
 #define LOWER 1
 #define RAISE 2
 #define ADJUST 3
+#define APPS 4
 
 / {
     // Activate ADJUST layer by pressing raise and lower
@@ -43,6 +44,18 @@
         tab {
             bindings = <&kp TAB>;
             key-positions = <12 13>;
+        };
+
+        caps_word {
+            bindings = <&caps_word>;
+            key-positions = <36 37>;
+            layers = <BASE>;
+        };
+
+        apps {
+            bindings = <&sl APPS>;
+            key-positions = <38 39>;
+            layers = <BASE>;
         };
     };
 
@@ -103,12 +116,12 @@
         default_layer {
             display-name = "default";
 
-            // ------------------------------------------------------------------------------------------------------------
-            // |   `   |  1  |  2  |  3   |  4   |  5   |                   |  6   |  7    |  8    |  9   |   0   |       |
-            // |  ESC  |  Q  |  W  |  E   |  R   |  T   |                   |  Y   |  U    |  I    |  O   |   P   | BKSPC |
-            // |  TAB  |  A  |  S  |  D   |  F   |  G   |                   |  H   |  J    |  K    |  L   |   ;   |   '   |
-            // | SHIFT |  Z  |  X  |  C   |  V   |  B   |  MUTE  |  |       |  N   |  M    |  ,    |  .   |   /   | SHIFT |
-            //               | GUI | ALT  | CTRL | LOWER|  ENTER |  | SPACE | RAISE| CTRL  | ALT   | GUI  |
+            // Left half: all letters plus thumb tap/hold behaviors. The right half is disconnected.
+            // | Q | P | F | M | L | J |
+            // | B | Y | U | R | S | O |
+            // | C | D | T | H | E | A |
+            // | X | G | V | W | N | I | K |
+            //     | Z/LOWER | ESC/CTRL | SLASH/ALT | ENTER/CMD | SPACE/SHIFT |
 
             bindings = <
 &kp Q  &kp P  &kp F    &kp M                 &kp L            &kp J                                       &kp N6     &kp N7     &kp N8     &kp N9    &kp N0    &none
@@ -124,20 +137,19 @@
         lower_layer {
             display-name = "lower";
 
-            // TODO: Some binds are waiting for shifted keycode support.
-            // ------------------------------------------------------------------------------------------------------------
-            // |       |  F1 |  F2 |  F3  |  F4  |  F5  |                   |  F6  |  F7   |  F8   |  F9  |  F10  |  F11  |
-            // |   `   |  1  |  2  |  3   |  4   |  5   |                   |  6   |  7    |  8    |  9   |   0   |  F12  |
-            // |       |  !  |  @  |  #   |  $   |  %   |                   |  ^   |  &    |  *    |  (   |   )   |   |   |
-            // |       |  =  |  -  |  +   |  {   |  }   |        |  |       |  [   |  ]    |  ;    |  :   |   \   |       |
-            //               |     |      |      |      |        |  |       |      |       |       |      |
+            // Left half:
+            // | 1 | 2 | 3 | 4 | 5 | 6 |
+            // | 7 | 8 | 9 | 0 | - | = |
+            // | ' | " | ; | : | [ | ] |
+            // | \ | RAISE | - | + | , | . | ADJUST |
+            //     | BASE | sticky CTRL | SLASH/ALT | sticky CMD | SPACE/SHIFT |
 
             bindings = <
 &kp NUMBER_1    &kp NUMBER_2  &kp NUMBER_3  &kp NUMBER_4          &kp N5            &kp NUMBER_6                                 &kp F6     &kp F7    &kp F8     &kp F9     &kp F10   &kp F11
 &kp N7          &kp N8        &kp N9        &kp N0                &kp MINUS         &kp EQUAL                                    &kp N6     &kp N7    &kp N8     &kp N9     &kp N0    &kp F12
-&kp GRAVE       &kp NUMBER_8  &kp N9        &kp NON_US_BACKSLASH  &kp LEFT_BRACKET  &kp RIGHT_BRACKET                            &kp CARET  &kp AMPS  &kp ASTRK  &kp LPAR   &kp RPAR  &kp PIPE
-&kp LEFT_SHIFT  &to 2         &kp MINUS     &kp PLUS              &kp COMMA         &kp PERIOD         &kp SLASH         &trans  &kp LBKT   &kp RBKT  &kp SEMI   &kp COLON  &kp BSLH  &trans
-                              &to 0         &esccontrllayer0      &optionquestion   &entercommand      &spaceshiftdot    &trans  &trans     &trans    &trans     &trans
+&kp SQT         &kp DQT       &kp SEMI      &kp COLON             &kp LEFT_BRACKET  &kp RIGHT_BRACKET                            &kp CARET  &kp AMPS  &kp ASTRK  &kp LPAR   &kp RPAR  &kp PIPE
+&kp BSLH        &to RAISE     &kp MINUS     &kp PLUS              &kp COMMA         &kp PERIOD         &to ADJUST       &trans  &kp LBKT   &kp RBKT  &kp SEMI   &kp COLON  &kp BSLH  &trans
+                              &to BASE      &sk LCTRL              &optionquestion   &sk LGUI           &spaceshiftdot    &trans  &trans     &trans    &trans     &trans
             >;
 
             sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp PG_UP PG_DN>;
@@ -146,19 +158,18 @@
         raise_layer {
             display-name = "raise";
 
-            // ------------------------------------------------------------------------------------------------------------
-            // | BTCLR | BT1  | BT2  |  BT3  |  BT4  |  BT5 |                |      |      |       |      |       |       |
-            // |       | INS  | PSCR | GUI   |       |      |                | PGUP |      |   ^   |      |       |       |
-            // |       | ALT  | CTRL | SHIFT |       | CAPS |                | PGDN |   <- |   v   |  ->  |  DEL  | BKSPC |
-            // |       | UNDO | CUT  | COPY  | PASTE |      |      |  |      |      |      |       |      |       |       |
-            //                |      |       |       |      |      |  |      |      |      |       |      |
+            // Left half navigation and editing:
+            // |       |      |      |       |        |        |
+            // | PG UP | HOME | UP   | END   | PG DN  | DELETE |
+            // | BSPC  | LEFT | DOWN | RIGHT | INSERT | PRINT  |
+            // |       | UNDO | CUT  | COPY  | PASTE  |        | BASE |
 
             bindings = <
-&bt BT_CLR  &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2      &bt BT_SEL 3     &bt BT_SEL 4                             &trans     &trans    &trans    &trans     &trans   &trans
-&trans      &kp INS       &kp PSCRN     &kp K_CMENU       &trans           &trans                                   &kp PG_UP  &trans    &kp UP    &trans     &kp N0   &trans
-&trans      &kp LALT      &kp LCTRL     &kp LSHFT         &trans           &kp CLCK                                 &kp PG_DN  &kp LEFT  &kp DOWN  &kp RIGHT  &kp DEL  &kp BSPC
+&trans      &trans        &trans        &trans             &trans           &trans                                   &trans     &trans    &trans    &trans     &trans   &trans
+&kp PG_UP   &kp HOME      &kp UP        &kp END            &kp PG_DN        &kp DEL                                 &kp PG_UP  &trans    &kp UP    &trans     &kp N0   &trans
+&kp BSPC    &kp LEFT      &kp DOWN      &kp RIGHT          &kp INS          &kp PSCRN                               &kp PG_DN  &kp LEFT  &kp DOWN  &kp RIGHT  &kp DEL  &kp BSPC
 &trans      &kp K_UNDO    &kp K_CUT     &kp K_COPY        &kp K_PASTE      &trans         &to 0             &trans  &trans     &trans    &trans    &trans     &trans   &trans
-                          &to 0         &esccontrllayer0  &optionquestion  &entercommand  &spaceshiftdot    &trans  &trans     &trans    &trans    &trans
+                          &to BASE      &esccontrllayer0  &optionquestion  &entercommand  &spaceshiftdot    &trans  &trans     &trans    &trans    &trans
             >;
 
             sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp PG_UP PG_DN>;
@@ -177,8 +188,22 @@
 &bt BT_CLR         &bt BT_SEL 0     &bt BT_SEL 1     &bt BT_SEL 2     &bt BT_SEL 3     &bt BT_SEL 4                               &none  &none  &none  &none  &none  &none
 &ext_power EP_TOG  &rgb_ug RGB_HUD  &rgb_ug RGB_HUI  &rgb_ug RGB_SAD  &rgb_ug RGB_SAI  &rgb_ug RGB_EFF                            &none  &none  &none  &none  &none  &none
 &none              &rgb_ug RGB_BRD  &rgb_ug RGB_BRI  &none            &none            &none                                      &none  &none  &none  &none  &none  &none
-&none              &none            &none            &none            &none            &none            &rgb_ug RGB_TOG    &none  &none  &none  &none  &none  &none  &none
-                                    &none            &none            &none            &none            &none              &none  &none  &none  &none  &none
+&none              &none            &none            &none            &none            &none            &to BASE             &none  &none  &none  &none  &none  &none  &none
+                                    &to BASE         &none            &none            &none            &none                &none  &none  &none  &none  &none
+            >;
+        };
+
+        apps_layer {
+            display-name = "apps";
+
+            // V+W activates this layer for one keypress.
+            // B browser, T terminal, N notes, C chat, S settings, M messages, F Finder.
+            bindings = <
+&trans    &trans  &kp F19  &kp F18  &trans   &trans                         &trans  &trans  &trans  &trans  &trans  &trans
+&kp F13   &trans  &trans   &trans   &kp F17  &trans                         &trans  &trans  &trans  &trans  &trans  &trans
+&kp F16   &trans  &kp F14  &trans   &trans   &trans                         &trans  &trans  &trans  &trans  &trans  &trans
+&trans    &trans  &trans   &trans   &kp F15  &trans   &to BASE     &trans  &trans  &trans  &trans  &trans  &trans  &trans
+                  &to BASE &trans   &trans   &trans    &trans       &trans  &trans  &trans  &trans  &trans
             >;
         };
     };
