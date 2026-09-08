@@ -137,10 +137,10 @@
             //     | Z: tap Z / hold LOWER / double-tap RAISE | ESC/CTRL | SLASH/ALT | ENTER/CMD | SPACE/SHIFT |
 
             bindings = <
-&kp Q  &kp P  &kp F    &kp M                 &kp L            &kp J                                       &kp N6     &kp N7     &kp N8     &kp N9    &kp N0    &none
-&kp B  &kp Y  &kp U    &kp R                 &kp S            &kp O                                       &kp Y      &kp U      &kp I      &kp O     &kp P     &kp BSPC
-&kp C  &kp D  &kp T    &kp H                 &kp E            &kp A                                       &kp H      &kp J      &kp K      &kp L     &kp SEMI  &kp SQT
-&kp X  &kp G  &kp V    &kp W                 &kp N             &kp I          &lt RAISE K       &none      &kp N      &kp M      &kp COMMA  &kp DOT   &kp FSLH  &kp RSHFT
+&kp Q  &kp P  &kp F     &kp M                 &kp L            &kp J                                       &kp N6     &kp N7     &kp N8     &kp N9    &kp N0    &none
+&kp B  &kp Y  &kp U     &kp R                 &kp S            &kp O                                       &kp Y      &kp U      &kp I      &kp O     &kp P     &kp BSPC
+&kp C  &kp D  &kp T     &kp H                 &kp E            &kp A                                       &kp H      &kp J      &kp K      &kp L     &kp SEMI  &kp SQT
+&kp X  &kp G  &kp V     &kp W                 &kp N            &kp I          &lt RAISE K       &none      &kp N      &kp M      &kp COMMA  &kp DOT   &kp FSLH  &kp RSHFT
               &zlayers  &mt LEFT_CONTROL ESC  &optionquestion  &entercommand  &spaceshiftdot    &kp SPACE  &mo RAISE  &kp RCTRL  &kp RALT   &kp RGUI
             >;
 
@@ -159,11 +159,11 @@
             //     | same thumb behaviors as Base: Z/LOWER | ESC/CTRL | SLASH/ALT | ENTER/CMD | SPACE/SHIFT |
 
             bindings = <
-&kp NUMBER_1    &kp NUMBER_2  &kp NUMBER_3  &kp NUMBER_4          &kp N5            &kp NUMBER_6                                 &kp F6     &kp F7    &kp F8     &kp F9     &kp F10   &kp F11
-&kp N7          &kp N8        &kp N9        &kp N0                &kp MINUS         &kp EQUAL                                    &kp N6     &kp N7    &kp N8     &kp N9     &kp N0    &kp F12
-&kp SQT         &kp LC(LA(H)) &kp SEMI      &kp LC(LA(L))         &kp LEFT_BRACKET  &kp RIGHT_BRACKET                            &kp CARET  &kp AMPS  &kp ASTRK  &kp LPAR   &kp RPAR  &kp PIPE
-&kp BSLH        &kp LC(LA(C)) &kp SLASH     &kp LC(LA(V))         &kp COMMA         &kp PERIOD         &kp GRAVE        &trans  &kp LBKT   &kp RBKT  &kp SEMI   &kp COLON  &kp BSLH  &trans
-                              &trans        &trans                 &trans             &trans             &trans           &trans  &trans     &trans    &trans     &trans
+&kp NUMBER_1  &kp NUMBER_2   &kp NUMBER_3  &kp NUMBER_4   &kp N5            &kp NUMBER_6                                 &kp F6     &kp F7    &kp F8     &kp F9     &kp F10   &kp F11
+&kp N7        &kp N8         &kp N9        &kp N0         &kp MINUS         &kp EQUAL                                    &kp N6     &kp N7    &kp N8     &kp N9     &kp N0    &kp F12
+&kp SQT       &kp LC(LA(H))  &kp SEMI      &kp LC(LA(L))  &kp LEFT_BRACKET  &kp RIGHT_BRACKET                            &kp CARET  &kp AMPS  &kp ASTRK  &kp LPAR   &kp RPAR  &kp PIPE
+&kp BSLH      &kp LC(LA(C))  &kp SLASH     &kp LC(LA(V))  &kp COMMA         &kp PERIOD         &kp GRAVE         &trans  &kp LBKT   &kp RBKT  &kp SEMI   &kp COLON  &kp BSLH  &trans
+                             &trans        &trans         &optionquestion   &entercommand      &spaceshiftdot    &trans  &trans     &trans    &trans     &trans
             >;
 
             sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp PG_UP PG_DN>;
@@ -182,15 +182,14 @@
             //     | BASE | ESC/CTRL | SLASH/ALT | ENTER/CMD | SPACE/SHIFT |
 
             bindings = <
-&bt BT_SEL 0  &bt BT_SEL 1  &kp F19   &kp F18     &bt BT_SEL 2      &bootloader                              &trans     &trans    &trans    &trans     &trans   &trans
-&kp F13       &bt BT_SEL 3  &bt BT_SEL 4  &kp HOME &kp F17          &kp END                                  &kp PG_UP  &trans    &kp UP    &trans     &kp N0   &trans
-&kp F16       &ghostty_layout_1  &kp F14   &ghostty_layout_2  &ghostty_layout_3  &kp DEL                          &kp PG_DN  &kp LEFT  &kp DOWN  &kp RIGHT  &kp DEL  &kp BSPC
-&kp LEFT      &kp DOWN      &kp UP    &kp RIGHT    &kp F15          &ext_power EP_TOG  &kp ESC          &trans  &trans     &trans    &trans    &trans     &trans   &trans
-                             &to BASE   &esccontrllayer0  &optionquestion  &entercommand  &spaceshiftdot    &trans  &trans     &trans    &trans    &trans
+&bt BT_SEL 0  &bt BT_SEL 1       &kp F19       &kp F18            &bt BT_SEL 2       &bootloader                                  &trans     &trans    &trans    &trans     &trans   &trans
+&kp F13       &bt BT_SEL 3       &bt BT_SEL 4  &kp HOME           &kp F17            &kp END                                      &kp PG_UP  &trans    &kp UP    &trans     &kp N0   &trans
+&kp F16       &ghostty_layout_1  &kp F14       &ghostty_layout_2  &ghostty_layout_3  &kp DEL                                      &kp PG_DN  &kp LEFT  &kp DOWN  &kp RIGHT  &kp DEL  &kp BSPC
+&kp LEFT      &kp DOWN           &kp UP        &kp RIGHT          &kp F15            &ext_power EP_TOG  &kp ESC           &trans  &trans     &trans    &trans    &trans     &trans   &trans
+                                 &to BASE      &esccontrllayer0   &optionquestion    &entercommand      &spaceshiftdot    &trans  &trans     &trans    &trans    &trans
             >;
 
             sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp PG_UP PG_DN>;
         };
-
     };
 };
