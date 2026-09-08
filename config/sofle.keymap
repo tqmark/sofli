@@ -107,12 +107,12 @@
             bindings = <&kp I>, <&kp ENTER>;
         };
 
-        zlayers: zlayers {
+        xlayers: xlayers {
             compatible = "zmk,behavior-tap-dance";
-            label = "ZLAYERS";
+            label = "XLAYERS";
             #binding-cells = <0>;
             tapping-term-ms = <250>;
-            bindings = <&lt LOWER Z>, <&tog LOWER>;
+            bindings = <&lt LOWER X>, <&tog LOWER>;
         };
 
         klayers: klayers {
@@ -149,15 +149,15 @@
             // | Q | P | F | M | L | J |
             // | B | Y | U | R | S | O |
             // | C | D | T | H | E | A |
-            // | X | G | V | W | N | I | K: tap K / hold RAISE / double-tap lock RAISE |
-            //     | Z: tap Z / hold LOWER / double-tap lock LOWER | ESC/CTRL | SLASH/ALT | ENTER/CMD | SPACE/SHIFT |
+            // | X: tap X / hold LOWER / double-tap lock LOWER | G | V | W | N | I | K: tap K / hold RAISE / double-tap lock RAISE |
+            //     | Z | ESC/CTRL | SLASH/ALT | ENTER/CMD | SPACE/SHIFT |
 
             bindings = <
 &kp Q  &kp P  &kp F     &kp M                 &kp L            &kp J                                       &kp N6     &kp N7     &kp N8     &kp N9    &kp N0    &none
 &kp B  &kp Y  &kp U     &kp R                 &kp S            &kp O                                       &kp Y      &kp U      &kp I      &kp O     &kp P     &kp BSPC
 &kp C  &kp D  &kp T     &kp H                 &kp E            &kp A                                       &kp H      &kp J      &kp K      &kp L     &kp SEMI  &kp SQT
-&kp X  &kp G  &kp V     &kp W                 &kp N            &kp I          &klayers          &none      &kp N      &kp M      &kp COMMA  &kp DOT   &kp FSLH  &kp RSHFT
-              &zlayers  &mt LEFT_CONTROL ESC  &optionquestion  &entercommand  &spaceshiftdot    &kp SPACE  &mo RAISE  &kp RCTRL  &kp RALT   &kp RGUI
+&xlayers  &kp G  &kp V     &kp W                 &kp N            &kp I          &klayers          &none      &kp N      &kp M      &kp COMMA  &kp DOT   &kp FSLH  &kp RSHFT
+              &kp Z     &mt LEFT_CONTROL ESC  &optionquestion  &entercommand  &spaceshiftdot    &kp SPACE  &mo RAISE  &kp RCTRL  &kp RALT   &kp RGUI
             >;
 
             sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp PG_UP PG_DN>;
@@ -170,7 +170,7 @@
             // | 1 | 2 | 3 | 4 | 5 | 6 |
             // | 7 | 8 | 9 | 0 | - | = |
             // | ' | WINDOW LEFT | ; | WINDOW RIGHT | [ | ] |
-            // Hold Z temporarily or double-tap Z to lock; tap Z while locked to return to Base.
+            // Hold X temporarily or double-tap X to lock; tap Z while locked to return to Base.
             // | \ | ALMOST MAX | / | RESTORE | , | . | ` |
             //     | Z: return BASE | ESC/CTRL | SLASH/ALT | ENTER/CMD | SPACE/SHIFT |
 
