@@ -111,7 +111,7 @@
             compatible = "zmk,behavior-tap-dance";
             label = "XLAYERS";
             #binding-cells = <0>;
-            tapping-term-ms = <250>;
+            tapping-term-ms = <175>;
             bindings = <&lt LOWER X>, <&tog LOWER>;
         };
 
