@@ -14,6 +14,32 @@
 #define RAISE 2
 
 / {
+    macros {
+        ghostty_layout_1: ghostty_layout_1 {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            wait-ms = <40>;
+            tap-ms = <40>;
+            bindings = <&kp LC(A) &kp N1>;
+        };
+
+        ghostty_layout_2: ghostty_layout_2 {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            wait-ms = <40>;
+            tap-ms = <40>;
+            bindings = <&kp LC(A) &kp N2>;
+        };
+
+        ghostty_layout_3: ghostty_layout_3 {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            wait-ms = <40>;
+            tap-ms = <40>;
+            bindings = <&kp LC(A) &kp N3>;
+        };
+    };
+
     combos {
         compatible = "zmk,combos";
 
@@ -151,14 +177,14 @@
             // Q+J together clears all Bluetooth pairings.
             // | BT1      | BT2 | FINDER   | MESSAGES | BT3    | BOOTLOADER |
             // | BROWSER  | BT4 | BT5      | HOME     | SETTINGS | END      |
-            // | CHAT     | PAGE UP | TERMINAL | PAGE DOWN | BSPC | DELETE |
+            // | CHAT     | GHOSTTY 1 | TERMINAL | GHOSTTY 2 | GHOSTTY 3 | DELETE |
             // | LEFT     | DOWN | UP | RIGHT | NOTES | POWER | ESC |
             //     | BASE | ESC/CTRL | SLASH/ALT | ENTER/CMD | SPACE/SHIFT |
 
             bindings = <
 &bt BT_SEL 0  &bt BT_SEL 1  &kp F19   &kp F18     &bt BT_SEL 2      &bootloader                              &trans     &trans    &trans    &trans     &trans   &trans
 &kp F13       &bt BT_SEL 3  &bt BT_SEL 4  &kp HOME &kp F17          &kp END                                  &kp PG_UP  &trans    &kp UP    &trans     &kp N0   &trans
-&kp F16       &kp PG_UP     &kp F14   &kp PG_DN    &kp BSPC         &kp DEL                                  &kp PG_DN  &kp LEFT  &kp DOWN  &kp RIGHT  &kp DEL  &kp BSPC
+&kp F16       &ghostty_layout_1  &kp F14   &ghostty_layout_2  &ghostty_layout_3  &kp DEL                          &kp PG_DN  &kp LEFT  &kp DOWN  &kp RIGHT  &kp DEL  &kp BSPC
 &kp LEFT      &kp DOWN      &kp UP    &kp RIGHT    &kp F15          &ext_power EP_TOG  &kp ESC          &trans  &trans     &trans    &trans    &trans     &trans   &trans
                              &to BASE   &esccontrllayer0  &optionquestion  &entercommand  &spaceshiftdot    &trans  &trans     &trans    &trans    &trans
             >;
