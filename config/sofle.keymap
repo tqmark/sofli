@@ -115,6 +115,14 @@
             bindings = <&lt LOWER Z>, <&to RAISE>;
         };
 
+        zraise: zraise {
+            compatible = "zmk,behavior-tap-dance";
+            label = "ZRAISE";
+            #binding-cells = <0>;
+            tapping-term-ms = <250>;
+            bindings = <&kp Z>, <&to BASE>;
+        };
+
         esccontrllayer0: esccontrllayer0 {
             compatible = "zmk,behavior-tap-dance";
             label = "ESCCONTRLLAYER0";
@@ -172,21 +180,21 @@
         raise_layer {
             display-name = "raise";
 
-            // Hold K temporarily or double-tap Z to lock this layer; tap Z to return.
+            // Hold K temporarily or double-tap Z to lock this layer; double-tap Z again to return.
             // V+W activates it for one keypress, normally to launch an app.
             // Q+J together clears all Bluetooth pairings.
             // | BT1      | BT2 | FINDER   | MESSAGES | BT3    | BOOTLOADER |
             // | BROWSER  | BT4 | BT5      | HOME     | SETTINGS | END      |
             // | CHAT     | GHOSTTY 1 | TERMINAL | GHOSTTY 2 | GHOSTTY 3 | DELETE |
-            // | LEFT     | DOWN | UP | RIGHT | NOTES | POWER | ESC |
-            //     | BASE | ESC/CTRL | SLASH/ALT | ENTER/CMD | SPACE/SHIFT |
+            // | LEFT     | DOWN | UP | RIGHT | NOTES | DISPLAY ON | ESC |
+            //     | Z (double-tap BASE) | ESC/CTRL | SLASH/ALT | ENTER/CMD | SPACE/SHIFT |
 
             bindings = <
 &bt BT_SEL 0  &bt BT_SEL 1       &kp F19       &kp F18            &bt BT_SEL 2       &bootloader                                  &trans     &trans    &trans    &trans     &trans   &trans
 &kp F13       &bt BT_SEL 3       &bt BT_SEL 4  &kp HOME           &kp F17            &kp END                                      &kp PG_UP  &trans    &kp UP    &trans     &kp N0   &trans
 &kp F16       &ghostty_layout_1  &kp F14       &ghostty_layout_2  &ghostty_layout_3  &kp DEL                                      &kp PG_DN  &kp LEFT  &kp DOWN  &kp RIGHT  &kp DEL  &kp BSPC
-&kp LEFT      &kp DOWN           &kp UP        &kp RIGHT          &kp F15            &ext_power EP_TOG  &kp ESC           &trans  &trans     &trans    &trans    &trans     &trans   &trans
-                                 &to BASE      &esccontrllayer0   &optionquestion    &entercommand      &spaceshiftdot    &trans  &trans     &trans    &trans    &trans
+&kp LEFT      &kp DOWN           &kp UP        &kp RIGHT          &kp F15            &ext_power EP_ON   &kp ESC           &trans  &trans     &trans    &trans    &trans     &trans   &trans
+                                 &zraise       &esccontrllayer0   &optionquestion    &entercommand      &spaceshiftdot    &trans  &trans     &trans    &trans    &trans
             >;
 
             sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp PG_UP PG_DN>;
