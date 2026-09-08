@@ -131,14 +131,6 @@
             bindings = <&kp ESC>, <&tog RAISE>;
         };
 
-        zraise: zraise {
-            compatible = "zmk,behavior-tap-dance";
-            label = "ZRAISE";
-            #binding-cells = <0>;
-            tapping-term-ms = <250>;
-            bindings = <&kp Z>, <&to BASE>;
-        };
-
         esccontrllayer0: esccontrllayer0 {
             compatible = "zmk,behavior-tap-dance";
             label = "ESCCONTRLLAYER0";
@@ -178,16 +170,16 @@
             // | 1 | 2 | 3 | 4 | 5 | 6 |
             // | 7 | 8 | 9 | 0 | - | = |
             // | ' | WINDOW LEFT | ; | WINDOW RIGHT | [ | ] |
-            // Hold Z temporarily or double-tap Z to lock/unlock this layer.
+            // Hold Z temporarily or double-tap Z to lock; tap Z while locked to return to Base.
             // | \ | ALMOST MAX | / | RESTORE | , | . | ` |
-            //     | same thumb behaviors as Base: Z/LOWER | ESC/CTRL | SLASH/ALT | ENTER/CMD | SPACE/SHIFT |
+            //     | Z: return BASE | ESC/CTRL | SLASH/ALT | ENTER/CMD | SPACE/SHIFT |
 
             bindings = <
 &kp NUMBER_1  &kp NUMBER_2   &kp NUMBER_3  &kp NUMBER_4   &kp N5            &kp NUMBER_6                                 &kp F6     &kp F7    &kp F8     &kp F9     &kp F10   &kp F11
 &kp N7        &kp N8         &kp N9        &kp N0         &kp MINUS         &kp EQUAL                                    &kp N6     &kp N7    &kp N8     &kp N9     &kp N0    &kp F12
 &kp SQT       &kp LC(LA(H))  &kp SEMI      &kp LC(LA(L))  &kp LEFT_BRACKET  &kp RIGHT_BRACKET                            &kp CARET  &kp AMPS  &kp ASTRK  &kp LPAR   &kp RPAR  &kp PIPE
 &kp BSLH      &kp LC(LA(C))  &kp SLASH     &kp LC(LA(V))  &kp COMMA         &kp PERIOD         &kp GRAVE         &trans  &kp LBKT   &kp RBKT  &kp SEMI   &kp COLON  &kp BSLH  &trans
-                             &trans        &trans         &optionquestion   &entercommand      &spaceshiftdot    &trans  &trans     &trans    &trans     &trans
+                             &to BASE      &trans         &optionquestion   &entercommand      &spaceshiftdot    &trans  &trans     &trans    &trans     &trans
             >;
 
             sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp PG_UP PG_DN>;
@@ -196,21 +188,21 @@
         raise_layer {
             display-name = "raise";
 
-            // Hold K temporarily or double-tap K to lock/unlock this layer.
+            // Hold K temporarily or double-tap K to lock; tap Z to return to Base.
             // V+W activates it for one keypress, normally to launch an app.
             // Q+J together clears all Bluetooth pairings.
             // | BT1      | BT2 | FINDER   | MESSAGES | BT3    | BOOTLOADER |
             // | BROWSER  | BT4 | BT5      | HOME     | SETTINGS | END      |
             // | CHAT     | GHOSTTY 1 | TERMINAL | GHOSTTY 2 | GHOSTTY 3 | DELETE |
             // | LEFT     | DOWN | UP | RIGHT | NOTES | DISPLAY ON | ESC |
-            //     | Z (double-tap BASE) | ESC/CTRL | SLASH/ALT | ENTER/CMD | SPACE/SHIFT |
+            //     | Z: return BASE | ESC/CTRL | SLASH/ALT | ENTER/CMD | SPACE/SHIFT |
 
             bindings = <
 &bt BT_SEL 0  &bt BT_SEL 1       &kp F19       &kp F18            &bt BT_SEL 2       &bootloader                                  &trans     &trans    &trans    &trans     &trans   &trans
 &kp F13       &bt BT_SEL 3       &bt BT_SEL 4  &kp HOME           &kp F17            &kp END                                      &kp PG_UP  &trans    &kp UP    &trans     &kp N0   &trans
 &kp F16       &ghostty_layout_1  &kp F14       &ghostty_layout_2  &ghostty_layout_3  &kp DEL                                      &kp PG_DN  &kp LEFT  &kp DOWN  &kp RIGHT  &kp DEL  &kp BSPC
 &kp LEFT      &kp DOWN           &kp UP        &kp RIGHT          &kp F15            &ext_power EP_ON   &kraise           &trans  &trans     &trans    &trans    &trans     &trans   &trans
-                                 &zraise       &esccontrllayer0   &optionquestion    &entercommand      &spaceshiftdot    &trans  &trans     &trans    &trans    &trans
+                                 &to BASE      &esccontrllayer0   &optionquestion    &entercommand      &spaceshiftdot    &trans  &trans     &trans    &trans    &trans
             >;
 
             sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp PG_UP PG_DN>;
