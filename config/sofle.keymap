@@ -14,11 +14,11 @@
 #define RAISE 2
 
 &mt {
-    tapping-term-ms = <150>;
+    tapping-term-ms = <175>;
 };
 
 &lt {
-    tapping-term-ms = <150>;
+    tapping-term-ms = <175>;
 };
 
 / {
@@ -91,7 +91,7 @@
             compatible = "zmk,behavior-tap-dance";
             label = "SPACESHIFTDOT";
             #binding-cells = <0>;
-            tapping-term-ms = <125>;
+            tapping-term-ms = <150>;
             bindings = <&mt LSHIFT SPACE>, <&kp DOT>;
         };
 
@@ -99,7 +99,7 @@
             compatible = "zmk,behavior-tap-dance";
             label = "OPTIONQUESTION";
             #binding-cells = <0>;
-            tapping-term-ms = <125>;
+            tapping-term-ms = <150>;
             bindings = <&mt LEFT_ALT SLASH>, <&mo LOWER>;
         };
 
@@ -107,7 +107,7 @@
             compatible = "zmk,behavior-tap-dance";
             label = "ENTERCOMMAND";
             #binding-cells = <0>;
-            tapping-term-ms = <125>;
+            tapping-term-ms = <150>;
             bindings = <&mt LEFT_COMMAND ENTER>, <&kp COMMA>;
         };
 
@@ -115,7 +115,7 @@
             compatible = "zmk,behavior-tap-dance";
             label = "IENTER";
             #binding-cells = <0>;
-            tapping-term-ms = <125>;
+            tapping-term-ms = <150>;
             bindings = <&kp I>, <&kp ENTER>;
         };
 
@@ -123,7 +123,7 @@
             compatible = "zmk,behavior-tap-dance";
             label = "XLAYERS";
             #binding-cells = <0>;
-            tapping-term-ms = <125>;
+            tapping-term-ms = <150>;
             bindings = <&lt LOWER X>, <&tog LOWER>;
         };
 
@@ -131,7 +131,7 @@
             compatible = "zmk,behavior-tap-dance";
             label = "KLAYERS";
             #binding-cells = <0>;
-            tapping-term-ms = <125>;
+            tapping-term-ms = <150>;
             bindings = <&lt RAISE K>, <&tog RAISE>;
         };
 
@@ -139,7 +139,7 @@
             compatible = "zmk,behavior-tap-dance";
             label = "KRAISE";
             #binding-cells = <0>;
-            tapping-term-ms = <125>;
+            tapping-term-ms = <150>;
             bindings = <&kp ESC>, <&tog RAISE>;
         };
 
@@ -147,7 +147,7 @@
             compatible = "zmk,behavior-tap-dance";
             label = "ESCCONTRLLAYER0";
             #binding-cells = <0>;
-            tapping-term-ms = <125>;
+            tapping-term-ms = <150>;
             bindings = <&mt LEFT_CONTROL ESC>, <&to BASE>;
         };
     };
