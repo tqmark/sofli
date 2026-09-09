@@ -194,14 +194,14 @@
             // | ' | WINDOW LEFT | ; | WINDOW RIGHT | [ | ] |
             // Hold X temporarily or double-tap X to lock; tap Z while locked to return to Base.
             // | \ | ALMOST MAX | / | RESTORE | , | . | ` |
-            //     | Z: return BASE | ESC/CTRL | SLASH/ALT | ENTER/CMD | SPACE/SHIFT |
+            //     | Z: return BASE | ESC/CTRL | SLASH/ALT | ENTER/CMD | ENTER/SHIFT |
 
             bindings = <
 &kp NUMBER_1  &kp NUMBER_2   &kp NUMBER_3  &kp NUMBER_4   &kp N5            &kp NUMBER_6                                 &kp F6     &kp F7    &kp F8     &kp F9     &kp F10   &kp F11
 &kp N7        &kp N8         &kp N9        &kp N0         &kp MINUS         &kp EQUAL                                    &kp N6     &kp N7    &kp N8     &kp N9     &kp N0    &kp F12
 &kp SQT       &kp LC(LA(H))  &kp SEMI      &kp LC(LA(L))  &kp LEFT_BRACKET  &kp RIGHT_BRACKET                            &kp CARET  &kp AMPS  &kp ASTRK  &kp LPAR   &kp RPAR  &kp PIPE
 &kp BSLH      &kp LC(LA(C))  &kp SLASH     &kp LC(LA(V))  &kp COMMA         &kp PERIOD         &kp GRAVE         &trans  &kp LBKT   &kp RBKT  &kp SEMI   &kp COLON  &kp BSLH  &trans
-                             &to BASE      &trans         &optionquestion   &mt LEFT_COMMAND ENTER  &spaceshiftdot    &trans  &trans     &trans    &trans     &trans
+                             &to BASE      &trans         &optionquestion   &mt LEFT_COMMAND ENTER  &mt LEFT_SHIFT ENTER  &trans  &trans     &trans    &trans     &trans
             >;
 
             sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp PG_UP PG_DN>;
