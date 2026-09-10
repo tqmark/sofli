@@ -86,12 +86,6 @@
             key-positions = <12 13>;
         };
 
-        caps_word {
-            bindings = <&caps_word>;
-            key-positions = <36 37>;
-            layers = <BASE>;
-        };
-
         raise_once {
             bindings = <&sl RAISE>;
             key-positions = <38 39>;
@@ -150,7 +144,7 @@
             compatible = "zmk,behavior-tap-dance";
             label = "XLAYERS";
             #binding-cells = <0>;
-            tapping-term-ms = <175>;
+            tapping-term-ms = <250>;
             bindings = <&lt LOWER X>, <&tog LOWER>;
         };
 
@@ -240,15 +234,15 @@
             // Hold K temporarily or double-tap K to lock; tap Z to return to Base.
             // V+W activates it for one keypress, normally to launch an app.
             // Q+J together clears all Bluetooth pairings; L+J enters the bootloader.
-            // | LEFT     | DOWN | UP       | RIGHT    | BT3    | BACKSPACE  |
-            // | BROWSER  | BT4 | BT5      | HOME     | SETTINGS | END      |
+            // | LEFT     | DOWN | UP       | RIGHT    | UNUSED | BACKSPACE  |
+            // | BROWSER  | UNUSED | UNUSED | HOME    | SETTINGS | END      |
             // | CHAT     | GHOSTTY 1 | TERMINAL | GHOSTTY 2 | GHOSTTY 3 | DELETE |
             // | MESSAGES | FINDER | BT1 | BT2 | NOTES | DISPLAY ON | ESC |
             //     | Z: return BASE | SLASH/ALT | ESC/CTRL | COMMA/CMD; double-tap ENTER | SPACE/SHIFT |
 
             bindings = <
-&kp LEFT      &kp DOWN           &kp UP        &kp RIGHT          &bt BT_SEL 2       &kp BACKSPACE                                 &trans     &trans    &trans    &trans     &trans   &trans
-&kp F13       &bt BT_SEL 3       &bt BT_SEL 4  &kp HOME           &kp F17            &kp END                                      &kp PG_UP  &trans    &kp UP    &trans     &kp N0   &trans
+&kp LEFT      &kp DOWN           &kp UP        &kp RIGHT          &none               &kp BACKSPACE                                 &trans     &trans    &trans    &trans     &trans   &trans
+&kp F13       &none              &none         &kp HOME           &kp F17            &kp END                                      &kp PG_UP  &trans    &kp UP    &trans     &kp N0   &trans
 &kp F16       &ghostty_layout_1  &kp F14       &ghostty_layout_2  &ghostty_layout_3  &kp DEL                                      &kp PG_DN  &kp LEFT  &kp DOWN  &kp RIGHT  &kp DEL  &kp BSPC
 &kp F18       &kp F19            &bt BT_SEL 0  &bt BT_SEL 1       &kp F15            &ext_power EP_ON   &kraise           &trans  &trans     &trans    &trans    &trans     &trans   &trans
                                  &to BASE      &optionquestion    &esccontrllayer0   &commacommandenter      &spaceshiftdot    &trans  &trans     &trans    &trans    &trans
