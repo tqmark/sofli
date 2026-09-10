@@ -59,6 +59,12 @@
                 ;
         };
 
+        lower_bslash_tap: lower_bslash_tap {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp BSLH>;
+        };
+
     };
 
     combos {
@@ -178,7 +184,7 @@
             #binding-cells = <0>;
             flavor = "hold-preferred";
             tapping-term-ms = <200>;
-            bindings = <&lower_base_peek &kp BSLH>;
+            bindings = <&lower_base_peek>, <&lower_bslash_tap>;
         };
     };
 
