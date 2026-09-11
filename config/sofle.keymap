@@ -13,7 +13,19 @@
 #define LOWER 1
 #define RAISE 2
 
+// balanced, not the default tap-preferred. Under tap-preferred a mod-tap is
+// decided ONLY by its own release or by the timer: pressing another key does
+// not resolve it. So every modifier chord cost a blind 200 ms dwell, and the
+// second key sat captured in the hold-tap queue until the timer fired. Ctrl +
+// Space was the worst case, because the Space tap-dance then added its own
+// 175 ms on top of that.
+//
+// balanced resolves to hold the moment the OTHER key is released, so Ctrl is
+// down as soon as you let go of Space. It is safer here than hold-preferred:
+// tapping the Esc thumb and rolling into a letter still gives Esc, because the
+// thumb is released first and its own release always means tap.
 &mt {
+    flavor = "balanced";
     tapping-term-ms = <200>;
 };
 
