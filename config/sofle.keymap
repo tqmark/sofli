@@ -17,7 +17,11 @@
     tapping-term-ms = <200>;
 };
 
+// hold-preferred so the layer engages the moment a second key goes down.
+// The default, tap-preferred, only resolves on timeout, which meant every
+// Lower/Raise access cost a full 200 ms dwell before the layer was live.
 &lt {
+    flavor = "hold-preferred";
     tapping-term-ms = <200>;
 };
 
@@ -70,20 +74,26 @@
     combos {
         compatible = "zmk,combos";
 
+        // Combos match key POSITIONS, not letters, so an unscoped combo also
+        // fires on Lower's number row and Raise's arrows. Everything benign is
+        // pinned to BASE: <0 1> is 1+2 on Lower and Left+Down on Raise, <4 5>
+        // is 5+6 on Lower (as in 256, 65536) and <12 13> is 7+8.
         grave {
             bindings = <&kp GRAVE>;
             key-positions = <0 1>;
+            layers = <BASE>;
         };
 
         backspace {
             bindings = <&kp BACKSPACE>;
             key-positions = <4 5>;
-            layers = <BASE LOWER>;
+            layers = <BASE>;
         };
 
         tab {
             bindings = <&kp TAB>;
             key-positions = <12 13>;
+            layers = <BASE>;
         };
 
         raise_once {
@@ -92,16 +102,21 @@
             layers = <BASE>;
         };
 
-        clear_bluetooth {
+        // Both destructive combos used to sit on the editing keys: <0 5> was
+        // Left-arrow + Backspace, and <4 5> was the same L+J chord trained as
+        // Backspace elsewhere, one slip from dropping into UF2 with no HID.
+        // Moved onto the bottom row, where they are deliberate finger presses
+        // and never occur while navigating or deleting.
+        clear_bluetooth {          // BT1 + BT2 together
             bindings = <&bt BT_CLR>;
-            key-positions = <0 5>;
+            key-positions = <38 39>;
             layers = <RAISE>;
-            timeout-ms = <150>;
+            timeout-ms = <50>;
         };
 
-        bootloader_combo {
+        bootloader_combo {         // pinky + ring + middle, bottom row
             bindings = <&bootloader>;
-            key-positions = <4 5>;
+            key-positions = <36 37 38>;
             layers = <RAISE>;
             timeout-ms = <150>;
         };
@@ -116,14 +131,6 @@
             bindings = <&mt LSHIFT SPACE>, <&kp DOT>;
         };
 
-        optionquestion: optionquestion {
-            compatible = "zmk,behavior-tap-dance";
-            label = "OPTIONQUESTION";
-            #binding-cells = <0>;
-            tapping-term-ms = <175>;
-            bindings = <&mt LEFT_ALT SLASH>, <&mo LOWER>;
-        };
-
         commacommandenter: commacommandenter {
             compatible = "zmk,behavior-tap-dance";
             label = "COMMACOMMANDENTER";
@@ -132,29 +139,13 @@
             bindings = <&mt LEFT_COMMAND COMMA>, <&kp ENTER>;
         };
 
-        Ienter: Ienter {
-            compatible = "zmk,behavior-tap-dance";
-            label = "IENTER";
-            #binding-cells = <0>;
-            tapping-term-ms = <175>;
-            bindings = <&kp I>, <&kp ENTER>;
-        };
-
-        xlayers: xlayers {
-            compatible = "zmk,behavior-tap-dance";
-            label = "XLAYERS";
-            #binding-cells = <0>;
-            tapping-term-ms = <175>;
-            bindings = <&lt LOWER X>, <&tog LOWER>;
-        };
-
-        klayers: klayers {
-            compatible = "zmk,behavior-tap-dance";
-            label = "KLAYERS";
-            #binding-cells = <0>;
-            tapping-term-ms = <175>;
-            bindings = <&lt RAISE K>, <&tog RAISE>;
-        };
+        // xlayers/klayers are gone. Wrapping &lt in a tap-dance meant the dance
+        // had to resolve first, and tap-dance resolves EAGERLY on any other key
+        // press without buffering it. So pressing a second key inside 175 ms
+        // leaked the base letter through before the layer was live, and waiting
+        // it out cost 175 ms + the hold-tap's own 200 ms. X and K are now plain
+        // &lt; locking moved to Z, which is a standalone press and cannot be
+        // torn down by the &lt release.
 
         kraise: kraise {
             compatible = "zmk,behavior-tap-dance";
@@ -192,15 +183,16 @@
             // | Q | P | F | M | L | J |
             // | B | Y | U | R | S | O |
             // | C | D | T | H | E | A |
-            // | X: tap X / hold LOWER / double-tap lock LOWER | G | V | W | N | I | K: tap K / hold RAISE / double-tap lock RAISE |
+            // | X: tap X / hold LOWER | G | V | W | N | I | K: tap K / hold RAISE |
             //     | Z | SLASH/ALT | ESC/CTRL | COMMA/CMD; double-tap ENTER | SPACE/SHIFT |
+            // To lock a layer: hold X (or K), then tap Z. To leave it: tap Z.
 
             bindings = <
 &kp Q  &kp P  &kp F     &kp M                 &kp L            &kp J                                       &kp N6     &kp N7     &kp N8     &kp N9    &kp N0    &none
 &kp B  &kp Y  &kp U     &kp R                 &kp S            &kp O                                       &kp Y      &kp U      &kp I      &kp O     &kp P     &kp BSPC
 &kp C  &kp D  &kp T     &kp H                 &kp E            &kp A                                       &kp H      &kp J      &kp K      &kp L     &kp SEMI  &kp SQT
-&xlayers  &kp G  &kp V     &kp W                 &kp N            &kp I          &klayers          &none      &kp N      &kp M      &kp COMMA  &kp DOT   &kp FSLH  &kp RSHFT
-              &kp Z     &optionquestion  &mt LEFT_CONTROL ESC  &commacommandenter  &spaceshiftdot    &kp SPACE  &mo RAISE  &kp RCTRL  &kp RALT   &kp RGUI
+&lt LOWER X  &kp G  &kp V     &kp W                 &kp N            &kp I          &lt RAISE K          &none      &kp N      &kp M      &kp COMMA  &kp DOT   &kp FSLH  &kp RSHFT
+              &kp Z     &mt LEFT_ALT SLASH  &mt LEFT_CONTROL ESC  &commacommandenter  &spaceshiftdot    &kp SPACE  &mo RAISE  &kp RCTRL  &kp RALT   &kp RGUI
             >;
 
             sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp PG_UP PG_DN>;
@@ -212,17 +204,19 @@
             // Left half:
             // | 1 | 2 | 3 | 4 | 5 | 6 |
             // | 7 | 8 | 9 | 0 | - | = |
-            // | ' | WINDOW LEFT | ; | WINDOW RIGHT | [ | ] |
-            // Hold X temporarily or double-tap X to lock; tap Z while locked to return to Base.
+            // | ' | BACKSPACE | ; | WINDOW RIGHT | [ | ] |
+            // Hold X to use temporarily, or hold X then tap Z to lock. Tap Z to leave.
+            // Backspace is a real key here now that the L+J combo is BASE-only: on
+            // this layer positions 4+5 are 5 and 6, as in 256 or 65536.
             // | BACKSLASH: tap \\ / hold BASE | ALMOST MAX | / | RESTORE | , | . | ` |
-            //     | Z: return BASE | SLASH/ALT | ESC/CTRL | ENTER/CMD | ENTER/SHIFT |
+            //     | Z: lock / unlock | SLASH/ALT | ESC/CTRL | ENTER/CMD | ENTER/SHIFT |
 
             bindings = <
 &kp NUMBER_1  &kp NUMBER_2   &kp NUMBER_3  &kp NUMBER_4   &kp N5            &kp NUMBER_6                                 &kp F6     &kp F7    &kp F8     &kp F9     &kp F10   &kp F11
 &kp N7        &kp N8         &kp N9        &kp N0         &kp MINUS         &kp EQUAL                                    &kp N6     &kp N7    &kp N8     &kp N9     &kp N0    &kp F12
-&kp SQT       &kp LC(LA(H))  &kp SEMI      &kp LC(LA(L))  &kp LEFT_BRACKET  &kp RIGHT_BRACKET                            &kp CARET  &kp AMPS  &kp ASTRK  &kp LPAR   &kp RPAR  &kp PIPE
+&kp SQT       &kp BSPC       &kp SEMI      &kp LC(LA(L))  &kp LEFT_BRACKET  &kp RIGHT_BRACKET                            &kp CARET  &kp AMPS  &kp ASTRK  &kp LPAR   &kp RPAR  &kp PIPE
 &lower_bslash_base 0 0  &kp LC(LA(C))  &kp SLASH     &kp LC(LA(V))  &kp COMMA         &kp PERIOD         &kp GRAVE         &trans  &kp LBKT   &kp RBKT  &kp SEMI   &kp COLON  &kp BSLH  &trans
-                             &to BASE      &optionquestion  &trans          &mt LEFT_COMMAND ENTER  &mt LEFT_SHIFT ENTER  &trans  &trans     &trans    &trans     &trans
+                             &tog LOWER    &mt LEFT_ALT SLASH  &trans       &mt LEFT_COMMAND ENTER  &mt LEFT_SHIFT ENTER  &trans  &trans     &trans    &trans     &trans
             >;
 
             sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp PG_UP PG_DN>;
@@ -231,21 +225,24 @@
         raise_layer {
             display-name = "raise";
 
-            // Hold K temporarily or double-tap K to lock; tap Z to return to Base.
-            // V+W activates it for one keypress, normally to launch an app.
-            // Q+J together clears all Bluetooth pairings; L+J enters the bootloader.
+            // Hold K to use temporarily, or hold K then tap Z to lock. Tap Z to leave.
+            // K itself still taps ESC here, and double-tapping K also unlocks.
+            // V+W on Base activates Raise for one keypress, normally to launch an app.
+            // The two destructive combos now live on the bottom row: BT1+BT2 clears
+            // all Bluetooth pairings, and pinky+ring+middle enters the bootloader.
+            // Neither can be hit while arrowing or deleting on the top row.
             // | LEFT     | DOWN | UP       | RIGHT    | UNUSED | BACKSPACE  |
             // | BROWSER  | UNUSED | UNUSED | HOME    | SETTINGS | END      |
             // | CHAT     | GHOSTTY 1 | TERMINAL | GHOSTTY 2 | GHOSTTY 3 | DELETE |
             // | MESSAGES | FINDER | BT1 | BT2 | NOTES | DISPLAY ON | ESC |
-            //     | Z: return BASE | SLASH/ALT | ESC/CTRL | COMMA/CMD; double-tap ENTER | SPACE/SHIFT |
+            //     | Z: lock / unlock | SLASH/ALT | ESC/CTRL | COMMA/CMD; double-tap ENTER | SPACE/SHIFT |
 
             bindings = <
 &kp LEFT      &kp DOWN           &kp UP        &kp RIGHT          &none               &kp BACKSPACE                                 &trans     &trans    &trans    &trans     &trans   &trans
 &kp F13       &none              &none         &kp HOME           &kp F17            &kp END                                      &kp PG_UP  &trans    &kp UP    &trans     &kp N0   &trans
 &kp F16       &ghostty_layout_1  &kp F14       &ghostty_layout_2  &ghostty_layout_3  &kp DEL                                      &kp PG_DN  &kp LEFT  &kp DOWN  &kp RIGHT  &kp DEL  &kp BSPC
 &kp F18       &kp F19            &bt BT_SEL 0  &bt BT_SEL 1       &kp F15            &ext_power EP_ON   &kraise           &trans  &trans     &trans    &trans    &trans     &trans   &trans
-                                 &to BASE      &optionquestion    &esccontrllayer0   &commacommandenter      &spaceshiftdot    &trans  &trans     &trans    &trans    &trans
+                                 &tog RAISE    &mt LEFT_ALT SLASH  &esccontrllayer0  &commacommandenter      &spaceshiftdot    &trans  &trans     &trans    &trans    &trans
             >;
 
             sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp PG_UP PG_DN>;
