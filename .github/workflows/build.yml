@@ -3,4 +3,7 @@ on: [push, pull_request, workflow_dispatch]
 
 jobs:
   build:
-    uses: zmkfirmware/zmk/.github/workflows/build-user-config.yml@4ec69cb7e658590adf6354027aca789b364a70c5
+    # Kept in step with config/west.yml. The reusable workflow chooses the
+    # Docker image, so a ZMK revision on Zephyr 3.5 must be built by a
+    # workflow from the same era.
+    uses: zmkfirmware/zmk/.github/workflows/build-user-config.yml@abb64ba316c29caddc49727ca2cac2f0ed5970c7
