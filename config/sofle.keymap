@@ -114,9 +114,9 @@
             timeout-ms = <50>;
         };
 
-        bootloader_combo {         // pinky + ring + middle, bottom row
+        bootloader_combo {         // X + G on Raise, bottom row
             bindings = <&bootloader>;
-            key-positions = <36 37 38>;
+            key-positions = <36 37>;
             layers = <RAISE>;
             timeout-ms = <150>;
         };
@@ -229,7 +229,7 @@
             // K itself still taps ESC here, and double-tapping K also unlocks.
             // V+W on Base activates Raise for one keypress, normally to launch an app.
             // The two destructive combos now live on the bottom row: BT1+BT2 clears
-            // all Bluetooth pairings, and pinky+ring+middle enters the bootloader.
+            // all Bluetooth pairings, and X+G enters the bootloader.
             // Neither can be hit while arrowing or deleting on the top row.
             // | LEFT     | DOWN | UP       | RIGHT    | UNUSED | BACKSPACE  |
             // | BROWSER  | UNUSED | UNUSED | HOME    | SETTINGS | END      |
