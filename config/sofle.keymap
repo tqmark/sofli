@@ -12,20 +12,16 @@
 #define BASE 0
 #define LOWER 1
 #define RAISE 2
+#define MEDIA 3
 
-// balanced, not the default tap-preferred. Under tap-preferred a mod-tap is
-// decided ONLY by its own release or by the timer: pressing another key does
-// not resolve it. So every modifier chord cost a blind 200 ms dwell, and the
-// second key sat captured in the hold-tap queue until the timer fired. Ctrl +
-// Space was the worst case, because the Space tap-dance then added its own
-// 175 ms on top of that.
-//
-// balanced resolves to hold the moment the OTHER key is released, so Ctrl is
-// down as soon as you let go of Space. It is safer here than hold-preferred:
-// tapping the Esc thumb and rolling into a letter still gives Esc, because the
-// thumb is released first and its own release always means tap.
+// hold-preferred is &mt's own default, restored here deliberately after a
+// detour through balanced. balanced only decides on the OTHER key's release,
+// and a hold-tap captures every later keypress while undecided. Holding Ctrl
+// and Space together therefore never produced an "other key up", so Ctrl sat
+// undecided until its own 200 ms timer with the Space press still queued
+// behind it. hold-preferred decides the instant Space goes down.
 &mt {
-    flavor = "balanced";
+    flavor = "hold-preferred";
     tapping-term-ms = <200>;
 };
 
@@ -175,6 +171,26 @@
             bindings = <&mt LEFT_CONTROL ESC>, <&to BASE>;
         };
 
+        // Hold Q for volume. Q cannot be a plain &lt: this config overrides &lt
+        // to hold-preferred, which decides "hold" on any second key press, and
+        // Q is followed by U in query, queue, quick, quit, require, unique and
+        // sequence. Every one of those would lose its q.
+        //
+        // hold-trigger-key-positions fixes that. decide_positional_hold() runs
+        // before the flavor logic and forces a TAP whenever the first key after
+        // Q is not in the list, so only F, M, L and J can reach the layer and
+        // anything else -- U above all -- types a plain q. That makes it safe to
+        // keep hold-preferred, so the layer is live the moment one of those four
+        // goes down, with no dwell to wait out.
+        qmedia: qmedia {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <2>;
+            flavor = "hold-preferred";
+            tapping-term-ms = <200>;
+            hold-trigger-key-positions = <2 3 4 5>;   // F, M, L, J only
+            bindings = <&mo>, <&kp>;
+        };
+
         lower_bslash_base: lower_bslash_base {
             compatible = "zmk,behavior-hold-tap";
             label = "LOWER_BSLASH_BASE";
@@ -192,7 +208,7 @@
             display-name = "default";
 
             // Left half: all letters plus thumb tap/hold behaviors. The right half is disconnected.
-            // | Q | P | F | M | L | J |
+            // | Q: tap Q / hold MEDIA | P | F | M | L | J |
             // | B | Y | U | R | S | O |
             // | C | D | T | H | E | A |
             // | X: tap X / hold LOWER | G | V | W | N | I | K: tap K / hold RAISE |
@@ -200,7 +216,7 @@
             // To lock a layer: hold X (or K), then tap Z. To leave it: tap Z.
 
             bindings = <
-&kp Q  &kp P  &kp F     &kp M                 &kp L            &kp J                                       &kp N6     &kp N7     &kp N8     &kp N9    &kp N0    &none
+&qmedia MEDIA Q  &kp P  &kp F     &kp M             &kp L            &kp J                                       &kp N6     &kp N7     &kp N8     &kp N9    &kp N0    &none
 &kp B  &kp Y  &kp U     &kp R                 &kp S            &kp O                                       &kp Y      &kp U      &kp I      &kp O     &kp P     &kp BSPC
 &kp C  &kp D  &kp T     &kp H                 &kp E            &kp A                                       &kp H      &kp J      &kp K      &kp L     &kp SEMI  &kp SQT
 &lt LOWER X  &kp G  &kp V     &kp W                 &kp N            &kp I          &lt RAISE K          &none      &kp N      &kp M      &kp COMMA  &kp DOT   &kp FSLH  &kp RSHFT
@@ -243,18 +259,40 @@
             // The two destructive combos now live on the bottom row: BT1+BT2 clears
             // all Bluetooth pairings, and X+G enters the bootloader.
             // Neither can be hit while arrowing or deleting on the top row.
-            // | LEFT     | DOWN | UP       | RIGHT    | MUTE | BACKSPACE  |
-            // | BROWSER  | VOLUME DOWN | VOLUME UP | HOME    | SETTINGS | END      |
+            // | LEFT     | DOWN | UP       | RIGHT    | UNUSED | BACKSPACE  |
+            // | BROWSER  | UNUSED | UNUSED | HOME    | SETTINGS | END      |
             // | CHAT     | GHOSTTY 1 | TERMINAL | GHOSTTY 2 | GHOSTTY 3 | DELETE |
             // | MESSAGES | FINDER | BT1 | BT2 | NOTES | DISPLAY ON | ESC |
             //     | Z: lock / unlock | SLASH/ALT | ESC/CTRL | COMMA/CMD; double-tap ENTER | SPACE/SHIFT |
 
             bindings = <
-&kp LEFT      &kp DOWN           &kp UP        &kp RIGHT          &kp C_MUTE          &kp BACKSPACE                                 &trans     &trans    &trans    &trans     &trans   &trans
-&kp F13       &kp C_VOL_DN       &kp C_VOL_UP  &kp HOME           &kp F17            &kp END                                      &kp PG_UP  &trans    &kp UP    &trans     &kp N0   &trans
+&kp LEFT      &kp DOWN           &kp UP        &kp RIGHT          &none               &kp BACKSPACE                                 &trans     &trans    &trans    &trans     &trans   &trans
+&kp F13       &none              &none         &kp HOME           &kp F17            &kp END                                      &kp PG_UP  &trans    &kp UP    &trans     &kp N0   &trans
 &kp F16       &ghostty_layout_1  &kp F14       &ghostty_layout_2  &ghostty_layout_3  &kp DEL                                      &kp PG_DN  &kp LEFT  &kp DOWN  &kp RIGHT  &kp DEL  &kp BSPC
 &kp F18       &kp F19            &bt BT_SEL 0  &bt BT_SEL 1       &kp F15            &ext_power EP_ON   &kraise           &trans  &trans     &trans    &trans    &trans     &trans   &trans
                                  &tog RAISE    &mt LEFT_ALT SLASH  &esccontrllayer0  &commacommandenter      &spaceshiftdot    &trans  &trans     &trans    &trans    &trans
+            >;
+
+            sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp PG_UP PG_DN>;
+        };
+
+        media_layer {
+            display-name = "media";
+
+            // Hold Q and tap one of the four keys to its right. No dwell: the
+            // layer is live the instant F, M, L or J goes down, and those four
+            // are the only keys that can reach it.
+            //
+            // Reached only while Q is physically held. There is no &tog here
+            // and no exit key, so it is not a layer you can be stranded in.
+            // | (Q) | UNUSED | VOLUME DOWN | MUTE | VOLUME UP | BACKSPACE |
+
+            bindings = <
+&none  &none  &kp C_VOL_DN  &kp C_MUTE  &kp C_VOL_UP  &kp BACKSPACE                              &trans  &trans  &trans  &trans  &trans  &trans
+&none  &none  &none         &none       &none         &none                                      &trans  &trans  &trans  &trans  &trans  &trans
+&none  &none  &none         &none       &none         &none                                      &trans  &trans  &trans  &trans  &trans  &trans
+&none  &none  &none         &none       &none         &none         &none                        &trans  &trans  &trans  &trans  &trans  &trans  &trans
+              &none         &none       &none         &none         &none                        &trans  &trans  &trans  &trans  &trans
             >;
 
             sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp PG_UP PG_DN>;
