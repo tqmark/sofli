@@ -235,14 +235,14 @@
             // | LEFT     | DOWN | UP       | RIGHT    | UNUSED | BACKSPACE  |
             // | BROWSER  | UNUSED | UNUSED | HOME    | SETTINGS | END      |
             // | CHAT     | GHOSTTY 1 | TERMINAL | GHOSTTY 2 | GHOSTTY 3 | DELETE |
-            // | MESSAGES | FINDER | BT1 | BT2 | NOTES | DISPLAY ON | ESC |
+            // | UNUSED   | FINDER | BT1 | BT2 | NOTES | DISPLAY ON | ESC |
             //     | Z: lock / unlock | SLASH/ALT | ESC/CTRL | COMMA/CMD | SPACE/SHIFT |
 
             bindings = <
 &kp LEFT      &kp DOWN           &kp UP        &kp RIGHT          &none               &kp BACKSPACE                                 &trans     &trans    &trans    &trans     &trans   &trans
 &kp F13       &none              &none         &kp HOME           &kp F17            &kp END                                      &kp PG_UP  &trans    &kp UP    &trans     &kp N0   &trans
 &kp F16       &ghostty_layout_1  &kp F14       &ghostty_layout_2  &ghostty_layout_3  &kp DEL                                      &kp PG_DN  &kp LEFT  &kp DOWN  &kp RIGHT  &kp DEL  &kp BSPC
-&kp F18       &kp F19            &bt BT_SEL 0  &bt BT_SEL 1       &kp F15            &ext_power EP_ON   &kp ESC           &trans  &trans     &trans    &trans    &trans     &trans   &trans
+&none         &kp F19            &bt BT_SEL 0  &bt BT_SEL 1       &kp F15            &ext_power EP_ON   &kp ESC           &trans  &trans     &trans    &trans    &trans     &trans   &trans
                                  &tog RAISE    &mt LEFT_ALT SLASH  &mt LEFT_CONTROL ESC  &mt LEFT_COMMAND COMMA  &mt LEFT_SHIFT SPACE    &trans  &trans     &trans    &trans    &trans
             >;
 

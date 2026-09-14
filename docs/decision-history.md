@@ -96,14 +96,14 @@ Hold K for temporary access. Hold K, tap Z, and release K to lock it.
 Left      Down      Up       Right     unused    Backspace
 Browser   unused    unused   Home      Settings  End
 Chat      Layout 1  Ghostty  Layout 2  Layout 3  Delete
-Telegram  Finder    BT1      BT2       Notes     OLED on   Esc
+unused    Finder    BT1      BT2       Notes     OLED on   Esc
 
           Z-toggle  /-Option  Esc-Control  comma-Command  Space-Shift
 ```
 
 - The arrows use Q/P/F/M, preserving their visible left-to-right Vim-like movement shape.
 - Hold K+J for Backspace and K+A for forward Delete.
-- Hold K+B/T/C/S/X/G/N to open Browser, Ghostty, Chat toggle, Settings, Telegram, Finder, or Notes.
+- Hold K+B/T/C/S/G/N to open Browser, Ghostty, the Slack/Telegram toggle, Settings, Finder, or Notes. K+X is intentionally unused.
 - Raise+D/H/E emit Ghostty layout commands 1/2/3.
 - Raise+V/W select Bluetooth profiles 1/2.
 - Raise+I turns external power on to recover the OLED.
@@ -146,9 +146,9 @@ Live configuration: `~/.config/karabiner/karabiner.json`; launcher script: `~/.c
 
 - On the native Mac keyboard, Caps Lock taps Escape and holds Control with a 200 ms alone timeout.
 - Right Option maps to Left Control.
-- Native Space+B/T/N/C/S/M/F simultaneous chords open Browser, terminal, Notes, the Slack/Telegram toggle, Settings, Telegram, and Finder. They use a 30 ms window and explicitly exclude the Sofle device (VID `0x1d50`, PID `0x615e`) plus Ghostty and Apple Terminal.
-- The Sofle emits F13-F19 from Raise. Karabiner maps them to Browser, Ghostty/Terminal, Notes, the Slack/Telegram toggle, Settings, Telegram, and Finder. This keeps application launching away from F1-F12 and avoids Space/Shift ambiguity on the Sofle.
-- Chat is state-aware: when Slack is frontmost, C opens Telegram; when Telegram is frontmost, C opens Slack; when neither is frontmost, C opens Slack if installed and otherwise Telegram. K+X and native Space+M open Telegram directly; Apple Messages is no longer used.
+- Native Space+B/T/N/C/S/F simultaneous chords open Browser, terminal, Notes, the Slack/Telegram toggle, Settings, and Finder. Space+M remains normal typing. The chords use a 30 ms window and explicitly exclude the Sofle device (VID `0x1d50`, PID `0x615e`) plus Ghostty and Apple Terminal.
+- The Sofle emits F13-F17 and F19 from Raise. Karabiner maps them to Browser, Ghostty/Terminal, Notes, the Slack/Telegram toggle, Settings, and Finder. F18 is unused. This keeps application launching away from F1-F12 and avoids Space/Shift ambiguity on the Sofle.
+- C is the only chat shortcut. When Slack is frontmost, it opens Telegram; when Telegram is frontmost, it opens Slack; when neither is frontmost, it opens Slack if installed and otherwise Telegram. K+C uses it on the Sofle and native Space+C uses it on the Mac keyboard. Apple Messages is not used.
 - Ctrl+N/P becomes Down/Up outside Ghostty and Apple Terminal.
 - Left Option+H/L focuses the previous/next macOS window in the current Space.
 - Cmd+Tab and Cmd+Shift+Tab are disabled globally. No general replacement for selecting an arbitrary running application has been chosen; this is a gap.
@@ -260,7 +260,7 @@ The firmware preserves quick Escape, Control, Space, and movement access because
 - Enter remains readily available as X+Space. Period is X+comma, matching the preferred hold-then-tap gesture; Lower+I remains a duplicate period for now. Z remains the Raise recovery key.
 - The firmware name became `SofleL-FlatMT`, and CI gained a structural check that rejects any future custom behavior wrapping `&mt`.
 - The final K tap dance on Raise was also removed. K now sends immediate Escape, Z remains the exit, and CI rejects every tap dance on every layer.
-- The shared Karabiner chat launcher became a Slack/Telegram toggle based on the frontmost app. The former Messages action became direct Telegram.
+- The shared Karabiner chat launcher became a Slack/Telegram toggle based on the frontmost app. A separate direct-Telegram action was rejected: C is the only chat shortcut, K+X is unused, and native Space+M remains normal typing.
 
 ## Decisions deliberately rejected or superseded
 
