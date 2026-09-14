@@ -144,14 +144,6 @@
         // &lt; locking moved to Z, which is a standalone press and cannot be
         // torn down by the &lt release.
 
-        kraise: kraise {
-            compatible = "zmk,behavior-tap-dance";
-            label = "KRAISE";
-            #binding-cells = <0>;
-            tapping-term-ms = <175>;
-            bindings = <&kp ESC>, <&tog RAISE>;
-        };
-
         // Hold Q for volume. Q cannot be a plain &lt: this config overrides &lt
         // to hold-preferred, which decides "hold" on any second key press, and
         // Q is followed by U in query, queue, quick, quit, require, unique and
@@ -235,7 +227,7 @@
             display-name = "raise";
 
             // Hold K to use temporarily, or hold K then tap Z to lock. Tap Z to leave.
-            // K itself still taps ESC here, and double-tapping K also unlocks.
+            // K itself taps ESC here. Z is the single reliable layer exit.
             // V+W on Base activates Raise for one keypress, normally to launch an app.
             // The two destructive combos now live on the bottom row: BT1+BT2 clears
             // all Bluetooth pairings, and X+G enters the bootloader.
@@ -250,7 +242,7 @@
 &kp LEFT      &kp DOWN           &kp UP        &kp RIGHT          &none               &kp BACKSPACE                                 &trans     &trans    &trans    &trans     &trans   &trans
 &kp F13       &none              &none         &kp HOME           &kp F17            &kp END                                      &kp PG_UP  &trans    &kp UP    &trans     &kp N0   &trans
 &kp F16       &ghostty_layout_1  &kp F14       &ghostty_layout_2  &ghostty_layout_3  &kp DEL                                      &kp PG_DN  &kp LEFT  &kp DOWN  &kp RIGHT  &kp DEL  &kp BSPC
-&kp F18       &kp F19            &bt BT_SEL 0  &bt BT_SEL 1       &kp F15            &ext_power EP_ON   &kraise           &trans  &trans     &trans    &trans    &trans     &trans   &trans
+&kp F18       &kp F19            &bt BT_SEL 0  &bt BT_SEL 1       &kp F15            &ext_power EP_ON   &kp ESC           &trans  &trans     &trans    &trans    &trans     &trans   &trans
                                  &tog RAISE    &mt LEFT_ALT SLASH  &mt LEFT_CONTROL ESC  &mt LEFT_COMMAND COMMA  &mt LEFT_SHIFT SPACE    &trans  &trans     &trans    &trans    &trans
             >;
 

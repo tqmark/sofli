@@ -62,7 +62,7 @@ X/Lower  G  V  W  N  I  K/Raise
 - Tap the comma thumb for comma; hold it for Left Command.
 - Tap Space for Space; hold it for Left Shift.
 - Enter is X+Space through Lower. Period is X+comma through Lower; Lower+I is also period for now.
-- Hold-tap timing is 200 ms. The remaining K tap dance uses 175 ms.
+- Hold-tap timing is 200 ms. No tap dances remain on any layer.
 - X and K use hold-preferred layer-taps so a following key selects the layer immediately instead of waiting 200 ms.
 
 ### Lower
@@ -107,7 +107,7 @@ Messages  Finder    BT1      BT2       Notes     OLED on   Esc
 - Raise+D/H/E emit Ghostty layout commands 1/2/3.
 - Raise+V/W select Bluetooth profiles 1/2.
 - Raise+I turns external power on to recover the OLED.
-- Physical K on Raise taps Escape; double-tapping it toggles Raise off.
+- Physical K on Raise taps Escape immediately. Z is the only Raise exit.
 - The Esc/Control thumb on Raise is a plain mod-tap so Ctrl chords are not delayed. Z is the reliable return to Base.
 - Base V+W gives one-shot Raise for one command.
 - Raise V+W clears the selected Bluetooth profile. Raise X+G enters the bootloader. Both destructive combos were moved away from navigation and deletion keys.
@@ -256,8 +256,9 @@ The firmware preserves quick Escape, Control, Space, and movement access because
 
 - A source-level audit of the pinned ZMK revision showed that a tap dance creates its nested mod-tap only when the dance resolves. The interrupting key has already passed the hold-tap listener, so fast Shift+letter could remain lowercase and a following hold-tap could be lost.
 - Space/Shift, comma/Command, and Raise Escape/Control became direct `&mt` bindings. Double-tap period, Enter, and Raise-to-Base were removed from those positions.
-- Enter remains readily available as X+Space. Period is X+comma, matching the preferred hold-then-tap gesture; Lower+I remains a duplicate period for now. Z and K still provide Raise recovery.
+- Enter remains readily available as X+Space. Period is X+comma, matching the preferred hold-then-tap gesture; Lower+I remains a duplicate period for now. Z remains the Raise recovery key.
 - The firmware name became `SofleL-FlatMT`, and CI gained a structural check that rejects any future custom behavior wrapping `&mt`.
+- The final K tap dance on Raise was also removed. K now sends immediate Escape, Z remains the exit, and CI rejects every tap dance on every layer.
 
 ## Decisions deliberately rejected or superseded
 
@@ -310,7 +311,7 @@ Never copy a personal SSH private key into this repository or into firmware arti
 3. Hold X, tap Z, release X, tap Q: expect `1`. Tap Z and then Q: expect `q`.
 4. Lock Lower, hold physical X for Base peek, tap Space, release X: expect one Space and return to Lower.
 5. Hold K and immediately tap Q/P/F/M: expect Left/Down/Up/Right with no leaked letters.
-6. Lock Raise with K+Z and leave with Z. Also test the K and Esc-thumb recovery paths.
+6. Lock Raise with K+Z and leave with Z. Verify physical K and the Esc thumb both send Escape without delay.
 7. Test Ctrl+1 through Ctrl+5, Cmd+1 through Cmd+6, Ctrl+Shift, Space-as-Shift, X+Space Enter, and X+comma period.
 8. Test Base L+J, Lower+D, Raise+J, Media Q+J, and repeated deletion.
 9. Type common Q words, then test Q+F/M/L for media. Normal Q+U must remain text.
