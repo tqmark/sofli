@@ -148,7 +148,7 @@ Live configuration: `~/.config/karabiner/karabiner.json`; launcher script: `~/.c
 - Right Option maps to Left Control.
 - Native Space+B/T/N/C/S/F simultaneous chords open Browser, terminal, Notes, the Slack/Telegram toggle, Settings, and Finder. Space+M remains normal typing. The chords use a 30 ms window and explicitly exclude the Sofle device (VID `0x1d50`, PID `0x615e`) plus Ghostty and Apple Terminal.
 - The Sofle emits F13-F17 and F19 from Raise. Karabiner maps them to Browser, Ghostty/Terminal, Notes, the Slack/Telegram toggle, Settings, and Finder. F18 is unused. This keeps application launching away from F1-F12 and avoids Space/Shift ambiguity on the Sofle.
-- C is the only chat shortcut. When Slack is frontmost, it opens Telegram; when Telegram is frontmost, it opens Slack; when neither is frontmost, it opens Slack if installed and otherwise Telegram. K+C uses it on the Sofle and native Space+C uses it on the Mac keyboard. Apple Messages is not used.
+- C is the only chat shortcut. When Slack is frontmost, it opens Telegram; when Telegram is frontmost, it opens Slack; when neither is frontmost, it opens Telegram if installed and otherwise Slack. K+C uses it on the Sofle and native Space+C uses it on the Mac keyboard. Apple Messages is not used.
 - Ctrl+N/P becomes Down/Up outside Ghostty and Apple Terminal.
 - Left Option+H/L focuses the previous/next macOS window in the current Space.
 - Cmd+Tab and Cmd+Shift+Tab are disabled globally. No general replacement for selecting an arbitrary running application has been chosen; this is a gap.
