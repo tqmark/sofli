@@ -144,23 +144,16 @@
         // &lt; locking moved to Z, which is a standalone press and cannot be
         // torn down by the &lt release.
 
-        // Hold Q for volume. Q cannot be a plain &lt: this config overrides &lt
-        // to hold-preferred, which decides "hold" on any second key press, and
-        // Q is followed by U in query, queue, quick, quit, require, unique and
-        // sequence. Every one of those would lose its q.
-        //
-        // hold-trigger-key-positions fixes that. decide_positional_hold() runs
-        // before the flavor logic and forces a TAP whenever the first key after
-        // Q is not in the list, so only F, M, L and J can reach the layer and
-        // anything else -- U above all -- types a plain q. That makes it safe to
-        // keep hold-preferred, so the layer is live the moment one of those four
-        // goes down, with no dwell to wait out.
-        qmedia: qmedia {
+        // Y is the Media leader because its second-row ring-finger position is
+        // easier to hold than top-row Q while the middle and index fingers use
+        // F, M, L and J. Tap-preferred deliberately requires the full 200 ms
+        // hold before Media activates, preventing ordinary Y+M and Y+L rolls
+        // from becoming media commands.
+        ymedia: ymedia {
             compatible = "zmk,behavior-hold-tap";
             #binding-cells = <2>;
-            flavor = "hold-preferred";
+            flavor = "tap-preferred";
             tapping-term-ms = <200>;
-            hold-trigger-key-positions = <2 3 4 5>;   // F, M, L, J only
             bindings = <&mo>, <&kp>;
         };
 
@@ -181,16 +174,16 @@
             display-name = "default";
 
             // Left half: all letters plus thumb tap/hold behaviors. The right half is disconnected.
-            // | Q: tap Q / hold MEDIA | P | F | M | L | J |
-            // | B | Y | U | R | S | O |
+            // | Q | P | F | M | L | J |
+            // | B | Y: tap Y / hold MEDIA | U | R | S | O |
             // | C | D | T | H | E | A |
             // | X: tap X / hold LOWER | G | V | W | N | I | K: tap K / hold RAISE |
             //     | Z | SLASH/ALT | ESC/CTRL | COMMA/CMD | SPACE/SHIFT |
             // To lock a layer: hold X (or K), then tap Z. To leave it: tap Z.
 
             bindings = <
-&qmedia MEDIA Q  &kp P  &kp F     &kp M             &kp L            &kp J                                       &kp N6     &kp N7     &kp N8     &kp N9    &kp N0    &none
-&kp B  &kp Y  &kp U     &kp R                 &kp S            &kp O                                       &kp Y      &kp U      &kp I      &kp O     &kp P     &kp BSPC
+&kp Q  &kp P  &kp F     &kp M             &kp L            &kp J                                       &kp N6     &kp N7     &kp N8     &kp N9    &kp N0    &none
+&kp B  &ymedia MEDIA Y  &kp U     &kp R                 &kp S            &kp O                                       &kp Y      &kp U      &kp I      &kp O     &kp P     &kp BSPC
 &kp C  &kp D  &kp T     &kp H                 &kp E            &kp A                                       &kp H      &kp J      &kp K      &kp L     &kp SEMI  &kp SQT
 &lt LOWER X  &kp G  &kp V     &kp W                 &kp N            &kp I          &lt RAISE K          &none      &kp N      &kp M      &kp COMMA  &kp DOT   &kp FSLH  &kp RSHFT
               &kp Z     &mt LEFT_ALT SLASH  &mt LEFT_CONTROL ESC  &mt LEFT_COMMAND COMMA  &mt LEFT_SHIFT SPACE    &kp SPACE  &mo RAISE  &kp RCTRL  &kp RALT   &kp RGUI
@@ -252,13 +245,12 @@
         media_layer {
             display-name = "media";
 
-            // Hold Q and tap one of the four keys to its right. No dwell: the
-            // layer is live the instant F, M, L or J goes down, and those four
-            // are the only keys that can reach it.
+            // Hold Y for 200 ms, then tap F, M, L or J. The deliberate dwell
+            // protects normal Y+M and Y+L typing rolls from accidental commands.
             //
-            // Reached only while Q is physically held. There is no &tog here
+            // Reached only while Y is physically held. There is no &tog here
             // and no exit key, so it is not a layer you can be stranded in.
-            // | (Q) | UNUSED | VOLUME DOWN | MUTE | VOLUME UP | BACKSPACE |
+            // | UNUSED | UNUSED | VOLUME DOWN | MUTE | VOLUME UP | BACKSPACE |
 
             bindings = <
 &none  &none  &kp C_VOL_DN  &kp C_MUTE  &kp C_VOL_UP  &kp BACKSPACE                              &trans  &trans  &trans  &trans  &trans  &trans
