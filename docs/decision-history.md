@@ -25,8 +25,9 @@ This is the durable record of the decisions made while adapting the Sofle and th
 - OLED: enabled
 - RGB and encoders: disabled
 - Bluetooth profiles: only profiles 1 and 2 are exposed
-- Keymap revision documented here: `362f3bff9ba0c4503625a8daa77b474c61dfec60`
-- Latest known successful build for that revision: [GitHub Actions run 34733958813](https://github.com/tqmark/sofli/actions/runs/34733958813)
+- Baseline before the flattened-modifier safety change: `362f3bff9ba0c4503625a8daa77b474c61dfec60`
+- Last successful build before that safety change: [GitHub Actions run 34733958813](https://github.com/tqmark/sofli/actions/runs/34733958813)
+- Firmware name after the safety change: `SofleL-FlatMT`
 
 The full Sofle matrix still appears in `config/sofle.keymap`; the right-side entries are inactive placeholders required by the shield. The layouts below show only the physical left half.
 
@@ -58,9 +59,10 @@ X/Lower  G  V  W  N  I  K/Raise
 - Hold X or K and tap Z to lock that layer. Tap Z while locked to return to Base.
 - Tap `/` for slash; hold it for Left Option.
 - Tap Esc for Escape; hold it for Left Control.
-- Tap the comma thumb for comma; hold it for Left Command; double-tap it for Enter.
-- Tap Space for Space; hold it for Left Shift; double-tap it for period.
-- Hold-tap timing is 200 ms. Tap-dance timing is 175 ms.
+- Tap the comma thumb for comma; hold it for Left Command.
+- Tap Space for Space; hold it for Left Shift.
+- Enter is X+Space through Lower. Period is X+comma through Lower; Lower+I is also period for now.
+- Hold-tap timing is 200 ms. The remaining K tap dance uses 175 ms.
 - X and K use hold-preferred layer-taps so a following key selects the layer immediately instead of waiting 200 ms.
 
 ### Lower
@@ -73,13 +75,13 @@ Hold X for temporary access. Hold X, tap Z, and release X to lock it.
 '          Backspace            ;       Rectangle-right    [  ]
 \ / Base   Rectangle-almost-max /       Rectangle-restore  ,  .  `
 
-           Z-toggle   /-Option   Esc-Control   Enter-Command   Enter-Shift
+           Z-toggle   /-Option   Esc-Control   Period-Command   Enter-Shift
 ```
 
 - Digits are arranged in reading order, making Ctrl+1 through Ctrl+5 and Cmd+1 through Cmd+6 available from one hand.
 - Lower+D is a dedicated Backspace. The Base L+J combo is deliberately unavailable here because its physical positions are digits 5+6.
 - The physical X position taps backslash. While Lower is locked, holding it temporarily reveals Base; release it to return to Lower. This is the route to Base letters and a normal Space without unlocking.
-- The two thumb positions that normally produce comma and Space both tap Enter on Lower while retaining Command and Shift when held. Duplicate Enter is intentional; a direct Lower Space was removed.
+- The comma thumb taps period and holds Command on Lower. The Space thumb taps Enter and holds Shift. A direct Lower Space was removed.
 - Apostrophe, semicolon, brackets, backslash, slash, comma, period, and grave are directly available.
 - Shift-generated variants such as `+`, `_`, colon, double quote, braces, question mark, and tilde are not duplicated as dedicated keys.
 - Rectangle-right, almost-maximize, and restore remain here, but the user considers them redundant. Their replacements are unresolved.
@@ -106,7 +108,7 @@ Messages  Finder    BT1      BT2       Notes     OLED on   Esc
 - Raise+V/W select Bluetooth profiles 1/2.
 - Raise+I turns external power on to recover the OLED.
 - Physical K on Raise taps Escape; double-tapping it toggles Raise off.
-- The Esc/Control thumb on Raise can also double-tap back to Base.
+- The Esc/Control thumb on Raise is a plain mod-tap so Ctrl chords are not delayed. Z is the reliable return to Base.
 - Base V+W gives one-shot Raise for one command.
 - Raise V+W clears the selected Bluetooth profile. Raise X+G enters the bootloader. Both destructive combos were moved away from navigation and deletion keys.
 
@@ -250,6 +252,13 @@ The firmware preserves quick Escape, Control, Space, and movement access because
 - `362f3bf` created the fourth sparse Media layer: Q+F/M/L/J for volume down, mute, volume up, and Backspace. Positional hold triggers protect normal Q typing, the layer is momentary only, and Raise stays intact.
 - The same change restored modifier hold-taps to hold-preferred so modifiers resolve when the next key goes down. Space retains its tap-dance because Ctrl+Shift worked in use and double-tap period remained useful.
 
+### 2026-09-14: flatten modifier thumbs after the hold-tap audit
+
+- A source-level audit of the pinned ZMK revision showed that a tap dance creates its nested mod-tap only when the dance resolves. The interrupting key has already passed the hold-tap listener, so fast Shift+letter could remain lowercase and a following hold-tap could be lost.
+- Space/Shift, comma/Command, and Raise Escape/Control became direct `&mt` bindings. Double-tap period, Enter, and Raise-to-Base were removed from those positions.
+- Enter remains readily available as X+Space. Period is X+comma, matching the preferred hold-then-tap gesture; Lower+I remains a duplicate period for now. Z and K still provide Raise recovery.
+- The firmware name became `SofleL-FlatMT`, and CI gained a structural check that rejects any future custom behavior wrapping `&mt`.
+
 ## Decisions deliberately rejected or superseded
 
 - Reconnecting or depending on the right half: conflicts with the physical requirement.
@@ -265,11 +274,12 @@ The firmware preserves quick Escape, Control, Space, and movement access because
 - Bluetooth clear beside arrow and deletion keys: too destructive for an editing cluster.
 - ZMK main: forced an unrelated Zephyr/board-model migration and broke the established board name.
 - Global balanced modifier hold-taps: delayed held multi-modifier chords until another key was released.
+- Mod-taps nested inside tap dances: delayed the modifier until after the outer dance resolved and could lose fast chords.
 - Five exposed Bluetooth profiles: only two are needed.
 
 ## Known issues and unresolved decisions
 
-1. **Space hold on the new Mac**: Space is a 175 ms tap-dance whose first action wraps a 200 ms Space/Shift mod-tap. The user reports that holding it no longer produces Shift. macOS Slow Keys and Sticky Keys were observed off, and Karabiner's Space launchers exclude this Sofle and terminals. The board revision remains uncertain. Diagnose before changing firmware: hold Sofle Space for one full second, keep holding it, tap A, and record whether the output is `A`, `a`, or a space plus a letter.
+1. **Space hold on the new Mac**: the previous saved design wrapped a 200 ms Space/Shift mod-tap in a 175 ms tap dance. The user reported that holding it no longer produced Shift. The saved configuration now uses a direct Space/Shift mod-tap, but the fix is unconfirmed until flashed. Hold Sofle Space for one full second, keep holding it, tap A, and expect `A`.
 2. **Firmware identity**: verify whether the board still runs `28b2d85` or a later build. Do not infer installation merely from a successful CI build or the presence of a UF2 file.
 3. **Rectangle replacements**: Lower still contains right-half, almost-maximize, and restore even though they are considered redundant. Choose a coherent replacement set after observing real missing actions.
 4. **Arbitrary app switching**: Cmd+Tab is disabled, and named launchers do not select every running application. A dependable one-handed general switcher has not been chosen.
@@ -295,13 +305,13 @@ Never copy a personal SSH private key into this repository or into firmware arti
 
 ## Regression test after flashing the saved firmware
 
-1. Tap Z to ensure Base, then type ordinary Q/U, X, K, comma, Space, and repeated versions at normal speed.
+1. Confirm macOS sees the keyboard name `SofleL-FlatMT`. Tap Z to ensure Base, then type ordinary Q/U, X, K, comma, and Space at normal speed.
 2. Hold X and immediately tap Q: expect `1`, with no leaked `x` or `q`.
 3. Hold X, tap Z, release X, tap Q: expect `1`. Tap Z and then Q: expect `q`.
 4. Lock Lower, hold physical X for Base peek, tap Space, release X: expect one Space and return to Lower.
 5. Hold K and immediately tap Q/P/F/M: expect Left/Down/Up/Right with no leaked letters.
 6. Lock Raise with K+Z and leave with Z. Also test the K and Esc-thumb recovery paths.
-7. Test Ctrl+1 through Ctrl+5, Cmd+1 through Cmd+6, Ctrl+Shift, and Space-as-Shift.
+7. Test Ctrl+1 through Ctrl+5, Cmd+1 through Cmd+6, Ctrl+Shift, Space-as-Shift, X+Space Enter, and X+comma period.
 8. Test Base L+J, Lower+D, Raise+J, Media Q+J, and repeated deletion.
 9. Type common Q words, then test Q+F/M/L for media. Normal Q+U must remain text.
 10. Test Q+P, B+Y, L+J, and V+W deliberately and during fast ordinary typing.

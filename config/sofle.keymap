@@ -20,6 +20,11 @@
 // and Space together therefore never produced an "other key up", so Ctrl sat
 // undecided until its own 200 ms timer with the Space press still queued
 // behind it. hold-preferred decides the instant Space goes down.
+//
+// Keep every &mt directly in the keymap. A tap dance that wraps &mt creates
+// the hold-tap only after the dance resolves, after the interrupting key has
+// already passed the hold-tap listener. That delayed modifiers and could drop
+// a second hold-tap entirely.
 &mt {
     flavor = "hold-preferred";
     tapping-term-ms = <200>;
@@ -131,22 +136,6 @@
     };
 
     behaviors {
-        spaceshiftdot: spaceshiftdot {
-            compatible = "zmk,behavior-tap-dance";
-            label = "SPACESHIFTDOT";
-            #binding-cells = <0>;
-            tapping-term-ms = <175>;
-            bindings = <&mt LSHIFT SPACE>, <&kp DOT>;
-        };
-
-        commacommandenter: commacommandenter {
-            compatible = "zmk,behavior-tap-dance";
-            label = "COMMACOMMANDENTER";
-            #binding-cells = <0>;
-            tapping-term-ms = <175>;
-            bindings = <&mt LEFT_COMMAND COMMA>, <&kp ENTER>;
-        };
-
         // xlayers/klayers are gone. Wrapping &lt in a tap-dance meant the dance
         // had to resolve first, and tap-dance resolves EAGERLY on any other key
         // press without buffering it. So pressing a second key inside 175 ms
@@ -161,14 +150,6 @@
             #binding-cells = <0>;
             tapping-term-ms = <175>;
             bindings = <&kp ESC>, <&tog RAISE>;
-        };
-
-        esccontrllayer0: esccontrllayer0 {
-            compatible = "zmk,behavior-tap-dance";
-            label = "ESCCONTRLLAYER0";
-            #binding-cells = <0>;
-            tapping-term-ms = <175>;
-            bindings = <&mt LEFT_CONTROL ESC>, <&to BASE>;
         };
 
         // Hold Q for volume. Q cannot be a plain &lt: this config overrides &lt
@@ -212,7 +193,7 @@
             // | B | Y | U | R | S | O |
             // | C | D | T | H | E | A |
             // | X: tap X / hold LOWER | G | V | W | N | I | K: tap K / hold RAISE |
-            //     | Z | SLASH/ALT | ESC/CTRL | COMMA/CMD; double-tap ENTER | SPACE/SHIFT |
+            //     | Z | SLASH/ALT | ESC/CTRL | COMMA/CMD | SPACE/SHIFT |
             // To lock a layer: hold X (or K), then tap Z. To leave it: tap Z.
 
             bindings = <
@@ -220,7 +201,7 @@
 &kp B  &kp Y  &kp U     &kp R                 &kp S            &kp O                                       &kp Y      &kp U      &kp I      &kp O     &kp P     &kp BSPC
 &kp C  &kp D  &kp T     &kp H                 &kp E            &kp A                                       &kp H      &kp J      &kp K      &kp L     &kp SEMI  &kp SQT
 &lt LOWER X  &kp G  &kp V     &kp W                 &kp N            &kp I          &lt RAISE K          &none      &kp N      &kp M      &kp COMMA  &kp DOT   &kp FSLH  &kp RSHFT
-              &kp Z     &mt LEFT_ALT SLASH  &mt LEFT_CONTROL ESC  &commacommandenter  &spaceshiftdot    &kp SPACE  &mo RAISE  &kp RCTRL  &kp RALT   &kp RGUI
+              &kp Z     &mt LEFT_ALT SLASH  &mt LEFT_CONTROL ESC  &mt LEFT_COMMAND COMMA  &mt LEFT_SHIFT SPACE    &kp SPACE  &mo RAISE  &kp RCTRL  &kp RALT   &kp RGUI
             >;
 
             sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp PG_UP PG_DN>;
@@ -237,14 +218,14 @@
             // Backspace is a real key here now that the L+J combo is BASE-only: on
             // this layer positions 4+5 are 5 and 6, as in 256 or 65536.
             // | BACKSLASH: tap \\ / hold BASE | ALMOST MAX | / | RESTORE | , | . | ` |
-            //     | Z: lock / unlock | SLASH/ALT | ESC/CTRL | ENTER/CMD | ENTER/SHIFT |
+            //     | Z: lock / unlock | SLASH/ALT | ESC/CTRL | PERIOD/CMD | ENTER/SHIFT |
 
             bindings = <
 &kp NUMBER_1  &kp NUMBER_2   &kp NUMBER_3  &kp NUMBER_4   &kp N5            &kp NUMBER_6                                 &kp F6     &kp F7    &kp F8     &kp F9     &kp F10   &kp F11
 &kp N7        &kp N8         &kp N9        &kp N0         &kp MINUS         &kp EQUAL                                    &kp N6     &kp N7    &kp N8     &kp N9     &kp N0    &kp F12
 &kp SQT       &kp BSPC       &kp SEMI      &kp LC(LA(L))  &kp LEFT_BRACKET  &kp RIGHT_BRACKET                            &kp CARET  &kp AMPS  &kp ASTRK  &kp LPAR   &kp RPAR  &kp PIPE
 &lower_bslash_base 0 0  &kp LC(LA(C))  &kp SLASH     &kp LC(LA(V))  &kp COMMA         &kp PERIOD         &kp GRAVE         &trans  &kp LBKT   &kp RBKT  &kp SEMI   &kp COLON  &kp BSLH  &trans
-                             &tog LOWER    &mt LEFT_ALT SLASH  &trans       &mt LEFT_COMMAND ENTER  &mt LEFT_SHIFT ENTER  &trans  &trans     &trans    &trans     &trans
+                             &tog LOWER    &mt LEFT_ALT SLASH  &trans       &mt LEFT_COMMAND DOT  &mt LEFT_SHIFT ENTER  &trans  &trans     &trans    &trans     &trans
             >;
 
             sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp PG_UP PG_DN>;
@@ -263,14 +244,14 @@
             // | BROWSER  | UNUSED | UNUSED | HOME    | SETTINGS | END      |
             // | CHAT     | GHOSTTY 1 | TERMINAL | GHOSTTY 2 | GHOSTTY 3 | DELETE |
             // | MESSAGES | FINDER | BT1 | BT2 | NOTES | DISPLAY ON | ESC |
-            //     | Z: lock / unlock | SLASH/ALT | ESC/CTRL | COMMA/CMD; double-tap ENTER | SPACE/SHIFT |
+            //     | Z: lock / unlock | SLASH/ALT | ESC/CTRL | COMMA/CMD | SPACE/SHIFT |
 
             bindings = <
 &kp LEFT      &kp DOWN           &kp UP        &kp RIGHT          &none               &kp BACKSPACE                                 &trans     &trans    &trans    &trans     &trans   &trans
 &kp F13       &none              &none         &kp HOME           &kp F17            &kp END                                      &kp PG_UP  &trans    &kp UP    &trans     &kp N0   &trans
 &kp F16       &ghostty_layout_1  &kp F14       &ghostty_layout_2  &ghostty_layout_3  &kp DEL                                      &kp PG_DN  &kp LEFT  &kp DOWN  &kp RIGHT  &kp DEL  &kp BSPC
 &kp F18       &kp F19            &bt BT_SEL 0  &bt BT_SEL 1       &kp F15            &ext_power EP_ON   &kraise           &trans  &trans     &trans    &trans    &trans     &trans   &trans
-                                 &tog RAISE    &mt LEFT_ALT SLASH  &esccontrllayer0  &commacommandenter      &spaceshiftdot    &trans  &trans     &trans    &trans    &trans
+                                 &tog RAISE    &mt LEFT_ALT SLASH  &mt LEFT_CONTROL ESC  &mt LEFT_COMMAND COMMA  &mt LEFT_SHIFT SPACE    &trans  &trans     &trans    &trans    &trans
             >;
 
             sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp PG_UP PG_DN>;
