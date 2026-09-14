@@ -2,5 +2,16 @@ name: Build ZMK firmware
 on: [push, pull_request, workflow_dispatch]
 
 jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Reject tap dances that wrap mod-taps
+        run: scripts/check-hold-tap-safety.sh
+
   build:
-    uses: zmkfirmware/zmk/.github/workflows/build-user-config.yml@main
+    needs: validate
+    # Kept in step with config/west.yml. The reusable workflow chooses the
+    # Docker image, so a ZMK revision on Zephyr 3.5 must be built by a
+    # workflow from the same era.
+    uses: zmkfirmware/zmk/.github/workflows/build-user-config.yml@abb64ba316c29caddc49727ca2cac2f0ed5970c7

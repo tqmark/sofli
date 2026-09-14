@@ -8,92 +8,169 @@
 #include <dt-bindings/zmk/bt.h>
 #include <dt-bindings/zmk/ext_power.h>
 #include <dt-bindings/zmk/keys.h>
-#include <dt-bindings/zmk/rgb.h>
 
 #define BASE 0
 #define LOWER 1
 #define RAISE 2
-#define ADJUST 3
+#define MEDIA 3
+
+// hold-preferred is &mt's own default, restored here deliberately after a
+// detour through balanced. balanced only decides on the OTHER key's release,
+// and a hold-tap captures every later keypress while undecided. Holding Ctrl
+// and Space together therefore never produced an "other key up", so Ctrl sat
+// undecided until its own 200 ms timer with the Space press still queued
+// behind it. hold-preferred decides the instant Space goes down.
+//
+// Keep every &mt directly in the keymap. A tap dance that wraps &mt creates
+// the hold-tap only after the dance resolves, after the interrupting key has
+// already passed the hold-tap listener. That delayed modifiers and could drop
+// a second hold-tap entirely.
+&mt {
+    flavor = "hold-preferred";
+    tapping-term-ms = <200>;
+};
+
+// hold-preferred so the layer engages the moment a second key goes down.
+// The default, tap-preferred, only resolves on timeout, which meant every
+// Lower/Raise access cost a full 200 ms dwell before the layer was live.
+&lt {
+    flavor = "hold-preferred";
+    tapping-term-ms = <200>;
+};
 
 / {
-    // Activate ADJUST layer by pressing raise and lower
-
-    conditional_layers {
-        compatible = "zmk,conditional-layers";
-
-        adjust_layer {
-            if-layers = <LOWER RAISE>;
-            then-layer = <ADJUST>;
+    macros {
+        ghostty_layout_1: ghostty_layout_1 {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            wait-ms = <40>;
+            tap-ms = <40>;
+            bindings = <&kp LC(A) &kp N1>;
         };
+
+        ghostty_layout_2: ghostty_layout_2 {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            wait-ms = <40>;
+            tap-ms = <40>;
+            bindings = <&kp LC(A) &kp N2>;
+        };
+
+        ghostty_layout_3: ghostty_layout_3 {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            wait-ms = <40>;
+            tap-ms = <40>;
+            bindings = <&kp LC(A) &kp N3>;
+        };
+
+        lower_base_peek: lower_base_peek {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            wait-ms = <0>;
+            tap-ms = <0>;
+            bindings
+                = <&macro_tap &tog LOWER>
+                , <&macro_pause_for_release>
+                , <&macro_tap &tog LOWER>
+                ;
+        };
+
+        lower_bslash_tap: lower_bslash_tap {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp BSLH>;
+        };
+
     };
 
     combos {
         compatible = "zmk,combos";
 
+        // Combos match key POSITIONS, not letters, so an unscoped combo also
+        // fires on Lower's number row and Raise's arrows. Everything benign is
+        // pinned to BASE: <0 1> is 1+2 on Lower and Left+Down on Raise, <4 5>
+        // is 5+6 on Lower (as in 256, 65536) and <12 13> is 7+8.
         grave {
             bindings = <&kp GRAVE>;
             key-positions = <0 1>;
+            layers = <BASE>;
         };
 
         backspace {
             bindings = <&kp BACKSPACE>;
             key-positions = <4 5>;
+            layers = <BASE>;
         };
 
         tab {
             bindings = <&kp TAB>;
             key-positions = <12 13>;
+            layers = <BASE>;
+        };
+
+        raise_once {
+            bindings = <&sl RAISE>;
+            key-positions = <38 39>;
+            layers = <BASE>;
+        };
+
+        // Both destructive combos used to sit on the editing keys: <0 5> was
+        // Left-arrow + Backspace, and <4 5> was the same L+J chord trained as
+        // Backspace elsewhere, one slip from dropping into UF2 with no HID.
+        // Moved onto the bottom row, where they are deliberate finger presses
+        // and never occur while navigating or deleting.
+        clear_bluetooth {          // BT1 + BT2 together
+            bindings = <&bt BT_CLR>;
+            key-positions = <38 39>;
+            layers = <RAISE>;
+            timeout-ms = <50>;
+        };
+
+        bootloader_combo {         // X + G on Raise, bottom row
+            bindings = <&bootloader>;
+            key-positions = <36 37>;
+            layers = <RAISE>;
+            timeout-ms = <150>;
         };
     };
 
     behaviors {
-        spaceshiftdot: spaceshiftdot {
-            compatible = "zmk,behavior-tap-dance";
-            label = "SPACESHIFTDOT";
-            #binding-cells = <0>;
-            bindings = <&mt LSHIFT SPACE>, <&kp DOT>;
+        // xlayers/klayers are gone. Wrapping &lt in a tap-dance meant the dance
+        // had to resolve first, and tap-dance resolves EAGERLY on any other key
+        // press without buffering it. So pressing a second key inside 175 ms
+        // leaked the base letter through before the layer was live, and waiting
+        // it out cost 175 ms + the hold-tap's own 200 ms. X and K are now plain
+        // &lt; locking moved to Z, which is a standalone press and cannot be
+        // torn down by the &lt release.
+
+        // Hold Q for volume. Q cannot be a plain &lt: this config overrides &lt
+        // to hold-preferred, which decides "hold" on any second key press, and
+        // Q is followed by U in query, queue, quick, quit, require, unique and
+        // sequence. Every one of those would lose its q.
+        //
+        // hold-trigger-key-positions fixes that. decide_positional_hold() runs
+        // before the flavor logic and forces a TAP whenever the first key after
+        // Q is not in the list, so only F, M, L and J can reach the layer and
+        // anything else -- U above all -- types a plain q. That makes it safe to
+        // keep hold-preferred, so the layer is live the moment one of those four
+        // goes down, with no dwell to wait out.
+        qmedia: qmedia {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <2>;
+            flavor = "hold-preferred";
+            tapping-term-ms = <200>;
+            hold-trigger-key-positions = <2 3 4 5>;   // F, M, L, J only
+            bindings = <&mo>, <&kp>;
         };
 
-        optionquestion: optionquestion {
-            compatible = "zmk,behavior-tap-dance";
-            label = "OPTIONQUESTION";
-            #binding-cells = <0>;
-            bindings = <&mt LEFT_ALT SLASH>, <&mo 1>;
-        };
-
-        entercommand: entercommand {
-            compatible = "zmk,behavior-tap-dance";
-            label = "ENTERCOMMAND";
-            #binding-cells = <0>;
-            bindings = <&mt LEFT_COMMAND ENTER>, <&kp COMMA>;
-        };
-
-        Ienter: Ienter {
-            compatible = "zmk,behavior-tap-dance";
-            label = "IENTER";
-            #binding-cells = <0>;
-            bindings = <&kp I>, <&kp ENTER>;
-        };
-
-        klayer1: klayer1 {
-            compatible = "zmk,behavior-tap-dance";
-            label = "KLAYER1";
-            #binding-cells = <0>;
-            bindings = <&kp K>, <&to 1>;
-        };
-
-        zlayer2: zlayer2 {
-            compatible = "zmk,behavior-tap-dance";
-            label = "ZLAYER2";
-            #binding-cells = <0>;
-            bindings = <&kp Z>, <&to 2>;
-        };
-
-        esccontrllayer0: esccontrllayer0 {
-            compatible = "zmk,behavior-tap-dance";
-            label = "ESCCONTRLLAYER0";
-            #binding-cells = <0>;
-            bindings = <&mt LEFT_CONTROL ESC>, <&to 0>;
+        lower_bslash_base: lower_bslash_base {
+            compatible = "zmk,behavior-hold-tap";
+            label = "LOWER_BSLASH_BASE";
+            #binding-cells = <2>;
+            flavor = "hold-preferred";
+            tapping-term-ms = <200>;
+            bindings = <&lower_base_peek>, <&lower_bslash_tap>;
         };
     };
 
@@ -103,19 +180,20 @@
         default_layer {
             display-name = "default";
 
-            // ------------------------------------------------------------------------------------------------------------
-            // |   `   |  1  |  2  |  3   |  4   |  5   |                   |  6   |  7    |  8    |  9   |   0   |       |
-            // |  ESC  |  Q  |  W  |  E   |  R   |  T   |                   |  Y   |  U    |  I    |  O   |   P   | BKSPC |
-            // |  TAB  |  A  |  S  |  D   |  F   |  G   |                   |  H   |  J    |  K    |  L   |   ;   |   '   |
-            // | SHIFT |  Z  |  X  |  C   |  V   |  B   |  MUTE  |  |       |  N   |  M    |  ,    |  .   |   /   | SHIFT |
-            //               | GUI | ALT  | CTRL | LOWER|  ENTER |  | SPACE | RAISE| CTRL  | ALT   | GUI  |
+            // Left half: all letters plus thumb tap/hold behaviors. The right half is disconnected.
+            // | Q: tap Q / hold MEDIA | P | F | M | L | J |
+            // | B | Y | U | R | S | O |
+            // | C | D | T | H | E | A |
+            // | X: tap X / hold LOWER | G | V | W | N | I | K: tap K / hold RAISE |
+            //     | Z | SLASH/ALT | ESC/CTRL | COMMA/CMD | SPACE/SHIFT |
+            // To lock a layer: hold X (or K), then tap Z. To leave it: tap Z.
 
             bindings = <
-&kp Q  &kp P  &kp F    &kp M                 &kp L            &kp J                                       &kp N6     &kp N7     &kp N8     &kp N9    &kp N0    &none
-&kp B  &kp Y  &kp U    &kp R                 &kp S            &kp O                                       &kp Y      &kp U      &kp I      &kp O     &kp P     &kp BSPC
-&kp C  &kp D  &kp T    &kp H                 &kp E            &kp A                                       &kp H      &kp J      &kp K      &kp L     &kp SEMI  &kp SQT
-&kp X  &kp G  &kp V    &kp W                 &lt 1 N          &kp I          &klayer1          &none      &kp N      &kp M      &kp COMMA  &kp DOT   &kp FSLH  &kp RSHFT
-              &lt 1 Z  &mt LEFT_CONTROL ESC  &optionquestion  &entercommand  &spaceshiftdot    &kp SPACE  &mo RAISE  &kp RCTRL  &kp RALT   &kp RGUI
+&qmedia MEDIA Q  &kp P  &kp F     &kp M             &kp L            &kp J                                       &kp N6     &kp N7     &kp N8     &kp N9    &kp N0    &none
+&kp B  &kp Y  &kp U     &kp R                 &kp S            &kp O                                       &kp Y      &kp U      &kp I      &kp O     &kp P     &kp BSPC
+&kp C  &kp D  &kp T     &kp H                 &kp E            &kp A                                       &kp H      &kp J      &kp K      &kp L     &kp SEMI  &kp SQT
+&lt LOWER X  &kp G  &kp V     &kp W                 &kp N            &kp I          &lt RAISE K          &none      &kp N      &kp M      &kp COMMA  &kp DOT   &kp FSLH  &kp RSHFT
+              &kp Z     &mt LEFT_ALT SLASH  &mt LEFT_CONTROL ESC  &mt LEFT_COMMAND COMMA  &mt LEFT_SHIFT SPACE    &kp SPACE  &mo RAISE  &kp RCTRL  &kp RALT   &kp RGUI
             >;
 
             sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp PG_UP PG_DN>;
@@ -124,20 +202,22 @@
         lower_layer {
             display-name = "lower";
 
-            // TODO: Some binds are waiting for shifted keycode support.
-            // ------------------------------------------------------------------------------------------------------------
-            // |       |  F1 |  F2 |  F3  |  F4  |  F5  |                   |  F6  |  F7   |  F8   |  F9  |  F10  |  F11  |
-            // |   `   |  1  |  2  |  3   |  4   |  5   |                   |  6   |  7    |  8    |  9   |   0   |  F12  |
-            // |       |  !  |  @  |  #   |  $   |  %   |                   |  ^   |  &    |  *    |  (   |   )   |   |   |
-            // |       |  =  |  -  |  +   |  {   |  }   |        |  |       |  [   |  ]    |  ;    |  :   |   \   |       |
-            //               |     |      |      |      |        |  |       |      |       |       |      |
+            // Left half:
+            // | 1 | 2 | 3 | 4 | 5 | 6 |
+            // | 7 | 8 | 9 | 0 | - | = |
+            // | ' | BACKSPACE | ; | WINDOW RIGHT | [ | ] |
+            // Hold X to use temporarily, or hold X then tap Z to lock. Tap Z to leave.
+            // Backspace is a real key here now that the L+J combo is BASE-only: on
+            // this layer positions 4+5 are 5 and 6, as in 256 or 65536.
+            // | BACKSLASH: tap \\ / hold BASE | ALMOST MAX | / | RESTORE | , | . | ` |
+            //     | Z: lock / unlock | SLASH/ALT | ESC/CTRL | PERIOD/CMD | ENTER/SHIFT |
 
             bindings = <
-&kp NUMBER_1    &kp NUMBER_2  &kp NUMBER_3  &kp NUMBER_4          &kp N5            &kp NUMBER_6                                 &kp F6     &kp F7    &kp F8     &kp F9     &kp F10   &kp F11
-&kp N7          &kp N8        &kp N9        &kp N0                &kp MINUS         &kp EQUAL                                    &kp N6     &kp N7    &kp N8     &kp N9     &kp N0    &kp F12
-&kp GRAVE       &kp NUMBER_8  &kp N9        &kp NON_US_BACKSLASH  &kp LEFT_BRACKET  &kp RIGHT_BRACKET                            &kp CARET  &kp AMPS  &kp ASTRK  &kp LPAR   &kp RPAR  &kp PIPE
-&kp LEFT_SHIFT  &to 2         &kp MINUS     &kp PLUS              &kp COMMA         &kp PERIOD         &kp SLASH         &trans  &kp LBKT   &kp RBKT  &kp SEMI   &kp COLON  &kp BSLH  &trans
-                              &to 0         &esccontrllayer0      &optionquestion   &entercommand      &spaceshiftdot    &trans  &trans     &trans    &trans     &trans
+&kp NUMBER_1  &kp NUMBER_2   &kp NUMBER_3  &kp NUMBER_4   &kp N5            &kp NUMBER_6                                 &kp F6     &kp F7    &kp F8     &kp F9     &kp F10   &kp F11
+&kp N7        &kp N8         &kp N9        &kp N0         &kp MINUS         &kp EQUAL                                    &kp N6     &kp N7    &kp N8     &kp N9     &kp N0    &kp F12
+&kp SQT       &kp BSPC       &kp SEMI      &kp LC(LA(L))  &kp LEFT_BRACKET  &kp RIGHT_BRACKET                            &kp CARET  &kp AMPS  &kp ASTRK  &kp LPAR   &kp RPAR  &kp PIPE
+&lower_bslash_base 0 0  &kp LC(LA(C))  &kp SLASH     &kp LC(LA(V))  &kp COMMA         &kp PERIOD         &kp GRAVE         &trans  &kp LBKT   &kp RBKT  &kp SEMI   &kp COLON  &kp BSLH  &trans
+                             &tog LOWER    &mt LEFT_ALT SLASH  &trans       &mt LEFT_COMMAND DOT  &mt LEFT_SHIFT ENTER  &trans  &trans     &trans    &trans     &trans
             >;
 
             sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp PG_UP PG_DN>;
@@ -146,40 +226,49 @@
         raise_layer {
             display-name = "raise";
 
-            // ------------------------------------------------------------------------------------------------------------
-            // | BTCLR | BT1  | BT2  |  BT3  |  BT4  |  BT5 |                |      |      |       |      |       |       |
-            // |       | INS  | PSCR | GUI   |       |      |                | PGUP |      |   ^   |      |       |       |
-            // |       | ALT  | CTRL | SHIFT |       | CAPS |                | PGDN |   <- |   v   |  ->  |  DEL  | BKSPC |
-            // |       | UNDO | CUT  | COPY  | PASTE |      |      |  |      |      |      |       |      |       |       |
-            //                |      |       |       |      |      |  |      |      |      |       |      |
+            // Hold K to use temporarily, or hold K then tap Z to lock. Tap Z to leave.
+            // K itself taps ESC here. Z is the single reliable layer exit.
+            // V+W on Base activates Raise for one keypress, normally to launch an app.
+            // The two destructive combos now live on the bottom row: BT1+BT2 clears
+            // all Bluetooth pairings, and X+G enters the bootloader.
+            // Neither can be hit while arrowing or deleting on the top row.
+            // | LEFT     | DOWN | UP       | RIGHT    | UNUSED | BACKSPACE  |
+            // | BROWSER  | UNUSED | UNUSED | HOME    | SETTINGS | END      |
+            // | CHAT     | GHOSTTY 1 | TERMINAL | GHOSTTY 2 | GHOSTTY 3 | DELETE |
+            // | UNUSED   | FINDER | BT1 | BT2 | NOTES | DISPLAY ON | ESC |
+            //     | Z: lock / unlock | SLASH/ALT | ESC/CTRL | COMMA/CMD | SPACE/SHIFT |
 
             bindings = <
-&bt BT_CLR  &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2      &bt BT_SEL 3     &bt BT_SEL 4                             &trans     &trans    &trans    &trans     &trans   &trans
-&trans      &kp INS       &kp PSCRN     &kp K_CMENU       &trans           &trans                                   &kp PG_UP  &trans    &kp UP    &trans     &kp N0   &trans
-&trans      &kp LALT      &kp LCTRL     &kp LSHFT         &trans           &kp CLCK                                 &kp PG_DN  &kp LEFT  &kp DOWN  &kp RIGHT  &kp DEL  &kp BSPC
-&trans      &kp K_UNDO    &kp K_CUT     &kp K_COPY        &kp K_PASTE      &trans         &to 0             &trans  &trans     &trans    &trans    &trans     &trans   &trans
-                          &to 0         &esccontrllayer0  &optionquestion  &entercommand  &spaceshiftdot    &trans  &trans     &trans    &trans    &trans
+&kp LEFT      &kp DOWN           &kp UP        &kp RIGHT          &none               &kp BACKSPACE                                 &trans     &trans    &trans    &trans     &trans   &trans
+&kp F13       &none              &none         &kp HOME           &kp F17            &kp END                                      &kp PG_UP  &trans    &kp UP    &trans     &kp N0   &trans
+&kp F16       &ghostty_layout_1  &kp F14       &ghostty_layout_2  &ghostty_layout_3  &kp DEL                                      &kp PG_DN  &kp LEFT  &kp DOWN  &kp RIGHT  &kp DEL  &kp BSPC
+&none         &kp F19            &bt BT_SEL 0  &bt BT_SEL 1       &kp F15            &ext_power EP_ON   &kp ESC           &trans  &trans     &trans    &trans    &trans     &trans   &trans
+                                 &tog RAISE    &mt LEFT_ALT SLASH  &mt LEFT_CONTROL ESC  &mt LEFT_COMMAND COMMA  &mt LEFT_SHIFT SPACE    &trans  &trans     &trans    &trans    &trans
             >;
 
             sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp PG_UP PG_DN>;
         };
 
-        adjust_layer {
-            // ----------------------------------------------------------------------------------------------------------------------------
-            // | BTCLR  |  BT1    |  BT2    |   BT3   |   BT4   |   BT5   |                  |      |      |       |      |       |       |
-            // | EXTPWR | RGB_HUD | RGB_HUI | RGB_SAD | RGB_SAI | RGB_EFF |                  |      |      |       |      |       |       |
-            // |        | RGB_BRD | RGB_BRI |         |         |         |                  |      |      |       |      |       |       |
-            // |        |         |         |         |         |         | RGB_TOG | |      |      |      |       |      |       |       |
-            //                    |         |         |         |         |         | |      |      |      |       |      |
+        media_layer {
+            display-name = "media";
 
-            display-name = "adjust";
+            // Hold Q and tap one of the four keys to its right. No dwell: the
+            // layer is live the instant F, M, L or J goes down, and those four
+            // are the only keys that can reach it.
+            //
+            // Reached only while Q is physically held. There is no &tog here
+            // and no exit key, so it is not a layer you can be stranded in.
+            // | (Q) | UNUSED | VOLUME DOWN | MUTE | VOLUME UP | BACKSPACE |
+
             bindings = <
-&bt BT_CLR         &bt BT_SEL 0     &bt BT_SEL 1     &bt BT_SEL 2     &bt BT_SEL 3     &bt BT_SEL 4                               &none  &none  &none  &none  &none  &none
-&ext_power EP_TOG  &rgb_ug RGB_HUD  &rgb_ug RGB_HUI  &rgb_ug RGB_SAD  &rgb_ug RGB_SAI  &rgb_ug RGB_EFF                            &none  &none  &none  &none  &none  &none
-&none              &rgb_ug RGB_BRD  &rgb_ug RGB_BRI  &none            &none            &none                                      &none  &none  &none  &none  &none  &none
-&none              &none            &none            &none            &none            &none            &rgb_ug RGB_TOG    &none  &none  &none  &none  &none  &none  &none
-                                    &none            &none            &none            &none            &none              &none  &none  &none  &none  &none
+&none  &none  &kp C_VOL_DN  &kp C_MUTE  &kp C_VOL_UP  &kp BACKSPACE                              &trans  &trans  &trans  &trans  &trans  &trans
+&none  &none  &none         &none       &none         &none                                      &trans  &trans  &trans  &trans  &trans  &trans
+&none  &none  &none         &none       &none         &none                                      &trans  &trans  &trans  &trans  &trans  &trans
+&none  &none  &none         &none       &none         &none         &none                        &trans  &trans  &trans  &trans  &trans  &trans  &trans
+              &none         &none       &none         &none         &none                        &trans  &trans  &trans  &trans  &trans
             >;
+
+            sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp PG_UP PG_DN>;
         };
     };
 };
