@@ -30,7 +30,7 @@ This works because ZMK resolves a position from the highest active layer; after 
 | Physical position | Current Raise action | Proposed action | Resolution |
 | --- | --- | --- | --- |
 | `H` | Ghostty layout 2 | Left | Move layout 2 to one of the unused Raise positions, preferably physical `U` |
-| `J` | Backspace | Down | Remove this duplicate; Backspace remains available through Base `L+J`, Lower `D`, and Media `Q+J` |
+| `J` | Backspace | Down | Remove this duplicate; Backspace remains available through Base `L+J`, Lower `D`, and Media `Y+J` |
 | `K` | Escape / Raise-off tap dance | Up | Use `Z` as the existing reliable layer exit; the Escape/Control thumb still supplies Escape |
 | `L` | Unused | Right | No displacement |
 

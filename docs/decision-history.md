@@ -114,7 +114,7 @@ unused    Finder    BT1      BT2       Notes     OLED on   Esc
 
 ### Media
 
-Q remains a normal letter unless the next key is F, M, L, or J. Hold Q and tap:
+Q is now a normal key. Hold Y for 200 ms, then tap:
 
 ```text
 F  Volume Down
@@ -123,7 +123,7 @@ L  Volume Up
 J  Backspace
 ```
 
-This fourth layer was approved after the earlier three-layer simplification because it is sparse, momentary, and cannot trap the user. It preserves the Raise arrow cluster. A positional hold trigger forces normal text for every other key following Q, protecting common `qu` words such as `query`, `quick`, and `require`. A listed media key activates the layer immediately; a standalone Q hold resolves after 200 ms. Releasing Q always returns to Base.
+This fourth layer was approved after the earlier three-layer simplification because it is sparse, momentary, and cannot trap the user. It preserves the Raise arrow cluster. Y's second-row ring-finger position is easier to hold than top-row Q while the middle and index fingers operate F/M/L/J. Media activates only after a deliberate 200 ms hold; this prevents ordinary Y+M or Y+L rolls from becoming commands. Releasing Y always returns to Base.
 
 ### Combos
 
@@ -148,7 +148,7 @@ Live configuration: `~/.config/karabiner/karabiner.json`; launcher script: `~/.c
 - Right Option maps to Left Control.
 - Native Space+B/T/N/C/S/F simultaneous chords open Browser, terminal, Notes, the Slack/Telegram toggle, Settings, and Finder. Space+M remains normal typing. The chords use a 30 ms window and explicitly exclude the Sofle device (VID `0x1d50`, PID `0x615e`) plus Ghostty and Apple Terminal.
 - The Sofle emits F13-F17 and F19 from Raise. Karabiner maps them to Browser, Ghostty/Terminal, Notes, the Slack/Telegram toggle, Settings, and Finder. F18 is unused. This keeps application launching away from F1-F12 and avoids Space/Shift ambiguity on the Sofle.
-- C is the only chat shortcut. When Slack is frontmost, it opens Telegram; when Telegram is frontmost, it opens Slack; when neither is frontmost, it opens Slack if installed and otherwise Telegram. K+C uses it on the Sofle and native Space+C uses it on the Mac keyboard. Apple Messages is not used.
+- C is the only chat shortcut. When Slack is frontmost, it opens Telegram; when Telegram is frontmost, it opens Slack; when neither is frontmost, it opens Telegram if installed and otherwise Slack. K+C uses it on the Sofle and native Space+C uses it on the Mac keyboard. Apple Messages is not used.
 - Ctrl+N/P becomes Down/Up outside Ghostty and Apple Terminal.
 - Left Option+H/L focuses the previous/next macOS window in the current Space.
 - Cmd+Tab and Cmd+Shift+Tab are disabled globally. No general replacement for selecting an arbitrary running application has been chosen; this is a gap.
@@ -261,6 +261,7 @@ The firmware preserves quick Escape, Control, Space, and movement access because
 - The firmware name became `SofleL-FlatMT`, and CI gained a structural check that rejects any future custom behavior wrapping `&mt`.
 - The final K tap dance on Raise was also removed. K now sends immediate Escape, Z remains the exit, and CI rejects every tap dance on every layer.
 - The shared Karabiner chat launcher became a Slack/Telegram toggle based on the frontmost app. A separate direct-Telegram action was rejected: C is the only chat shortcut, K+X is unused, and native Space+M remains normal typing.
+- The Media leader moved from top-row Q to second-row Y for an easier ring-finger hold. Unlike the former instant positional trigger, Y requires a deliberate 200 ms hold so normal Y+M and Y+L typing cannot trigger media commands.
 
 ## Decisions deliberately rejected or superseded
 
@@ -286,7 +287,7 @@ The firmware preserves quick Escape, Control, Space, and movement access because
 2. **Firmware identity**: verify whether the board still runs `28b2d85` or a later build. Do not infer installation merely from a successful CI build or the presence of a UF2 file.
 3. **Rectangle replacements**: Lower still contains right-half, almost-maximize, and restore even though they are considered redundant. Choose a coherent replacement set after observing real missing actions.
 4. **Arbitrary app switching**: Cmd+Tab is disabled, and named launchers do not select every running application. A dependable one-handed general switcher has not been chosen.
-5. **Deletion comfort**: Base L+J, Lower+D, Raise+J, and Media Q+J provide several routes, but repeated-deletion comfort has not been measured.
+5. **Deletion comfort**: Base L+J, Lower+D, Raise+J, and Media Y+J provide several routes, but repeated-deletion comfort has not been measured.
 6. **Combo accidents**: Q+P, L+J, and B+Y need normal-speed typing tests for false activation.
 7. **USB wake repeat**: an older report said the first key after about 30 seconds over USB could repeat. Cause and current status are unknown.
 8. **OLED**: it was blank during setup and recovered after settings/power experiments. Raise+I exists as a safe power-on path; continued reliability is unconfirmed.
@@ -315,8 +316,8 @@ Never copy a personal SSH private key into this repository or into firmware arti
 5. Hold K and immediately tap Q/P/F/M: expect Left/Down/Up/Right with no leaked letters.
 6. Lock Raise with K+Z and leave with Z. Verify physical K and the Esc thumb both send Escape without delay.
 7. Test Ctrl+1 through Ctrl+5, Cmd+1 through Cmd+6, Ctrl+Shift, Space-as-Shift, X+Space Enter, and X+comma period.
-8. Test Base L+J, Lower+D, Raise+J, Media Q+J, and repeated deletion.
-9. Type common Q words, then test Q+F/M/L for media. Normal Q+U must remain text.
+8. Test Base L+J, Lower+D, Raise+J, Media Y+J, and repeated deletion.
+9. Type common Q words plus words containing Y+M and Y+L. Then hold Y for 200 ms and test Y+F/M/L/J for media.
 10. Test Q+P, B+Y, L+J, and V+W deliberately and during fast ordinary typing.
 11. Test BT1 and BT2 selection/pairing, USB wake, OLED power-on, and app bridge keys.
 12. Test Bluetooth clear and bootloader only when prepared for their destructive or disruptive effects.
