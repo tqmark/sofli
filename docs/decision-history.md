@@ -31,6 +31,14 @@ This is the durable record of the decisions made while adapting the Sofle and th
 
 The full Sofle matrix still appears in `config/sofle.keymap`; the right-side entries are inactive placeholders required by the shield. The layouts below show only the physical left half.
 
+### Automatic power saving
+
+- The OLED blanks after about 30 seconds without activity and turns back on when typing resumes.
+- Deep sleep is enabled after 15 minutes of inactivity on battery (`CONFIG_ZMK_SLEEP=y`, `CONFIG_ZMK_IDLE_SLEEP_TIMEOUT=900000`).
+- The pinned ZMK activity handler prevents deep sleep while USB power is present, including USB charging while using Bluetooth.
+- On battery, deep sleep disconnects Bluetooth; a matrix key press wakes the keyboard and it reconnects. The wake press may not be typed, and a reboot returns to Base. Saved Bluetooth pairings are retained.
+- These settings take effect separately on each keyboard after it is flashed. Real battery sleep/wake behavior still needs a physical test.
+
 ### Saved versus flashed
 
 “Saved” means present in Git. “Confirmed flashed” means explicitly verified on the physical board. These are not interchangeable.
@@ -263,6 +271,10 @@ The firmware preserves quick Escape, Control, Space, and movement access because
 - The shared Karabiner chat launcher became a Slack/Telegram toggle based on the frontmost app. A separate direct-Telegram action was rejected: C is the only chat shortcut, K+X is unused, and native Space+M remains normal typing.
 - The Media leader moved from top-row Q to second-row Y for an easier ring-finger hold. Unlike the former instant positional trigger, Y requires a deliberate 200 ms hold so normal Y+M and Y+L typing cannot trigger media commands.
 
+### 2026-09-17: automatic battery sleep
+
+- Enabled the pinned ZMK deep-sleep support after 15 minutes idle so an unused keyboard consumes less battery overnight. The existing 30-second OLED blanking remains; USB power prevents deep sleep. The firmware must be flashed to each Sofle separately.
+
 ## Decisions deliberately rejected or superseded
 
 - Reconnecting or depending on the right half: conflicts with the physical requirement.
@@ -321,3 +333,4 @@ Never copy a personal SSH private key into this repository or into firmware arti
 10. Test Q+P, B+Y, L+J, and V+W deliberately and during fast ordinary typing.
 11. Test BT1 and BT2 selection/pairing, USB wake, OLED power-on, and app bridge keys.
 12. Test Bluetooth clear and bootloader only when prepared for their destructive or disruptive effects.
+13. On battery, leave the keyboard untouched for just over 15 minutes, then press a matrix key and confirm Bluetooth reconnects and normal typing resumes. Separately confirm USB-powered operation stays awake past the same timeout.
