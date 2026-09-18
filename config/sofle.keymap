@@ -65,17 +65,11 @@
 
         // Combos match key POSITIONS, not letters, so an unscoped combo also
         // fires on other layers. Everything benign is pinned to BASE: <0 1>
-        // is 1+2 on Lower and BT0+BT1 on Raise; <4 5> is 5+6 on Lower
-        // (as in 256, 65536) and Right+Down on Navigation/Media.
+        // is 1+2 on Lower and BT0+BT1 on Raise; <12 13> is 7+8 on Lower.
+        // L+J has no combo; Backspace is the held-Y, tapped-O gesture.
         grave {
             bindings = <&kp GRAVE>;
             key-positions = <0 1>;
-            layers = <BASE>;
-        };
-
-        backspace {
-            bindings = <&kp BACKSPACE>;
-            key-positions = <4 5>;
             layers = <BASE>;
         };
 
@@ -175,8 +169,8 @@
             // | 7 | 8 | 9 | 0 | - | = |
             // | ' | UNUSED | ; | TAB | , | CTRL+A |
             // Hold X to use temporarily, or hold X then tap Z to lock. Tap Z to leave.
-            // Backspace is on Y+O from Base. L+J remains BASE-only to preserve
-            // Lower's digits 5+6. Shift+Tab uses the Shift thumb plus H/Tab.
+            // Backspace is on Y+O from Base; L+J no longer has a combo.
+            // Shift+Tab uses the Shift thumb plus H/Tab.
             // | BACKSLASH: tap \\ / hold BASE | UNUSED | BACKSLASH | UNUSED | [ | ] | ` |
             // V makes backslash/pipe reachable while X is held. Slash is on
             // the Option thumb; period is on the Command thumb.

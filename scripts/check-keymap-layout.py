@@ -85,7 +85,6 @@ def validate(source):
     # Existing combo scope and recovery gestures must not follow moved selectors.
     expected_combos = {
         "grave": ("0 1", "BASE", "&kp GRAVE", None),
-        "backspace": ("4 5", "BASE", "&kp BACKSPACE", None),
         "tab": ("12 13", "BASE", "&kp TAB", None),
         "raise_once": ("38 39", "BASE", "&sl RAISE", None),
         "clear_bluetooth": ("38 39", "RAISE", "&bt BT_CLR", "50"),

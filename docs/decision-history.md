@@ -90,7 +90,7 @@ Hold X for temporary access. Hold X, tap Z, and release X to lock it.
 ```
 
 - Digits are arranged in reading order, making Ctrl+1 through Ctrl+5 and Cmd+1 through Cmd+6 available from one hand.
-- Lower+D is unused; Backspace moved to Y+O. The Base L+J combo remains unavailable here because its positions are digits 5+6. For deletion, release temporary Lower before holding Y and tapping O. If Lower is locked, tap Z to exit first (or hold X for Base peek); pressing Y directly on Lower types `8`.
+- Lower+D is unused; Backspace is Y+O and the L+J combo has been removed entirely. For deletion, release temporary Lower before holding Y and tapping O. If Lower is locked, tap Z to exit first (or hold X for Base peek); pressing Y directly on Lower types `8`.
 - The physical X position taps backslash. While Lower is locked, holding it temporarily reveals Base; release it to return to Lower. This is the route to Base letters and a normal Space without unlocking.
 - The comma thumb taps period and holds Command on Lower. The Space thumb taps Enter and holds Shift. A direct Lower Space was removed.
 - Apostrophe, semicolon, brackets, backslash, slash, comma, period, and grave are directly available.
@@ -143,13 +143,12 @@ O        Backspace
 ### Combos
 
 - Base Q+P: grave accent
-- Base L+J: Backspace
 - Base B+Y: Tab
 - Base V+W: one-shot Raise
 - Raise V+W: clear selected Bluetooth profile, 50 ms combo window
 - Raise X+G: bootloader, 150 ms combo window
 
-The benign combos are scoped to Base because ZMK combos follow physical positions, not letters. Without scoping, Q+P would overlap Lower 1+2 and Raise BT0+BT1, L+J would overlap Lower 5+6 and Navigation/Media Right+Down, and B+Y would overlap Lower 7+8. Caps Lock and Caps Word were removed because they were not needed.
+The benign combos are scoped to Base because ZMK combos follow physical positions, not letters. Without scoping, Q+P would overlap Lower 1+2 and Raise BT0+BT1, and B+Y would overlap Lower 7+8. L+J no longer triggers a combo on any layer: on Base it sends the normal letters. Caps Lock and Caps Word were removed because they were not needed.
 
 ## macOS integration decisions
 
@@ -297,6 +296,7 @@ The firmware preserves quick Escape, Control, Space, and movement access because
 - Removed Lower+D Backspace and Lower+W Shift+Tab. Tab remains H; Shift+Tab uses the Shift thumb. Removing Lower Backspace means leaving Lower (or using Base peek) before Y+O.
 - Raise keeps the six app bridges, OLED recovery, Escape, and its existing thumb/lock behaviors. The two existing Bluetooth selectors moved from V/W to Q/P and are now explicitly labeled BT0/BT1. Removed duplicate arrows, selection, Backspace, and forward Delete. V+W still clears the selected Bluetooth profile; X+G still enters the bootloader, only on Raise.
 - Numbers, adjacent Lower brackets N/I, Lower+A Ctrl+A, Lower+E comma, Base typing/combos, right-half placeholders, and battery sleep remain unchanged. The new Sofle is still confirmed on c3b6c26; this newer design requires a separate flash.
+- The user then requested removal of the Base L+J Backspace combo. It was removed without changing any layer bindings or other combos; Y+O is now the only Backspace binding on the active left half. Base L/J are ordinary letters, including when pressed together.
 
 ## Decisions deliberately rejected or superseded
 
@@ -322,8 +322,8 @@ The firmware preserves quick Escape, Control, Space, and movement access because
 2. **Firmware identity**: the confirmed per-keyboard revisions are listed above. The Y Navigation/Media design still requires flashing. Do not infer installation merely from a successful CI build or the presence of a UF2 file.
 3. **Redesign ergonomics**: confirm pinky-held Y with H/J/K/L, O Backspace, P/F/M volume, and thumb-modified movement. Also test Lower Tab plus Shift, the Ctrl+A workflow, and leaving Lower for deletion.
 4. **Arbitrary app switching**: Cmd+Tab is disabled, and named launchers do not select every running application. A dependable one-handed general switcher has not been chosen.
-5. **Deletion comfort**: Base L+J and Y+O remain. The user chose O for index-finger deletion, but repeated-deletion comfort has not been measured; Lower/Raise no longer contain dedicated Backspace.
-6. **Combo accidents**: Q+P, L+J, and B+Y need normal-speed typing tests for false activation.
+5. **Deletion comfort**: Y+O is the Backspace route. The user chose O for index-finger deletion and removed L+J, but repeated-deletion comfort has not been measured; Lower/Raise no longer contain dedicated Backspace.
+6. **Combo accidents**: Q+P and B+Y need normal-speed typing tests for false activation. Verify L/J together now type letters instead of deleting.
 7. **USB wake repeat**: an older report said the first key after about 30 seconds over USB could repeat. Cause and current status are unknown.
 8. **OLED**: it was blank during setup and recovered after settings/power experiments. Raise+I exists as a safe power-on path; continued reliability is unconfirmed.
 9. **Physical ergonomics**: finger assignments, reach, fatigue, accidental locks, missing spaces, unexpected capitals, and multi-modifier comfort need observation rather than assumption.
@@ -351,9 +351,9 @@ Never copy a personal SSH private key into this repository or into firmware arti
 5. Hold Y for at least 200 ms and tap H/J/K/L: expect Left/Down/Up/Right. Release Y and verify the same keys work as Base letters (K still holds Raise). K+F should open Finder.
 6. Lock Raise with K+Z and leave with Z. Verify physical K and the Esc thumb both send Escape without delay.
 7. Test Ctrl+1 through Ctrl+5, Cmd+1 through Cmd+6, Ctrl+Shift, Space-as-Shift, X+Space Enter, and X+comma period.
-8. Test Base L+J and Y+O, including held-O repeat. Lower+D/W and Raise+J/A should do nothing. From Lower, release X (or exit the lock with Z) before using Y+O; then re-enter Lower for numbers.
+8. Test Y+O, including held-O repeat. Base L/J pressed together should type letters, never Backspace. Lower+D/W and Raise+J/A should do nothing. From Lower, release X (or exit the lock with Z) before using Y+O; then re-enter Lower for numbers.
 9. Type quick Y rolls, including `yo`, `yp`, `yf`, `ym`, `yh`, `yj`, `yk`, and `yl`, without holding Y 200 ms: expect letters, not commands. Then hold Y for 200 ms and test P/F/M for Volume Down/Up/Mute.
-10. Test Q+P, B+Y, L+J, and V+W deliberately and during fast ordinary typing.
+10. Test Q+P, B+Y, and V+W deliberately and during fast ordinary typing.
 11. Hold K and test Q/P for BT0/BT1 selection (the same saved profiles, now on Lower's 1/2 positions). V/W alone should do nothing. Test USB wake, OLED power-on, and all six app bridge keys.
 12. Test Bluetooth clear and bootloader only when prepared for their destructive or disruptive effects.
 13. On battery, leave the keyboard untouched for just over 15 minutes, then press a matrix key and confirm Bluetooth reconnects and normal typing resumes. Separately confirm USB-powered operation stays awake past the same timeout.
