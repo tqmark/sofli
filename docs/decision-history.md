@@ -71,7 +71,7 @@ X/Lower  G        V  W  N  I  K/Raise
 - Tap Esc for Escape; hold it for Left Control.
 - Tap the comma thumb for comma; hold it for Left Command.
 - Tap Space for Space; hold it for Left Shift.
-- Enter is X+Space through Lower. Period is X+comma through Lower; the old duplicate Lower+I period is now unused.
+- Enter is X+Space through Lower. Period is X+comma through Lower; the old duplicate Lower+I period is now right bracket (`]`).
 - Hold-tap timing is 200 ms. No tap dances remain on any layer.
 - X and K use hold-preferred layer-taps so a following key selects the layer immediately instead of waiting 200 ms.
 
@@ -82,8 +82,8 @@ Hold X for temporary access. Hold X, tap Z, and release X to lock it.
 ```text
 1          2          3  4          5  6
 7          8          9  0          -  =
-'          Backspace  ;  Tab        [  ]
-\ / Base   Ctrl+A     \  Shift+Tab  ,  unused  `
+'          Backspace  ;  Tab        [  Ctrl+A
+\ / Base   unused     \  Shift+Tab  ,  ]       `
 
            Z-toggle   /-Option   Esc-Control   Period-Command   Enter-Shift
 ```
@@ -95,8 +95,8 @@ Hold X for temporary access. Hold X, tap Z, and release X to lock it.
 - Apostrophe, semicolon, brackets, backslash, slash, comma, period, and grave are directly available.
 - Shift-generated variants such as `+`, `_`, colon, double quote, braces, question mark, and tilde are not duplicated as dedicated keys.
 - Lower+H is Tab and Lower+W is Shift+Tab, replacing Rectangle commands with common editing keys.
-- Lower+G sends Ctrl+A. In Ghostty, hold X, tap G and then Q/P/F for leader 1/2/3. For pane movement, hold X, tap G, release X, then tap Base H/J/K/L. Outside Ghostty this sends ordinary Ctrl+A and follows the active application's binding.
-- Lower+V is backslash; Shift gives pipe. It is reachable while X remains held, unlike the backslash on the X position itself. Slash remains on the Option thumb. Lower+I is unused because the comma thumb already supplies period.
+- Lower+A sends Ctrl+A, matching the physical A position. In Ghostty, hold X, tap A and then Q/P/F for leader 1/2/3. For pane movement, hold X, tap A, release X, then tap Base H/J/K/L. Outside Ghostty this sends ordinary Ctrl+A and follows the active application's binding.
+- Lower+V is backslash; Shift gives pipe. It is reachable while X remains held, unlike the backslash on the X position itself. Slash remains on the Option thumb. Lower+I supplies right bracket (`]`), moved from A to make room for Ctrl+A. Lower+G is unused.
 
 For Ctrl+1, hold X, hold the Esc/Control thumb, and tap physical Q. Ctrl+2 through Ctrl+6 use P, F, M, L, and J. The same positions work with the Command thumb.
 
@@ -169,7 +169,7 @@ Live configuration: `~/.config/karabiner/karabiner.json`; launcher script: `~/.c
 
 ### Rectangle
 
-Rectangle remains configured on macOS, but the Sofle no longer dedicates keys to it. The unused Lower window-right, almost-maximize, and restore bindings were replaced by Tab, Ctrl+A, and Shift+Tab. No Rectangle or native-keyboard settings were changed by this firmware redesign.
+Rectangle remains configured on macOS, but the Sofle no longer dedicates keys to it. The unused Lower window-right and restore bindings were replaced by Tab and Shift+Tab. The former almost-maximize position on G is unused; Ctrl+A uses physical A. No Rectangle or native-keyboard settings were changed by this firmware redesign.
 
 ### Ghostty
 
@@ -180,7 +180,7 @@ Live configuration: `~/.config/ghostty/config`; layout helper: `~/.config/ghostt
 - Ctrl+A twice sends a literal Ctrl+A. Escape cancels the leader.
 - Resize mode uses H/J/K/L or arrows and exits with Escape or Q.
 - Leader then 1/2/3 creates a two-thirds split, equal halves, or a six-pane grid.
-- The three direct Raise layout macros were removed. Lower+G now provides Ctrl+A without automatically sending a following command.
+- The three direct Raise layout macros were removed. Lower+A now provides Ctrl+A without automatically sending a following command.
 - Window, tab, and split state is restored on launch.
 
 Ghostty has no action for running the layout helper directly, so its binding types a shell command. It is safe only at a shell prompt; invoking it while Neovim, Claude, or another interactive program owns the pane can type unwanted text. That risk is accepted for now and should remain visible.
@@ -283,7 +283,7 @@ The firmware preserves quick Escape, Control, Space, and movement access because
 ### 2026-09-18: simplify Lower and Raise around daily actions
 
 - The user confirmed Browser, Ghostty, Telegram/Slack, Finder, Notes, and Settings on B/T/C/F/N/S, and requested both easier Tab/Ghostty leader access and movement/selection.
-- Lower's three unused Rectangle keys became Tab, Ctrl+A, and Shift+Tab. V became backslash to solve the X-held reach conflict; slash remains on its thumb. The duplicate Lower+I period was removed.
+- Lower's three unused Rectangle keys initially became Tab, Ctrl+A, and Shift+Tab. The user then requested Ctrl+A on physical A: it moved from G to A, right bracket moved from A to I, and G became unused. V became backslash to solve the X-held reach conflict; slash remains on its thumb. The duplicate Lower+I period was removed.
 - Finder moved from Raise+G to Raise+F; Up moved from F to U while Left/Down/Right stayed on Q/P/M. Raise+D/H became Shift+Left/Right. The three Ghostty layout macros and Home/End were removed.
 - Base, numbers, thumb behaviors, Media, layer locking, Bluetooth profiles, recovery combos, and deep sleep are unchanged. Remaining empty positions are deliberate.
 
@@ -346,5 +346,5 @@ Never copy a personal SSH private key into this repository or into firmware arti
 11. Test BT1 and BT2 selection/pairing, USB wake, OLED power-on, and app bridge keys.
 12. Test Bluetooth clear and bootloader only when prepared for their destructive or disruptive effects.
 13. On battery, leave the keyboard untouched for just over 15 minutes, then press a matrix key and confirm Bluetooth reconnects and normal typing resumes. Separately confirm USB-powered operation stays awake past the same timeout.
-14. Hold X and test H/W for Tab/Shift+Tab and V for backslash (Shift+V gives pipe). Test G then Q/P/F at a clean Ghostty shell prompt for leader 1/2/3; do not invoke those layouts inside Neovim.
+14. Hold X and test H/W for Tab/Shift+Tab and V for backslash (Shift+V gives pipe). Test A then Q/P/F at a clean Ghostty shell prompt for leader 1/2/3; do not invoke those layouts inside Neovim. Verify I sends `]` (Shift gives `}`) and G sends nothing.
 15. In a normal macOS text field, hold K and tap/repeat D/H to select left/right. Check vertical selection using the existing Shift thumb plus the Up/Down arrows. Test the same keys in Neovim separately, where behavior is editor-dependent.

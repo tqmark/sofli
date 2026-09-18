@@ -174,22 +174,22 @@
             // Left half:
             // | 1 | 2 | 3 | 4 | 5 | 6 |
             // | 7 | 8 | 9 | 0 | - | = |
-            // | ' | BACKSPACE | ; | TAB | [ | ] |
+            // | ' | BACKSPACE | ; | TAB | [ | CTRL+A |
             // Hold X to use temporarily, or hold X then tap Z to lock. Tap Z to leave.
             // Backspace is a real key here now that the L+J combo is BASE-only: on
             // this layer positions 4+5 are 5 and 6, as in 256 or 65536.
-            // | BACKSLASH: tap \\ / hold BASE | CTRL+A | BACKSLASH | SHIFT+TAB | , | UNUSED | ` |
+            // | BACKSLASH: tap \\ / hold BASE | UNUSED | BACKSLASH | SHIFT+TAB | , | ] | ` |
             // V makes backslash/pipe reachable while X is held. Slash is on
             // the Option thumb; period is on the Command thumb.
-            // G sends Ctrl+A only: in Ghostty, keep X held and tap Q/P/F for
+            // A sends Ctrl+A only: in Ghostty, keep X held and tap Q/P/F for
             // leader 1/2/3, or release X before tapping a Base H/J/K/L command.
             //     | Z: lock / unlock | SLASH/ALT | ESC/CTRL | PERIOD/CMD | ENTER/SHIFT |
 
             bindings = <
 &kp NUMBER_1  &kp NUMBER_2   &kp NUMBER_3  &kp NUMBER_4   &kp N5            &kp NUMBER_6                                 &kp F6     &kp F7    &kp F8     &kp F9     &kp F10   &kp F11
 &kp N7        &kp N8         &kp N9        &kp N0         &kp MINUS         &kp EQUAL                                    &kp N6     &kp N7    &kp N8     &kp N9     &kp N0    &kp F12
-&kp SQT       &kp BSPC       &kp SEMI      &kp TAB  &kp LEFT_BRACKET  &kp RIGHT_BRACKET                            &kp CARET  &kp AMPS  &kp ASTRK  &kp LPAR   &kp RPAR  &kp PIPE
-&lower_bslash_base 0 0  &kp LC(A)  &kp BSLH     &kp LS(TAB)  &kp COMMA         &none         &kp GRAVE         &trans  &kp LBKT   &kp RBKT  &kp SEMI   &kp COLON  &kp BSLH  &trans
+&kp SQT       &kp BSPC       &kp SEMI      &kp TAB  &kp LEFT_BRACKET  &kp LC(A)                                    &kp CARET  &kp AMPS  &kp ASTRK  &kp LPAR   &kp RPAR  &kp PIPE
+&lower_bslash_base 0 0  &none      &kp BSLH     &kp LS(TAB)  &kp COMMA         &kp RIGHT_BRACKET  &kp GRAVE    &trans  &kp LBKT   &kp RBKT  &kp SEMI   &kp COLON  &kp BSLH  &trans
                              &tog LOWER    &mt LEFT_ALT SLASH  &trans       &mt LEFT_COMMAND DOT  &mt LEFT_SHIFT ENTER  &trans  &trans     &trans    &trans     &trans
             >;
 
