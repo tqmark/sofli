@@ -1,0 +1,129 @@
+"""Static regression checks for the agreed left-only layout; no ZMK dependencies."""
+
+from pathlib import Path
+import re
+import sys
+
+
+POSITIONS = dict(zip(
+    "Q P F M L J B Y U R S O C D T H E A X G V W N I K Z slash esc comma space".split(),
+    [*range(0, 6), *range(12, 18), *range(24, 30), *range(36, 43), *range(50, 55)],
+))
+THUMBS = {
+    "slash": "&mt LEFT_ALT SLASH",
+    "esc": "&mt LEFT_CONTROL ESC",
+    "comma": "&mt LEFT_COMMAND COMMA",
+    "space": "&mt LEFT_SHIFT SPACE",
+}
+
+
+def require(condition, message):
+    if not condition:
+        raise ValueError(message)
+
+
+def validate(source):
+    source = re.sub(r"/\*.*?\*/|//[^\n]*", "", source, flags=re.S)
+    matches = re.findall(
+        r'(\w+)\s*\{\s*display-name\s*=\s*"[^"]*";\s*bindings\s*=\s*<([^>]*)>',
+        source,
+    )
+    require(len(matches) == 4, "Expected exactly four layers")
+    layers = {
+        name: [" ".join(binding.split()) for binding in re.findall(r"&[^&]+", body)]
+        for name, body in matches
+    }
+    require(list(layers) == ["default_layer", "lower_layer", "raise_layer", "media_layer"],
+            "Unexpected layer names or order")
+    for index, name in enumerate(("BASE", "LOWER", "RAISE", "MEDIA")):
+        require(re.search(r"#define\s+" + name + r"\s+" + str(index) + r"\b", source),
+                f"{name}: layer index changed")
+    for name, bindings in layers.items():
+        require(len(bindings) == 60, f"{name}: expected 60 matrix bindings")
+
+    base = {key: f"&kp {key}" for key in POSITIONS if len(key) == 1}
+    base.update(THUMBS)
+    base.update(X="&lt LOWER X", K="&lt RAISE K", Y="&ymedia MEDIA Y")
+
+    lower = dict(zip(
+        "Q P F M L J B Y U R S O".split(),
+        [f"&kp {key}" for key in
+         "NUMBER_1 NUMBER_2 NUMBER_3 NUMBER_4 N5 NUMBER_6 N7 N8 N9 N0 MINUS EQUAL".split()],
+    ))
+    lower.update(THUMBS)
+    lower.update({
+        "C": "&kp SQT", "T": "&kp SEMI", "H": "&kp TAB", "E": "&kp COMMA",
+        "A": "&kp LC(A)", "X": "&lower_bslash_base 0 0", "V": "&kp BSLH",
+        "N": "&kp LEFT_BRACKET", "I": "&kp RIGHT_BRACKET", "K": "&kp GRAVE",
+        "Z": "&tog LOWER", "esc": "&trans", "comma": "&mt LEFT_COMMAND DOT",
+        "space": "&mt LEFT_SHIFT ENTER",
+    })
+
+    raise_keys = dict(THUMBS)
+    raise_keys.update({
+        "Q": "&bt BT_SEL 0", "P": "&bt BT_SEL 1", "B": "&kp F13", "T": "&kp F14",
+        "N": "&kp F15", "C": "&kp F16", "S": "&kp F17", "F": "&kp F19",
+        "I": "&ext_power EP_ON", "K": "&kp ESC", "Z": "&tog RAISE",
+    })
+
+    nav_media = dict(THUMBS)
+    nav_media.update({
+        "P": "&kp C_VOL_DN", "F": "&kp C_VOL_UP", "M": "&kp C_MUTE",
+        "H": "&kp LEFT", "J": "&kp DOWN", "K": "&kp UP", "L": "&kp RIGHT",
+        "O": "&kp BACKSPACE",
+    })
+
+    for name, expected in zip(
+        ("default_layer", "lower_layer", "raise_layer", "media_layer"),
+        (base, lower, raise_keys, nav_media),
+    ):
+        for key, position in POSITIONS.items():
+            wanted = expected.get(key, "&none")
+            require(layers[name][position] == wanted,
+                    f"{name} physical {key}: expected {wanted}, got {layers[name][position]}")
+
+    # Existing combo scope and recovery gestures must not follow moved selectors.
+    expected_combos = {
+        "grave": ("0 1", "BASE", "&kp GRAVE", None),
+        "backspace": ("4 5", "BASE", "&kp BACKSPACE", None),
+        "tab": ("12 13", "BASE", "&kp TAB", None),
+        "raise_once": ("38 39", "BASE", "&sl RAISE", None),
+        "clear_bluetooth": ("38 39", "RAISE", "&bt BT_CLR", "50"),
+        "bootloader_combo": ("36 37", "RAISE", "&bootloader", "150"),
+    }
+    require(len(re.findall(r"\bkey-positions\s*=", source)) == len(expected_combos),
+            "Unexpected combo count")
+    for name, (positions, layer, binding, timeout) in expected_combos.items():
+        match = re.search(r"\b" + name + r"\s*\{([^}]*)\}", source)
+        require(match is not None, f"Missing combo {name}")
+        body = match.group(1)
+        for prop, value in {"key-positions": positions, "layers": layer, "bindings": binding}.items():
+            actual = re.search(re.escape(prop) + r"\s*=\s*<([^>]*)>", body)
+            require(actual is not None and " ".join(actual.group(1).split()) == value,
+                    f"{name}: unexpected {prop}")
+        if timeout:
+            require(re.search(r"timeout-ms\s*=\s*<" + timeout + r">", body),
+                    f"{name}: timeout changed")
+
+    for name, pattern, flavor in (
+        ("mt", r"&mt\s*\{([^}]*)\}", "hold-preferred"),
+        ("lt", r"&lt\s*\{([^}]*)\}", "hold-preferred"),
+        ("ymedia", r"ymedia:\s*ymedia\s*\{([^}]*)\}", "tap-preferred"),
+    ):
+        match = re.search(pattern, source)
+        require(match is not None, f"Missing hold behavior {name}")
+        body = match.group(1)
+        require(re.search(r'flavor\s*=\s*"' + flavor + '"', body), f"{name}: flavor changed")
+        require(re.search(r"tapping-term-ms\s*=\s*<200>", body), f"{name}: timing changed")
+        if name == "ymedia":
+            require(re.search(r"bindings\s*=\s*<&mo>\s*,\s*<&kp>", body),
+                    "Y must hold a momentary layer and tap a key")
+    require("zmk,behavior-tap-dance" not in source, "Tap dances are intentionally disabled")
+
+
+if __name__ == "__main__":
+    try:
+        validate(Path(sys.argv[1] if len(sys.argv) > 1 else "config/sofle.keymap").read_text())
+    except ValueError as error:
+        sys.exit(f"FAIL: {error}")
+    print("PASS: four 60-position layers; left bindings, modifiers, timing, and recovery combos match")

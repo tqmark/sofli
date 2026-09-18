@@ -13,15 +13,15 @@ The number, punctuation, and editing layer reached by holding X. It can be locke
 _Avoid_: Number layer, symbol layer, layer 1
 
 **Raise**:
-The navigation, application, Bluetooth, recovery, and command layer reached by holding K. It can be locked with Z for longer work.
+The application, Bluetooth, and recovery layer reached by holding K. It can be locked with Z for longer work.
 _Avoid_: Command layer, navigation layer, layer 2
 
-**Media**:
-The sparse momentary layer reached by holding Y for 200 ms and limited to volume and Backspace actions. It cannot be locked.
+**Navigation/Media**:
+The sparse momentary layer reached by holding Y with the pinky for 200 ms: H/J/K/L arrows, O Backspace, P/F/M volume, and the four Base modifier thumbs. It reuses the internal MEDIA layer and cannot be locked.
 _Avoid_: Function layer, layer 3
 
 **Layer leader**:
-The Base key held to reach another layer: X for Lower, K for Raise, or Y for Media.
+The Base key held to reach another layer: X for Lower, K for Raise, or Y for Navigation/Media.
 _Avoid_: Mode key
 
 **Layer lock**:

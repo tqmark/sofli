@@ -64,9 +64,9 @@
         compatible = "zmk,combos";
 
         // Combos match key POSITIONS, not letters, so an unscoped combo also
-        // fires on Lower's number row and Raise's arrows. Everything benign is
-        // pinned to BASE: <0 1> is 1+2 on Lower and Left+Down on Raise, <4 5>
-        // is 5+6 on Lower (as in 256, 65536) and <12 13> is 7+8.
+        // fires on other layers. Everything benign is pinned to BASE: <0 1>
+        // is 1+2 on Lower and BT0+BT1 on Raise; <4 5> is 5+6 on Lower
+        // (as in 256, 65536) and Right+Down on Navigation/Media.
         grave {
             bindings = <&kp GRAVE>;
             key-positions = <0 1>;
@@ -96,7 +96,7 @@
         // Backspace elsewhere, one slip from dropping into UF2 with no HID.
         // Moved onto the bottom row, where they are deliberate finger presses
         // and never occur while navigating or deleting.
-        clear_bluetooth {          // BT1 + BT2 together
+        clear_bluetooth {          // V + W on Raise; NOT the BT selector keys
             bindings = <&bt BT_CLR>;
             key-positions = <38 39>;
             layers = <RAISE>;
@@ -120,11 +120,10 @@
         // &lt; locking moved to Z, which is a standalone press and cannot be
         // torn down by the &lt release.
 
-        // Y is the Media leader because its second-row ring-finger position is
-        // easier to hold than top-row Q while the middle and index fingers use
-        // F, M, L and J. Tap-preferred deliberately requires the full 200 ms
-        // hold before Media activates, preventing ordinary Y+M and Y+L rolls
-        // from becoming media commands.
+        // The user operates Y with the pinky, leaving the index finger free
+        // for O/Backspace and H/J/K/L available for navigation. Reuse Media
+        // rather than adding a fifth layer. Tap-preferred still requires the
+        // full 200 ms hold, protecting quick Y rolls from navigation/media.
         ymedia: ymedia {
             compatible = "zmk,behavior-hold-tap";
             #binding-cells = <2>;
@@ -151,7 +150,7 @@
 
             // Left half: all letters plus thumb tap/hold behaviors. The right half is disconnected.
             // | Q | P | F | M | L | J |
-            // | B | Y: tap Y / hold MEDIA | U | R | S | O |
+            // | B | Y: tap Y / hold NAVIGATION+MEDIA | U | R | S | O |
             // | C | D | T | H | E | A |
             // | X: tap X / hold LOWER | G | V | W | N | I | K: tap K / hold RAISE |
             //     | Z | SLASH/ALT | ESC/CTRL | COMMA/CMD | SPACE/SHIFT |
@@ -174,11 +173,11 @@
             // Left half:
             // | 1 | 2 | 3 | 4 | 5 | 6 |
             // | 7 | 8 | 9 | 0 | - | = |
-            // | ' | BACKSPACE | ; | TAB | , | CTRL+A |
+            // | ' | UNUSED | ; | TAB | , | CTRL+A |
             // Hold X to use temporarily, or hold X then tap Z to lock. Tap Z to leave.
-            // Backspace is a real key here now that the L+J combo is BASE-only: on
-            // this layer positions 4+5 are 5 and 6, as in 256 or 65536.
-            // | BACKSLASH: tap \\ / hold BASE | UNUSED | BACKSLASH | SHIFT+TAB | [ | ] | ` |
+            // Backspace is on Y+O from Base. L+J remains BASE-only to preserve
+            // Lower's digits 5+6. Shift+Tab uses the Shift thumb plus H/Tab.
+            // | BACKSLASH: tap \\ / hold BASE | UNUSED | BACKSLASH | UNUSED | [ | ] | ` |
             // V makes backslash/pipe reachable while X is held. Slash is on
             // the Option thumb; period is on the Command thumb.
             // N/I keep [ and ] side by side; Shift gives { and }. E is comma.
@@ -189,8 +188,8 @@
             bindings = <
 &kp NUMBER_1  &kp NUMBER_2   &kp NUMBER_3  &kp NUMBER_4   &kp N5            &kp NUMBER_6                                 &kp F6     &kp F7    &kp F8     &kp F9     &kp F10   &kp F11
 &kp N7        &kp N8         &kp N9        &kp N0         &kp MINUS         &kp EQUAL                                    &kp N6     &kp N7    &kp N8     &kp N9     &kp N0    &kp F12
-&kp SQT       &kp BSPC       &kp SEMI      &kp TAB  &kp COMMA         &kp LC(A)                                    &kp CARET  &kp AMPS  &kp ASTRK  &kp LPAR   &kp RPAR  &kp PIPE
-&lower_bslash_base 0 0  &none      &kp BSLH     &kp LS(TAB)  &kp LEFT_BRACKET  &kp RIGHT_BRACKET  &kp GRAVE    &trans  &kp LBKT   &kp RBKT  &kp SEMI   &kp COLON  &kp BSLH  &trans
+&kp SQT       &none          &kp SEMI      &kp TAB  &kp COMMA         &kp LC(A)                                    &kp CARET  &kp AMPS  &kp ASTRK  &kp LPAR   &kp RPAR  &kp PIPE
+&lower_bslash_base 0 0  &none      &kp BSLH     &none        &kp LEFT_BRACKET  &kp RIGHT_BRACKET  &kp GRAVE    &trans  &kp LBKT   &kp RBKT  &kp SEMI   &kp COLON  &kp BSLH  &trans
                              &tog LOWER    &mt LEFT_ALT SLASH  &trans       &mt LEFT_COMMAND DOT  &mt LEFT_SHIFT ENTER  &trans  &trans     &trans    &trans     &trans
             >;
 
@@ -203,22 +202,21 @@
             // Hold K to use temporarily, or hold K then tap Z to lock. Tap Z to leave.
             // K itself taps ESC here. Z is the single reliable layer exit.
             // V+W on Base activates Raise for one keypress, normally to launch an app.
-            // The two destructive combos now live on the bottom row: BT1+BT2 clears
-            // the selected Bluetooth profile, and X+G enters the bootloader.
-            // Neither can be hit while arrowing or deleting on the top row.
-            // F is Finder, so Up moves to U. Left/Down/Right stay on Q/P/M.
-            // D/H send Shift+Left/Right for text selection in supporting apps.
-            // | LEFT     | DOWN | FINDER   | RIGHT    | UNUSED | BACKSPACE  |
-            // | BROWSER  | UNUSED | UP     | UNUSED   | SETTINGS | UNUSED   |
-            // | CHAT     | SELECT LEFT | TERMINAL | SELECT RIGHT | UNUSED | DELETE |
-            // | UNUSED   | UNUSED | BT1 | BT2 | NOTES | DISPLAY ON | ESC |
+            // Q/P (Lower's 1/2 positions) select existing BT profiles 0/1.
+            // Recovery combos stay on the bottom row: V+W clears the selected
+            // Bluetooth profile; X+G enters the bootloader. Do not move clear
+            // onto the BT selectors. Navigation and Backspace now live on Y.
+            // | BT0      | BT1    | FINDER   | UNUSED | UNUSED   | UNUSED |
+            // | BROWSER  | UNUSED | UNUSED   | UNUSED | SETTINGS | UNUSED |
+            // | CHAT     | UNUSED | TERMINAL | UNUSED | UNUSED   | UNUSED |
+            // | UNUSED   | UNUSED | UNUSED   | UNUSED | NOTES    | DISPLAY ON | ESC |
             //     | Z: lock / unlock | SLASH/ALT | ESC/CTRL | COMMA/CMD | SPACE/SHIFT |
 
             bindings = <
-&kp LEFT      &kp DOWN           &kp F19        &kp RIGHT          &none               &kp BACKSPACE                                 &trans     &trans    &trans    &trans     &trans   &trans
-&kp F13       &none              &kp UP        &none              &kp F17            &none                                        &kp PG_UP  &trans    &kp UP    &trans     &kp N0   &trans
-&kp F16       &kp LS(LEFT)  &kp F14       &kp LS(RIGHT)  &none  &kp DEL                                      &kp PG_DN  &kp LEFT  &kp DOWN  &kp RIGHT  &kp DEL  &kp BSPC
-&none         &none            &bt BT_SEL 0  &bt BT_SEL 1       &kp F15            &ext_power EP_ON   &kp ESC           &trans  &trans     &trans    &trans    &trans     &trans   &trans
+&bt BT_SEL 0  &bt BT_SEL 1       &kp F19        &none              &none              &none                                        &trans     &trans    &trans    &trans     &trans   &trans
+&kp F13       &none              &none          &none              &kp F17            &none                                        &kp PG_UP  &trans    &kp UP    &trans     &kp N0   &trans
+&kp F16       &none              &kp F14        &none              &none              &none                                        &kp PG_DN  &kp LEFT  &kp DOWN  &kp RIGHT  &kp DEL  &kp BSPC
+&none         &none              &none          &none              &kp F15            &ext_power EP_ON   &kp ESC           &trans  &trans     &trans    &trans    &trans     &trans   &trans
                                  &tog RAISE    &mt LEFT_ALT SLASH  &mt LEFT_CONTROL ESC  &mt LEFT_COMMAND COMMA  &mt LEFT_SHIFT SPACE    &trans  &trans     &trans    &trans    &trans
             >;
 
@@ -226,21 +224,27 @@
         };
 
         media_layer {
-            display-name = "media";
+            display-name = "nav/media";
 
-            // Hold Y for 200 ms, then tap F, M, L or J. The deliberate dwell
-            // protects normal Y+M and Y+L typing rolls from accidental commands.
+            // Hold Y for 200 ms: H/J/K/L are Left/Down/Up/Right; O is Backspace.
+            // P/F/M are Volume Down/Volume Up/Mute. No forward Delete.
+            // The deliberate dwell protects quick Y rolls from commands.
             //
             // Reached only while Y is physically held. There is no &tog here
             // and no exit key, so it is not a layer you can be stranded in.
-            // | UNUSED | UNUSED | VOLUME DOWN | MUTE | VOLUME UP | BACKSPACE |
+            // | UNUSED | VOLUME DOWN | VOLUME UP | MUTE | RIGHT | DOWN |
+            // | UNUSED | HELD Y | UNUSED | UNUSED | UNUSED | BACKSPACE |
+            // | UNUSED | UNUSED | UNUSED | LEFT | UNUSED | UNUSED |
+            // | UNUSED | UNUSED | UNUSED | UNUSED | UNUSED | UNUSED | UP |
+            // The four modifier thumbs use the Base tap/hold behaviors. Z is
+            // unused here: release Y to return to the underlying layer.
 
             bindings = <
-&none  &none  &kp C_VOL_DN  &kp C_MUTE  &kp C_VOL_UP  &kp BACKSPACE                              &trans  &trans  &trans  &trans  &trans  &trans
-&none  &none  &none         &none       &none         &none                                      &trans  &trans  &trans  &trans  &trans  &trans
-&none  &none  &none         &none       &none         &none                                      &trans  &trans  &trans  &trans  &trans  &trans
-&none  &none  &none         &none       &none         &none         &none                        &trans  &trans  &trans  &trans  &trans  &trans  &trans
-              &none         &none       &none         &none         &none                        &trans  &trans  &trans  &trans  &trans
+&none  &kp C_VOL_DN  &kp C_VOL_UP  &kp C_MUTE  &kp RIGHT  &kp DOWN                              &trans  &trans  &trans  &trans  &trans  &trans
+&none  &none         &none         &none       &none      &kp BACKSPACE                         &trans  &trans  &trans  &trans  &trans  &trans
+&none  &none         &none         &kp LEFT    &none      &none                                 &trans  &trans  &trans  &trans  &trans  &trans
+&none  &none         &none         &none       &none      &none         &kp UP                  &trans  &trans  &trans  &trans  &trans  &trans  &trans
+              &none    &mt LEFT_ALT SLASH  &mt LEFT_CONTROL ESC  &mt LEFT_COMMAND COMMA  &mt LEFT_SHIFT SPACE  &trans  &trans  &trans  &trans  &trans
             >;
 
             sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp PG_UP PG_DN>;

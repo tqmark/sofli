@@ -5,7 +5,7 @@ This is the durable record of the decisions made while adapting the Sofle and th
 ## Accessibility goal and design rules
 
 - The right hand is not usable. Every required action must be possible with the left hand alone.
-- All left-hand fingers are usable. K is normally an index-finger key and Z a pinky key; the exact finger used for X and the five thumb positions has not been measured.
+- All left-hand fingers are usable. The user confirmed Y and Z are pinky-operated; the previous ring-finger description of Y was incorrect. K is an index-finger key, and O was chosen for index-finger Backspace. Other finger assignments have not been measured.
 - The right Sofle half is disconnected and can remain disconnected.
 - Preserve the familiar Base letters. Moving frequently used letters to make a theoretically tidy layer is not worth relearning the keyboard.
 - Optimize for low fatigue, predictable behavior, recovery from mistakes, and low memory load.
@@ -24,7 +24,7 @@ This is the durable record of the decisions made while adapting the Sofle and th
 - Build matrix: left shield only; the earlier right-shield build was removed
 - OLED: enabled
 - RGB and encoders: disabled
-- Bluetooth profiles: only profiles 1 and 2 are exposed
+- Bluetooth profiles: only ZMK profiles 0 and 1 are exposed (previously labeled BT1/BT2)
 - Baseline before the flattened-modifier safety change: `362f3bff9ba0c4503625a8daa77b474c61dfec60`
 - Last successful build before that safety change: [GitHub Actions run 34733958813](https://github.com/tqmark/sofli/actions/runs/34733958813)
 - Firmware name after the safety change: `SofleL-FlatMT`
@@ -43,11 +43,11 @@ The full Sofle matrix still appears in `config/sofle.keymap`; the right-side ent
 
 “Saved” means present in Git. “Confirmed flashed” means explicitly verified on the physical board. These are not interchangeable.
 
-On 2026-09-17, serial transfer and USB reboot were verified separately for both keyboards:
+Serial transfer and USB reboot were verified separately for both keyboards:
 
-- Old Sofle (serial ending `2707E`): `0b8626e`, with 15-minute battery sleep.
-- New Sofle (serial ending `33F97`): `63db1e3`, before battery sleep was enabled. Its sleep update is still pending.
-- The 2026-09-18 Lower/Raise redesign is not yet confirmed flashed on either keyboard.
+- Old Sofle (serial ending `2707E`): `0b8626e`, with 15-minute battery sleep, flashed on 2026-09-17.
+- New Sofle (serial ending `33F97`): `c3b6c26`, with adjacent Lower brackets, Ctrl+A on A, and battery sleep. Flashed on 2026-09-18 at 13:57 Asia/Ho_Chi_Minh; serial DFU reported `Device programmed.` and the same serial returned as `SofleL-FlatMT`.
+- The newer Y Navigation/Media design described below has not been flashed to either keyboard.
 - Both confirmed versions and the current saved firmware enter the bootloader by holding K for Raise, then pressing X+G together.
 - Hardware fallback: double-tap the controller reset button.
 
@@ -56,16 +56,17 @@ On 2026-09-17, serial transfer and USB reboot were verified separately for both 
 ### Base
 
 ```text
-Q        P        F  M  L  J
-B        Y/Media  U  R  S  O
-C        D        T  H  E  A
-X/Lower  G        V  W  N  I  K/Raise
+Q        P            F  M  L  J
+B        Y/Nav+Media  U  R  S  O
+C        D            T  H  E  A
+X/Lower  G            V  W  N  I  K/Raise
 
          Z   /-Option   Esc-Control   comma-Command   Space-Shift
 ```
 
 - Tap X for `x`; hold X for temporary Lower.
 - Tap K for `k`; hold K for temporary Raise.
+- Tap Y for `y`; hold Y for 200 ms for temporary Navigation/Media. Release Y to leave it.
 - Hold X or K and tap Z to lock that layer. Tap Z while locked to return to Base.
 - Tap `/` for slash; hold it for Left Option.
 - Tap Esc for Escape; hold it for Left Control.
@@ -80,21 +81,21 @@ X/Lower  G        V  W  N  I  K/Raise
 Hold X for temporary access. Hold X, tap Z, and release X to lock it.
 
 ```text
-1          2          3  4          5  6
-7          8          9  0          -  =
-'          Backspace  ;  Tab        ,  Ctrl+A
-\ / Base   unused     \  Shift+Tab  [  ]       `
+1          2       3  4       5  6
+7          8       9  0       -  =
+'          unused  ;  Tab     ,  Ctrl+A
+\ / Base   unused  \  unused  [  ]       `
 
            Z-toggle   /-Option   Esc-Control   Period-Command   Enter-Shift
 ```
 
 - Digits are arranged in reading order, making Ctrl+1 through Ctrl+5 and Cmd+1 through Cmd+6 available from one hand.
-- Lower+D is a dedicated Backspace. The Base L+J combo is deliberately unavailable here because its physical positions are digits 5+6.
+- Lower+D is unused; Backspace moved to Y+O. The Base L+J combo remains unavailable here because its positions are digits 5+6. For deletion, release temporary Lower before holding Y and tapping O. If Lower is locked, tap Z to exit first (or hold X for Base peek); pressing Y directly on Lower types `8`.
 - The physical X position taps backslash. While Lower is locked, holding it temporarily reveals Base; release it to return to Lower. This is the route to Base letters and a normal Space without unlocking.
 - The comma thumb taps period and holds Command on Lower. The Space thumb taps Enter and holds Shift. A direct Lower Space was removed.
 - Apostrophe, semicolon, brackets, backslash, slash, comma, period, and grave are directly available.
 - Shift-generated variants such as `+`, `_`, colon, double quote, braces, question mark, and tilde are not duplicated as dedicated keys.
-- Lower+H is Tab and Lower+W is Shift+Tab, replacing Rectangle commands with common editing keys.
+- Lower+H is Tab. Add the Shift thumb for Shift+Tab; the dedicated Lower+W Shift+Tab was removed and W is unused.
 - Lower+A sends Ctrl+A, matching the physical A position. In Ghostty, hold X, tap A and then Q/P/F for leader 1/2/3. For pane movement, hold X, tap A, release X, then tap Base H/J/K/L. Outside Ghostty this sends ordinary Ctrl+A and follows the active application's binding.
 - Lower+V is backslash; Shift gives pipe. It is reachable while X remains held, unlike the backslash on the X position itself. Slash remains on the Option thumb. Lower+N/I supply adjacent brackets (`[` and `]`); Shift gives `{` and `}`. Lower+E supplies comma. Lower+G is unused.
 
@@ -105,38 +106,39 @@ For Ctrl+1, hold X, hold the Esc/Control thumb, and tap physical Q. Ctrl+2 throu
 Hold K for temporary access. Hold K, tap Z, and release K to lock it.
 
 ```text
-Left      Down         Finder   Right         unused    Backspace
-Browser   unused       Up       unused        Settings  unused
-Chat      Select left  Ghostty  Select right  unused    Delete
-unused    unused       BT1      BT2           Notes     OLED on   Esc
+BT0       BT1     Finder   unused  unused    unused
+Browser   unused  unused   unused  Settings  unused
+Chat      unused  Ghostty  unused  unused    unused
+unused    unused  unused   unused  Notes     OLED on   Esc
 
           Z-toggle  /-Option  Esc-Control  comma-Command  Space-Shift
 ```
 
-- Q/P/M retain Left/Down/Right. Up moves from F to U (U for Up) to give the requested Finder shortcut its mnemonic F. This keeps three familiar arrow positions instead of moving the whole cluster.
-- Hold K+J for Backspace and K+A for forward Delete.
+- Q/P select ZMK Bluetooth profiles 0/1, respectively. These are the same physical positions that produce 1/2 on Lower, and the same saved profiles previously labeled BT1/BT2. Individual V/W bindings are now unused.
 - Hold K+B/T/C/F/N/S to open Browser, Ghostty, the Telegram/Slack toggle, Finder, Notes, or Settings. F still emits the existing Finder bridge F19, so Karabiner needs no change.
-- Raise+D/H send Shift+Left/Right to extend or shrink a text selection in supporting apps without holding the Shift thumb. Terminal/Neovim behavior follows their own bindings; these are not Vim Visual-mode macros.
-- The unused Home/End and all three direct Ghostty layout macros were removed. Freed positions stay unused.
-- Raise+V/W select Bluetooth profiles 1/2.
+- Duplicate arrows, Shift+arrow selection, Backspace, and forward Delete were removed from Raise. Navigation and Backspace now belong to Y; use its Shift thumb for selection in supporting apps. Forward Delete was explicitly rejected. The earlier Home/End and direct Ghostty layout macros remain removed. Freed positions stay unused.
 - Raise+I turns external power on to recover the OLED.
 - Physical K on Raise taps Escape immediately. Z is the only Raise exit.
 - The Esc/Control thumb on Raise is a plain mod-tap so Ctrl chords are not delayed. Z is the reliable return to Base.
 - Base V+W gives one-shot Raise for one command.
 - Raise V+W clears the selected Bluetooth profile. Raise X+G enters the bootloader. Both destructive combos were moved away from navigation and deletion keys.
 
-### Media
+### Navigation/Media
 
-Q is now a normal key. Hold Y for 200 ms, then tap:
+Hold Y with the pinky for 200 ms, then tap:
 
 ```text
-F  Volume Down
-M  Mute
-L  Volume Up
-J  Backspace
+P/F/M    Volume Down / Volume Up / Mute
+H/J/K/L  Left / Down / Up / Right
+O        Backspace
 ```
 
-This fourth layer was approved after the earlier three-layer simplification because it is sparse, momentary, and cannot trap the user. It preserves the Raise arrow cluster. Y's second-row ring-finger position is easier to hold than top-row Q while the middle and index fingers operate F/M/L/J. Media activates only after a deliberate 200 ms hold; this prevents ordinary Y+M or Y+L rolls from becoming commands. Releasing Y always returns to Base.
+- This reuses the existing fourth layer; there is no fifth layer or new letter hold-tap. The internal `MEDIA` index and `ymedia` behavior remain unchanged; the OLED label is `nav/media`.
+- The user confirmed Y is a pinky key and chose O for index-finger Backspace, leaving physical H/J/K/L available as arrows. Holding K cannot offer K/Up; Y avoids that physical conflict.
+- P/F/M keep the three volume actions together. L is now Right and J is Down; neither is a deletion key here. A is unused: there is no forward Delete on the active left half.
+- Slash/Option, Escape/Control, comma/Command, and Space/Shift are direct mod-taps matching Base. Shift+arrows selects in supporting apps; Option or Command modifies movement according to the application. These are not Vim Visual-mode macros.
+- Tap-preferred timing stays at 200 ms. Hold Y for the full interval before navigation/media; quick Y rolls remain typing. This is deliberately not the immediate-interrupt behavior of X/K.
+- Unused left positions, including X and Z, do nothing. Physical K sends Up, not Raise. There is no lock; releasing Y removes only this layer and normally returns to Base. Leave Lower/Raise first to reach the Base Y leader.
 
 ### Combos
 
@@ -147,7 +149,7 @@ This fourth layer was approved after the earlier three-layer simplification beca
 - Raise V+W: clear selected Bluetooth profile, 50 ms combo window
 - Raise X+G: bootloader, 150 ms combo window
 
-The benign combos are scoped to Base because ZMK combos follow physical positions, not letters. Without scoping, Q+P also meant Lower 1+2 and Raise Left+Down, L+J meant Lower 5+6, and B+Y meant Lower 7+8. That corrupted ordinary numbers and navigation. Caps Lock and Caps Word were removed because they were not needed.
+The benign combos are scoped to Base because ZMK combos follow physical positions, not letters. Without scoping, Q+P would overlap Lower 1+2 and Raise BT0+BT1, L+J would overlap Lower 5+6 and Navigation/Media Right+Down, and B+Y would overlap Lower 7+8. Caps Lock and Caps Word were removed because they were not needed.
 
 ## macOS integration decisions
 
@@ -169,7 +171,7 @@ Live configuration: `~/.config/karabiner/karabiner.json`; launcher script: `~/.c
 
 ### Rectangle
 
-Rectangle remains configured on macOS, but the Sofle no longer dedicates keys to it. The unused Lower window-right and restore bindings were replaced by Tab and Shift+Tab. The former almost-maximize position on G is unused; Ctrl+A uses physical A. No Rectangle or native-keyboard settings were changed by this firmware redesign.
+Rectangle remains configured on macOS, but the Sofle no longer dedicates keys to it. Lower+H is Tab; the former almost-maximize and restore positions G/W are unused. Ctrl+A uses physical A. No Rectangle or native-keyboard settings were changed by this firmware redesign.
 
 ### Ghostty
 
@@ -199,7 +201,7 @@ Live configuration: `~/.config/nvim`. Space is the Neovim leader.
 - Alt+J/K moves lines or selections.
 - Ctrl+arrows resizes Neovim windows.
 
-The firmware preserves quick Escape, Control, Space, and movement access because these mappings make them more valuable than isolated shortcut keys. Raise+D/H send standard Shift+arrows for applications that select with those keys; use normal Vim Visual mode for Vim-native selection unless the editor is explicitly configured otherwise.
+The firmware preserves quick Escape, Control, Space, and movement access because these mappings make them more valuable than isolated shortcut keys. Y+H/J/K/L send standard arrows; use the Shift thumb for applications that select with Shift+arrows. Use normal Base H/J/K/L and Vim Visual mode for Vim-native movement/selection unless the editor is explicitly configured otherwise.
 
 ## Decision chronology
 
@@ -274,7 +276,7 @@ The firmware preserves quick Escape, Control, Space, and movement access because
 - The firmware name became `SofleL-FlatMT`, and CI gained a structural check that rejects any future custom behavior wrapping `&mt`.
 - The final K tap dance on Raise was also removed. K now sends immediate Escape, Z remains the exit, and CI rejects every tap dance on every layer.
 - The shared Karabiner chat launcher became a Slack/Telegram toggle based on the frontmost app. A separate direct-Telegram action was rejected: C is the only chat shortcut, K+X is unused, and native Space+M remains normal typing.
-- The Media leader moved from top-row Q to second-row Y for an easier ring-finger hold. Unlike the former instant positional trigger, Y requires a deliberate 200 ms hold so normal Y+M and Y+L typing cannot trigger media commands.
+- The Media leader moved from top-row Q to second-row Y for an easier hold. It was initially documented as ring-finger-operated; the user corrected this to pinky on 2026-09-18. Unlike the former instant positional trigger, Y requires a deliberate 200 ms hold so quick Y rolls cannot trigger commands.
 
 ### 2026-09-17: automatic battery sleep
 
@@ -287,6 +289,14 @@ The firmware preserves quick Escape, Control, Space, and movement access because
 - The user requested brackets next to each other: left bracket moved from Lower+E to Lower+N beside right bracket on I, and comma moved from N to E. Ctrl+A remains on A.
 - Finder moved from Raise+G to Raise+F; Up moved from F to U while Left/Down/Right stayed on Q/P/M. Raise+D/H became Shift+Left/Right. The three Ghostty layout macros and Home/End were removed.
 - Base, numbers, thumb behaviors, Media, layer locking, Bluetooth profiles, recovery combos, and deep sleep are unchanged. Remaining empty positions are deliberate.
+
+### 2026-09-18: pinky-held Navigation/Media and leaner Lower/Raise
+
+- The user confirmed Y is a pinky key, chose O for index-finger Backspace, and requested P/F/M as Volume Down/Up/Mute. The existing Y-held fourth layer now also puts arrows on physical H/J/K/L. No new leader, fifth layer, forward Delete, or tap dance was added.
+- Navigation/Media gained the four Base modifier thumbs for selection and modified movement. Y retains its deliberate 200 ms tap-preferred hold; X/K and modifier timing are unchanged. Z remains the Lower/Raise lock/exit key and is inactive on Navigation/Media.
+- Removed Lower+D Backspace and Lower+W Shift+Tab. Tab remains H; Shift+Tab uses the Shift thumb. Removing Lower Backspace means leaving Lower (or using Base peek) before Y+O.
+- Raise keeps the six app bridges, OLED recovery, Escape, and its existing thumb/lock behaviors. The two existing Bluetooth selectors moved from V/W to Q/P and are now explicitly labeled BT0/BT1. Removed duplicate arrows, selection, Backspace, and forward Delete. V+W still clears the selected Bluetooth profile; X+G still enters the bootloader, only on Raise.
+- Numbers, adjacent Lower brackets N/I, Lower+A Ctrl+A, Lower+E comma, Base typing/combos, right-half placeholders, and battery sleep remain unchanged. The new Sofle is still confirmed on c3b6c26; this newer design requires a separate flash.
 
 ## Decisions deliberately rejected or superseded
 
@@ -309,10 +319,10 @@ The firmware preserves quick Escape, Control, Space, and movement access because
 ## Known issues and unresolved decisions
 
 1. **Space hold on the new Mac**: the earlier nested tap dance was removed and the direct Space/Shift mod-tap has been flashed on both keyboards. Physical comfort and normal-speed typing still need user testing. Hold Sofle Space, keep holding it, tap A, and expect `A`.
-2. **Firmware identity**: the confirmed per-keyboard revisions are listed above. The redesigned layers still require flashing. Do not infer installation merely from a successful CI build or the presence of a UF2 file.
-3. **Redesign ergonomics**: confirm Lower Tab/Shift+Tab, the Ctrl+A workflow, Up on U, and selection on D/H feel comfortable before treating their physical placement as settled.
+2. **Firmware identity**: the confirmed per-keyboard revisions are listed above. The Y Navigation/Media design still requires flashing. Do not infer installation merely from a successful CI build or the presence of a UF2 file.
+3. **Redesign ergonomics**: confirm pinky-held Y with H/J/K/L, O Backspace, P/F/M volume, and thumb-modified movement. Also test Lower Tab plus Shift, the Ctrl+A workflow, and leaving Lower for deletion.
 4. **Arbitrary app switching**: Cmd+Tab is disabled, and named launchers do not select every running application. A dependable one-handed general switcher has not been chosen.
-5. **Deletion comfort**: Base L+J, Lower+D, Raise+J, and Media Y+J provide several routes, but repeated-deletion comfort has not been measured.
+5. **Deletion comfort**: Base L+J and Y+O remain. The user chose O for index-finger deletion, but repeated-deletion comfort has not been measured; Lower/Raise no longer contain dedicated Backspace.
 6. **Combo accidents**: Q+P, L+J, and B+Y need normal-speed typing tests for false activation.
 7. **USB wake repeat**: an older report said the first key after about 30 seconds over USB could repeat. Cause and current status are unknown.
 8. **OLED**: it was blank during setup and recovered after settings/power experiments. Raise+I exists as a safe power-on path; continued reliability is unconfirmed.
@@ -338,14 +348,14 @@ Never copy a personal SSH private key into this repository or into firmware arti
 2. Hold X and immediately tap Q: expect `1`, with no leaked `x` or `q`.
 3. Hold X, tap Z, release X, tap Q: expect `1`. Tap Z and then Q: expect `q`.
 4. Lock Lower, hold physical X for Base peek, tap Space, release X: expect one Space and return to Lower.
-5. Hold K and immediately tap Q/P/U/M: expect Left/Down/Up/Right with no leaked letters. K+F should open Finder.
+5. Hold Y for at least 200 ms and tap H/J/K/L: expect Left/Down/Up/Right. Release Y and verify the same keys work as Base letters (K still holds Raise). K+F should open Finder.
 6. Lock Raise with K+Z and leave with Z. Verify physical K and the Esc thumb both send Escape without delay.
 7. Test Ctrl+1 through Ctrl+5, Cmd+1 through Cmd+6, Ctrl+Shift, Space-as-Shift, X+Space Enter, and X+comma period.
-8. Test Base L+J, Lower+D, Raise+J, Media Y+J, and repeated deletion.
-9. Type common Q words plus words containing Y+M and Y+L. Then hold Y for 200 ms and test Y+F/M/L/J for media.
+8. Test Base L+J and Y+O, including held-O repeat. Lower+D/W and Raise+J/A should do nothing. From Lower, release X (or exit the lock with Z) before using Y+O; then re-enter Lower for numbers.
+9. Type quick Y rolls, including `yo`, `yp`, `yf`, `ym`, `yh`, `yj`, `yk`, and `yl`, without holding Y 200 ms: expect letters, not commands. Then hold Y for 200 ms and test P/F/M for Volume Down/Up/Mute.
 10. Test Q+P, B+Y, L+J, and V+W deliberately and during fast ordinary typing.
-11. Test BT1 and BT2 selection/pairing, USB wake, OLED power-on, and app bridge keys.
+11. Hold K and test Q/P for BT0/BT1 selection (the same saved profiles, now on Lower's 1/2 positions). V/W alone should do nothing. Test USB wake, OLED power-on, and all six app bridge keys.
 12. Test Bluetooth clear and bootloader only when prepared for their destructive or disruptive effects.
 13. On battery, leave the keyboard untouched for just over 15 minutes, then press a matrix key and confirm Bluetooth reconnects and normal typing resumes. Separately confirm USB-powered operation stays awake past the same timeout.
-14. Hold X and test H/W for Tab/Shift+Tab and V for backslash (Shift+V gives pipe). Test A then Q/P/F at a clean Ghostty shell prompt for leader 1/2/3; do not invoke those layouts inside Neovim. Verify N/I send `[`/`]` (Shift gives `{`/`}`), E sends comma, and G sends nothing.
-15. In a normal macOS text field, hold K and tap/repeat D/H to select left/right. Check vertical selection using the existing Shift thumb plus the Up/Down arrows. Test the same keys in Neovim separately, where behavior is editor-dependent.
+14. Hold X and test H for Tab, Shift thumb+H for Shift+Tab, and V for backslash (Shift+V gives pipe). Test A then Q/P/F at a clean Ghostty shell prompt for leader 1/2/3; do not invoke those layouts inside Neovim. Verify N/I send `[`/`]` (Shift gives `{`/`}`), E sends comma, and G/D/W send nothing.
+15. In a normal macOS text field, hold Y for 200 ms, hold the Shift thumb, and tap/repeat H/J/K/L to select in each direction. Test Option/Command modified movement separately and release all keys to check for stuck modifiers. Verify the four modifier thumbs retain Base tap outputs. Test Neovim separately, where behavior is editor-dependent.

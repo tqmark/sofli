@@ -2,7 +2,7 @@
 
 Research date: 2026-09-14
 
-Historical proposal, not implemented. The 2026-09-18 redesign instead keeps Q/P/M as Left/Down/Right, moves Up to U so F can open Finder, and uses D/H for Shift+Left/Right selection. Base H/J/K/L typing and the K layer leader remain unchanged. See `../decision-history.md` for the current saved layout; the comparisons below describe the earlier design.
+Historical proposal, not implemented. The final 2026-09-18 redesign instead reuses the Y-held fourth layer for H/J/K/L arrows, O Backspace, P/F/M volume, and Base modifier thumbs. The user confirmed Y is pinky-operated. Raise now holds applications, Bluetooth, and recovery rather than arrows. Base H/J/K/L typing and the K layer leader remain unchanged. See `../decision-history.md` for the current saved layout; the comparisons below describe the earlier design.
 
 ## Question
 
