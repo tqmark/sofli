@@ -82,8 +82,8 @@ Hold X for temporary access. Hold X, tap Z, and release X to lock it.
 ```text
 1          2          3  4          5  6
 7          8          9  0          -  =
-'          Backspace  ;  Tab        [  Ctrl+A
-\ / Base   unused     \  Shift+Tab  ,  ]       `
+'          Backspace  ;  Tab        ,  Ctrl+A
+\ / Base   unused     \  Shift+Tab  [  ]       `
 
            Z-toggle   /-Option   Esc-Control   Period-Command   Enter-Shift
 ```
@@ -96,7 +96,7 @@ Hold X for temporary access. Hold X, tap Z, and release X to lock it.
 - Shift-generated variants such as `+`, `_`, colon, double quote, braces, question mark, and tilde are not duplicated as dedicated keys.
 - Lower+H is Tab and Lower+W is Shift+Tab, replacing Rectangle commands with common editing keys.
 - Lower+A sends Ctrl+A, matching the physical A position. In Ghostty, hold X, tap A and then Q/P/F for leader 1/2/3. For pane movement, hold X, tap A, release X, then tap Base H/J/K/L. Outside Ghostty this sends ordinary Ctrl+A and follows the active application's binding.
-- Lower+V is backslash; Shift gives pipe. It is reachable while X remains held, unlike the backslash on the X position itself. Slash remains on the Option thumb. Lower+I supplies right bracket (`]`), moved from A to make room for Ctrl+A. Lower+G is unused.
+- Lower+V is backslash; Shift gives pipe. It is reachable while X remains held, unlike the backslash on the X position itself. Slash remains on the Option thumb. Lower+N/I supply adjacent brackets (`[` and `]`); Shift gives `{` and `}`. Lower+E supplies comma. Lower+G is unused.
 
 For Ctrl+1, hold X, hold the Esc/Control thumb, and tap physical Q. Ctrl+2 through Ctrl+6 use P, F, M, L, and J. The same positions work with the Command thumb.
 
@@ -284,6 +284,7 @@ The firmware preserves quick Escape, Control, Space, and movement access because
 
 - The user confirmed Browser, Ghostty, Telegram/Slack, Finder, Notes, and Settings on B/T/C/F/N/S, and requested both easier Tab/Ghostty leader access and movement/selection.
 - Lower's three unused Rectangle keys initially became Tab, Ctrl+A, and Shift+Tab. The user then requested Ctrl+A on physical A: it moved from G to A, right bracket moved from A to I, and G became unused. V became backslash to solve the X-held reach conflict; slash remains on its thumb. The duplicate Lower+I period was removed.
+- The user requested brackets next to each other: left bracket moved from Lower+E to Lower+N beside right bracket on I, and comma moved from N to E. Ctrl+A remains on A.
 - Finder moved from Raise+G to Raise+F; Up moved from F to U while Left/Down/Right stayed on Q/P/M. Raise+D/H became Shift+Left/Right. The three Ghostty layout macros and Home/End were removed.
 - Base, numbers, thumb behaviors, Media, layer locking, Bluetooth profiles, recovery combos, and deep sleep are unchanged. Remaining empty positions are deliberate.
 
@@ -346,5 +347,5 @@ Never copy a personal SSH private key into this repository or into firmware arti
 11. Test BT1 and BT2 selection/pairing, USB wake, OLED power-on, and app bridge keys.
 12. Test Bluetooth clear and bootloader only when prepared for their destructive or disruptive effects.
 13. On battery, leave the keyboard untouched for just over 15 minutes, then press a matrix key and confirm Bluetooth reconnects and normal typing resumes. Separately confirm USB-powered operation stays awake past the same timeout.
-14. Hold X and test H/W for Tab/Shift+Tab and V for backslash (Shift+V gives pipe). Test A then Q/P/F at a clean Ghostty shell prompt for leader 1/2/3; do not invoke those layouts inside Neovim. Verify I sends `]` (Shift gives `}`) and G sends nothing.
+14. Hold X and test H/W for Tab/Shift+Tab and V for backslash (Shift+V gives pipe). Test A then Q/P/F at a clean Ghostty shell prompt for leader 1/2/3; do not invoke those layouts inside Neovim. Verify N/I send `[`/`]` (Shift gives `{`/`}`), E sends comma, and G sends nothing.
 15. In a normal macOS text field, hold K and tap/repeat D/H to select left/right. Check vertical selection using the existing Shift thumb plus the Up/Down arrows. Test the same keys in Neovim separately, where behavior is editor-dependent.
