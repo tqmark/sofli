@@ -1,6 +1,6 @@
 # Left-only Sofle: current setup and decision history
 
-This is the durable record of the decisions made while adapting the Sofle and the surrounding macOS tools for a programmer who uses only the left hand. It records the current saved design, why it exists, what was superseded, what is known to be physically flashed, and what remains unresolved. This snapshot was verified on 2026-09-14.
+This is the durable record of the decisions made while adapting the Sofle and the surrounding macOS tools for a programmer who uses only the left hand. It records the current saved design, why it exists, what was superseded, what is known to be physically flashed, and what remains unresolved. Keymap snapshot updated on 2026-09-18.
 
 ## Accessibility goal and design rules
 
@@ -43,10 +43,12 @@ The full Sofle matrix still appears in `config/sofle.keymap`; the right-side ent
 
 “Saved” means present in Git. “Confirmed flashed” means explicitly verified on the physical board. These are not interchangeable.
 
-The last explicitly reported physical revision was `28b2d85`. Later revisions, including the layer-lock fixes and Media layer at `362f3bf`, were built, and flashing interactions followed, but their installation was not conclusively recorded. Until the keyboard is checked, use these two bootloader methods carefully:
+On 2026-09-17, serial transfer and USB reboot were verified separately for both keyboards:
 
-- On confirmed `28b2d85`: hold K for Raise, then press L+J.
-- On the current saved firmware: hold K for Raise, then press X+G.
+- Old Sofle (serial ending `2707E`): `0b8626e`, with 15-minute battery sleep.
+- New Sofle (serial ending `33F97`): `63db1e3`, before battery sleep was enabled. Its sleep update is still pending.
+- The 2026-09-18 Lower/Raise redesign is not yet confirmed flashed on either keyboard.
+- Both confirmed versions and the current saved firmware enter the bootloader by holding K for Raise, then pressing X+G together.
 - Hardware fallback: double-tap the controller reset button.
 
 ## Current saved keymap
@@ -54,10 +56,10 @@ The last explicitly reported physical revision was `28b2d85`. Later revisions, i
 ### Base
 
 ```text
-Q/Media  P  F  M  L  J
-B        Y  U  R  S  O
-C        D  T  H  E  A
-X/Lower  G  V  W  N  I  K/Raise
+Q        P        F  M  L  J
+B        Y/Media  U  R  S  O
+C        D        T  H  E  A
+X/Lower  G        V  W  N  I  K/Raise
 
          Z   /-Option   Esc-Control   comma-Command   Space-Shift
 ```
@@ -69,7 +71,7 @@ X/Lower  G  V  W  N  I  K/Raise
 - Tap Esc for Escape; hold it for Left Control.
 - Tap the comma thumb for comma; hold it for Left Command.
 - Tap Space for Space; hold it for Left Shift.
-- Enter is X+Space through Lower. Period is X+comma through Lower; Lower+I is also period for now.
+- Enter is X+Space through Lower. Period is X+comma through Lower; the old duplicate Lower+I period is now unused.
 - Hold-tap timing is 200 ms. No tap dances remain on any layer.
 - X and K use hold-preferred layer-taps so a following key selects the layer immediately instead of waiting 200 ms.
 
@@ -78,10 +80,10 @@ X/Lower  G  V  W  N  I  K/Raise
 Hold X for temporary access. Hold X, tap Z, and release X to lock it.
 
 ```text
-1          2                    3       4                  5  6
-7          8                    9       0                  -  =
-'          Backspace            ;       Rectangle-right    [  ]
-\ / Base   Rectangle-almost-max /       Rectangle-restore  ,  .  `
+1          2          3  4          5  6
+7          8          9  0          -  =
+'          Backspace  ;  Tab        [  ]
+\ / Base   Ctrl+A     \  Shift+Tab  ,  unused  `
 
            Z-toggle   /-Option   Esc-Control   Period-Command   Enter-Shift
 ```
@@ -92,7 +94,9 @@ Hold X for temporary access. Hold X, tap Z, and release X to lock it.
 - The comma thumb taps period and holds Command on Lower. The Space thumb taps Enter and holds Shift. A direct Lower Space was removed.
 - Apostrophe, semicolon, brackets, backslash, slash, comma, period, and grave are directly available.
 - Shift-generated variants such as `+`, `_`, colon, double quote, braces, question mark, and tilde are not duplicated as dedicated keys.
-- Rectangle-right, almost-maximize, and restore remain here, but the user considers them redundant. Their replacements are unresolved.
+- Lower+H is Tab and Lower+W is Shift+Tab, replacing Rectangle commands with common editing keys.
+- Lower+G sends Ctrl+A. In Ghostty, hold X, tap G and then Q/P/F for leader 1/2/3. For pane movement, hold X, tap G, release X, then tap Base H/J/K/L. Outside Ghostty this sends ordinary Ctrl+A and follows the active application's binding.
+- Lower+V is backslash; Shift gives pipe. It is reachable while X remains held, unlike the backslash on the X position itself. Slash remains on the Option thumb. Lower+I is unused because the comma thumb already supplies period.
 
 For Ctrl+1, hold X, hold the Esc/Control thumb, and tap physical Q. Ctrl+2 through Ctrl+6 use P, F, M, L, and J. The same positions work with the Command thumb.
 
@@ -101,18 +105,19 @@ For Ctrl+1, hold X, hold the Esc/Control thumb, and tap physical Q. Ctrl+2 throu
 Hold K for temporary access. Hold K, tap Z, and release K to lock it.
 
 ```text
-Left      Down      Up       Right     unused    Backspace
-Browser   unused    unused   Home      Settings  End
-Chat      Layout 1  Ghostty  Layout 2  Layout 3  Delete
-unused    Finder    BT1      BT2       Notes     OLED on   Esc
+Left      Down         Finder   Right         unused    Backspace
+Browser   unused       Up       unused        Settings  unused
+Chat      Select left  Ghostty  Select right  unused    Delete
+unused    unused       BT1      BT2           Notes     OLED on   Esc
 
           Z-toggle  /-Option  Esc-Control  comma-Command  Space-Shift
 ```
 
-- The arrows use Q/P/F/M, preserving their visible left-to-right Vim-like movement shape.
+- Q/P/M retain Left/Down/Right. Up moves from F to U (U for Up) to give the requested Finder shortcut its mnemonic F. This keeps three familiar arrow positions instead of moving the whole cluster.
 - Hold K+J for Backspace and K+A for forward Delete.
-- Hold K+B/T/C/S/G/N to open Browser, Ghostty, the Slack/Telegram toggle, Settings, Finder, or Notes. K+X is intentionally unused.
-- Raise+D/H/E emit Ghostty layout commands 1/2/3.
+- Hold K+B/T/C/F/N/S to open Browser, Ghostty, the Telegram/Slack toggle, Finder, Notes, or Settings. F still emits the existing Finder bridge F19, so Karabiner needs no change.
+- Raise+D/H send Shift+Left/Right to extend or shrink a text selection in supporting apps without holding the Shift thumb. Terminal/Neovim behavior follows their own bindings; these are not Vim Visual-mode macros.
+- The unused Home/End and all three direct Ghostty layout macros were removed. Freed positions stay unused.
 - Raise+V/W select Bluetooth profiles 1/2.
 - Raise+I turns external power on to recover the OLED.
 - Physical K on Raise taps Escape immediately. Z is the only Raise exit.
@@ -164,7 +169,7 @@ Live configuration: `~/.config/karabiner/karabiner.json`; launcher script: `~/.c
 
 ### Rectangle
 
-Rectangle starts at login, uses 12-pixel screen-edge gaps, hides its menu-bar icon, and uses Ctrl+Option shortcuts. The wider configuration includes halves, thirds, two-thirds, fourths, almost-maximize, restore, and custom actions. Only right-half, almost-maximize, and restore remain emitted by Lower. They are considered redundant and should eventually be replaced as one coherent set rather than with unrelated novelty shortcuts.
+Rectangle remains configured on macOS, but the Sofle no longer dedicates keys to it. The unused Lower window-right, almost-maximize, and restore bindings were replaced by Tab, Ctrl+A, and Shift+Tab. No Rectangle or native-keyboard settings were changed by this firmware redesign.
 
 ### Ghostty
 
@@ -175,7 +180,7 @@ Live configuration: `~/.config/ghostty/config`; layout helper: `~/.config/ghostt
 - Ctrl+A twice sends a literal Ctrl+A. Escape cancels the leader.
 - Resize mode uses H/J/K/L or arrows and exits with Escape or Q.
 - Leader then 1/2/3 creates a two-thirds split, equal halves, or a six-pane grid.
-- Raise+D/H/E emits those three leader sequences directly.
+- The three direct Raise layout macros were removed. Lower+G now provides Ctrl+A without automatically sending a following command.
 - Window, tab, and split state is restored on launch.
 
 Ghostty has no action for running the layout helper directly, so its binding types a shell command. It is safe only at a shell prompt; invoking it while Neovim, Claude, or another interactive program owns the pane can type unwanted text. That risk is accepted for now and should remain visible.
@@ -194,7 +199,7 @@ Live configuration: `~/.config/nvim`. Space is the Neovim leader.
 - Alt+J/K moves lines or selections.
 - Ctrl+arrows resizes Neovim windows.
 
-The firmware preserves quick Escape, Control, Space, and movement access because these mappings make them more valuable than isolated shortcut keys.
+The firmware preserves quick Escape, Control, Space, and movement access because these mappings make them more valuable than isolated shortcut keys. Raise+D/H send standard Shift+arrows for applications that select with those keys; use normal Vim Visual mode for Vim-native selection unless the editor is explicitly configured otherwise.
 
 ## Decision chronology
 
@@ -275,6 +280,13 @@ The firmware preserves quick Escape, Control, Space, and movement access because
 
 - Enabled the pinned ZMK deep-sleep support after 15 minutes idle so an unused keyboard consumes less battery overnight. The existing 30-second OLED blanking remains; USB power prevents deep sleep. The firmware must be flashed to each Sofle separately.
 
+### 2026-09-18: simplify Lower and Raise around daily actions
+
+- The user confirmed Browser, Ghostty, Telegram/Slack, Finder, Notes, and Settings on B/T/C/F/N/S, and requested both easier Tab/Ghostty leader access and movement/selection.
+- Lower's three unused Rectangle keys became Tab, Ctrl+A, and Shift+Tab. V became backslash to solve the X-held reach conflict; slash remains on its thumb. The duplicate Lower+I period was removed.
+- Finder moved from Raise+G to Raise+F; Up moved from F to U while Left/Down/Right stayed on Q/P/M. Raise+D/H became Shift+Left/Right. The three Ghostty layout macros and Home/End were removed.
+- Base, numbers, thumb behaviors, Media, layer locking, Bluetooth profiles, recovery combos, and deep sleep are unchanged. Remaining empty positions are deliberate.
+
 ## Decisions deliberately rejected or superseded
 
 - Reconnecting or depending on the right half: conflicts with the physical requirement.
@@ -295,9 +307,9 @@ The firmware preserves quick Escape, Control, Space, and movement access because
 
 ## Known issues and unresolved decisions
 
-1. **Space hold on the new Mac**: the previous saved design wrapped a 200 ms Space/Shift mod-tap in a 175 ms tap dance. The user reported that holding it no longer produced Shift. The saved configuration now uses a direct Space/Shift mod-tap, but the fix is unconfirmed until flashed. Hold Sofle Space for one full second, keep holding it, tap A, and expect `A`.
-2. **Firmware identity**: verify whether the board still runs `28b2d85` or a later build. Do not infer installation merely from a successful CI build or the presence of a UF2 file.
-3. **Rectangle replacements**: Lower still contains right-half, almost-maximize, and restore even though they are considered redundant. Choose a coherent replacement set after observing real missing actions.
+1. **Space hold on the new Mac**: the earlier nested tap dance was removed and the direct Space/Shift mod-tap has been flashed on both keyboards. Physical comfort and normal-speed typing still need user testing. Hold Sofle Space, keep holding it, tap A, and expect `A`.
+2. **Firmware identity**: the confirmed per-keyboard revisions are listed above. The redesigned layers still require flashing. Do not infer installation merely from a successful CI build or the presence of a UF2 file.
+3. **Redesign ergonomics**: confirm Lower Tab/Shift+Tab, the Ctrl+A workflow, Up on U, and selection on D/H feel comfortable before treating their physical placement as settled.
 4. **Arbitrary app switching**: Cmd+Tab is disabled, and named launchers do not select every running application. A dependable one-handed general switcher has not been chosen.
 5. **Deletion comfort**: Base L+J, Lower+D, Raise+J, and Media Y+J provide several routes, but repeated-deletion comfort has not been measured.
 6. **Combo accidents**: Q+P, L+J, and B+Y need normal-speed typing tests for false activation.
@@ -325,7 +337,7 @@ Never copy a personal SSH private key into this repository or into firmware arti
 2. Hold X and immediately tap Q: expect `1`, with no leaked `x` or `q`.
 3. Hold X, tap Z, release X, tap Q: expect `1`. Tap Z and then Q: expect `q`.
 4. Lock Lower, hold physical X for Base peek, tap Space, release X: expect one Space and return to Lower.
-5. Hold K and immediately tap Q/P/F/M: expect Left/Down/Up/Right with no leaked letters.
+5. Hold K and immediately tap Q/P/U/M: expect Left/Down/Up/Right with no leaked letters. K+F should open Finder.
 6. Lock Raise with K+Z and leave with Z. Verify physical K and the Esc thumb both send Escape without delay.
 7. Test Ctrl+1 through Ctrl+5, Cmd+1 through Cmd+6, Ctrl+Shift, Space-as-Shift, X+Space Enter, and X+comma period.
 8. Test Base L+J, Lower+D, Raise+J, Media Y+J, and repeated deletion.
@@ -334,3 +346,5 @@ Never copy a personal SSH private key into this repository or into firmware arti
 11. Test BT1 and BT2 selection/pairing, USB wake, OLED power-on, and app bridge keys.
 12. Test Bluetooth clear and bootloader only when prepared for their destructive or disruptive effects.
 13. On battery, leave the keyboard untouched for just over 15 minutes, then press a matrix key and confirm Bluetooth reconnects and normal typing resumes. Separately confirm USB-powered operation stays awake past the same timeout.
+14. Hold X and test H/W for Tab/Shift+Tab and V for backslash (Shift+V gives pipe). Test G then Q/P/F at a clean Ghostty shell prompt for leader 1/2/3; do not invoke those layouts inside Neovim.
+15. In a normal macOS text field, hold K and tap/repeat D/H to select left/right. Check vertical selection using the existing Shift thumb plus the Up/Down arrows. Test the same keys in Neovim separately, where behavior is editor-dependent.

@@ -40,30 +40,6 @@
 
 / {
     macros {
-        ghostty_layout_1: ghostty_layout_1 {
-            compatible = "zmk,behavior-macro";
-            #binding-cells = <0>;
-            wait-ms = <40>;
-            tap-ms = <40>;
-            bindings = <&kp LC(A) &kp N1>;
-        };
-
-        ghostty_layout_2: ghostty_layout_2 {
-            compatible = "zmk,behavior-macro";
-            #binding-cells = <0>;
-            wait-ms = <40>;
-            tap-ms = <40>;
-            bindings = <&kp LC(A) &kp N2>;
-        };
-
-        ghostty_layout_3: ghostty_layout_3 {
-            compatible = "zmk,behavior-macro";
-            #binding-cells = <0>;
-            wait-ms = <40>;
-            tap-ms = <40>;
-            bindings = <&kp LC(A) &kp N3>;
-        };
-
         lower_base_peek: lower_base_peek {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
@@ -198,18 +174,22 @@
             // Left half:
             // | 1 | 2 | 3 | 4 | 5 | 6 |
             // | 7 | 8 | 9 | 0 | - | = |
-            // | ' | BACKSPACE | ; | WINDOW RIGHT | [ | ] |
+            // | ' | BACKSPACE | ; | TAB | [ | ] |
             // Hold X to use temporarily, or hold X then tap Z to lock. Tap Z to leave.
             // Backspace is a real key here now that the L+J combo is BASE-only: on
             // this layer positions 4+5 are 5 and 6, as in 256 or 65536.
-            // | BACKSLASH: tap \\ / hold BASE | ALMOST MAX | / | RESTORE | , | . | ` |
+            // | BACKSLASH: tap \\ / hold BASE | CTRL+A | BACKSLASH | SHIFT+TAB | , | UNUSED | ` |
+            // V makes backslash/pipe reachable while X is held. Slash is on
+            // the Option thumb; period is on the Command thumb.
+            // G sends Ctrl+A only: in Ghostty, keep X held and tap Q/P/F for
+            // leader 1/2/3, or release X before tapping a Base H/J/K/L command.
             //     | Z: lock / unlock | SLASH/ALT | ESC/CTRL | PERIOD/CMD | ENTER/SHIFT |
 
             bindings = <
 &kp NUMBER_1  &kp NUMBER_2   &kp NUMBER_3  &kp NUMBER_4   &kp N5            &kp NUMBER_6                                 &kp F6     &kp F7    &kp F8     &kp F9     &kp F10   &kp F11
 &kp N7        &kp N8         &kp N9        &kp N0         &kp MINUS         &kp EQUAL                                    &kp N6     &kp N7    &kp N8     &kp N9     &kp N0    &kp F12
-&kp SQT       &kp BSPC       &kp SEMI      &kp LC(LA(L))  &kp LEFT_BRACKET  &kp RIGHT_BRACKET                            &kp CARET  &kp AMPS  &kp ASTRK  &kp LPAR   &kp RPAR  &kp PIPE
-&lower_bslash_base 0 0  &kp LC(LA(C))  &kp SLASH     &kp LC(LA(V))  &kp COMMA         &kp PERIOD         &kp GRAVE         &trans  &kp LBKT   &kp RBKT  &kp SEMI   &kp COLON  &kp BSLH  &trans
+&kp SQT       &kp BSPC       &kp SEMI      &kp TAB  &kp LEFT_BRACKET  &kp RIGHT_BRACKET                            &kp CARET  &kp AMPS  &kp ASTRK  &kp LPAR   &kp RPAR  &kp PIPE
+&lower_bslash_base 0 0  &kp LC(A)  &kp BSLH     &kp LS(TAB)  &kp COMMA         &none         &kp GRAVE         &trans  &kp LBKT   &kp RBKT  &kp SEMI   &kp COLON  &kp BSLH  &trans
                              &tog LOWER    &mt LEFT_ALT SLASH  &trans       &mt LEFT_COMMAND DOT  &mt LEFT_SHIFT ENTER  &trans  &trans     &trans    &trans     &trans
             >;
 
@@ -223,19 +203,21 @@
             // K itself taps ESC here. Z is the single reliable layer exit.
             // V+W on Base activates Raise for one keypress, normally to launch an app.
             // The two destructive combos now live on the bottom row: BT1+BT2 clears
-            // all Bluetooth pairings, and X+G enters the bootloader.
+            // the selected Bluetooth profile, and X+G enters the bootloader.
             // Neither can be hit while arrowing or deleting on the top row.
-            // | LEFT     | DOWN | UP       | RIGHT    | UNUSED | BACKSPACE  |
-            // | BROWSER  | UNUSED | UNUSED | HOME    | SETTINGS | END      |
-            // | CHAT     | GHOSTTY 1 | TERMINAL | GHOSTTY 2 | GHOSTTY 3 | DELETE |
-            // | UNUSED   | FINDER | BT1 | BT2 | NOTES | DISPLAY ON | ESC |
+            // F is Finder, so Up moves to U. Left/Down/Right stay on Q/P/M.
+            // D/H send Shift+Left/Right for text selection in supporting apps.
+            // | LEFT     | DOWN | FINDER   | RIGHT    | UNUSED | BACKSPACE  |
+            // | BROWSER  | UNUSED | UP     | UNUSED   | SETTINGS | UNUSED   |
+            // | CHAT     | SELECT LEFT | TERMINAL | SELECT RIGHT | UNUSED | DELETE |
+            // | UNUSED   | UNUSED | BT1 | BT2 | NOTES | DISPLAY ON | ESC |
             //     | Z: lock / unlock | SLASH/ALT | ESC/CTRL | COMMA/CMD | SPACE/SHIFT |
 
             bindings = <
-&kp LEFT      &kp DOWN           &kp UP        &kp RIGHT          &none               &kp BACKSPACE                                 &trans     &trans    &trans    &trans     &trans   &trans
-&kp F13       &none              &none         &kp HOME           &kp F17            &kp END                                      &kp PG_UP  &trans    &kp UP    &trans     &kp N0   &trans
-&kp F16       &ghostty_layout_1  &kp F14       &ghostty_layout_2  &ghostty_layout_3  &kp DEL                                      &kp PG_DN  &kp LEFT  &kp DOWN  &kp RIGHT  &kp DEL  &kp BSPC
-&none         &kp F19            &bt BT_SEL 0  &bt BT_SEL 1       &kp F15            &ext_power EP_ON   &kp ESC           &trans  &trans     &trans    &trans    &trans     &trans   &trans
+&kp LEFT      &kp DOWN           &kp F19        &kp RIGHT          &none               &kp BACKSPACE                                 &trans     &trans    &trans    &trans     &trans   &trans
+&kp F13       &none              &kp UP        &none              &kp F17            &none                                        &kp PG_UP  &trans    &kp UP    &trans     &kp N0   &trans
+&kp F16       &kp LS(LEFT)  &kp F14       &kp LS(RIGHT)  &none  &kp DEL                                      &kp PG_DN  &kp LEFT  &kp DOWN  &kp RIGHT  &kp DEL  &kp BSPC
+&none         &none            &bt BT_SEL 0  &bt BT_SEL 1       &kp F15            &ext_power EP_ON   &kp ESC           &trans  &trans     &trans    &trans    &trans     &trans   &trans
                                  &tog RAISE    &mt LEFT_ALT SLASH  &mt LEFT_CONTROL ESC  &mt LEFT_COMMAND COMMA  &mt LEFT_SHIFT SPACE    &trans  &trans     &trans    &trans    &trans
             >;
 

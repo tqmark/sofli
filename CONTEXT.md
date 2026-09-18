@@ -17,11 +17,11 @@ The navigation, application, Bluetooth, recovery, and command layer reached by h
 _Avoid_: Command layer, navigation layer, layer 2
 
 **Media**:
-The sparse momentary layer reached through Q and limited to volume and Backspace actions. It cannot be locked.
+The sparse momentary layer reached by holding Y for 200 ms and limited to volume and Backspace actions. It cannot be locked.
 _Avoid_: Function layer, layer 3
 
 **Layer leader**:
-The Base key held to reach another layer: X for Lower, K for Raise, or Q for Media.
+The Base key held to reach another layer: X for Lower, K for Raise, or Y for Media.
 _Avoid_: Mode key
 
 **Layer lock**:

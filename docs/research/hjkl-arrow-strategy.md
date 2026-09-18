@@ -2,6 +2,8 @@
 
 Research date: 2026-09-14
 
+Historical proposal, not implemented. The 2026-09-18 redesign instead keeps Q/P/M as Left/Down/Right, moves Up to U so F can open Finder, and uses D/H for Shift+Left/Right selection. Base H/J/K/L typing and the K layer leader remain unchanged. See `../decision-history.md` for the current saved layout; the comparisons below describe the earlier design.
+
 ## Question
 
 How should the physical Base `H`, `J`, `K`, and `L` keys also produce Left, Down, Up, and Right without making ordinary typing less reliable for a one-left-hand user?
