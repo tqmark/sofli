@@ -46,8 +46,8 @@ The full Sofle matrix still appears in `config/sofle.keymap`; the right-side ent
 Serial transfer and USB reboot were verified separately for both keyboards:
 
 - Old Sofle (serial ending `2707E`): `0b8626e`, with 15-minute battery sleep, flashed on 2026-09-17.
-- New Sofle (serial ending `33F97`): `c3b6c26`, with adjacent Lower brackets, Ctrl+A on A, and battery sleep. Flashed on 2026-09-18 at 13:57 Asia/Ho_Chi_Minh; serial DFU reported `Device programmed.` and the same serial returned as `SofleL-FlatMT`.
-- The newer Y Navigation/Media design described below has not been flashed to either keyboard.
+- New Sofle (serial ending `33F97`): `9b9d69e`, with Y Navigation/Media, leaner Lower/Raise, BT0/BT1 on Q/P, and no L+J combo. Flashed on 2026-09-18 at 15:12 Asia/Ho_Chi_Minh; serial DFU reported `Device programmed.` and the same serial returned as `SofleL-FlatMT` (USB `1d50:615e`). This supersedes its earlier `c3b6c26` flash.
+- The design below is merged into main and installed on the new Sofle. It has not been flashed to the old Sofle; physical typing/comfort tests on the new version are still pending.
 - Both confirmed versions and the current saved firmware enter the bootloader by holding K for Raise, then pressing X+G together.
 - Hardware fallback: double-tap the controller reset button.
 
@@ -297,6 +297,7 @@ The firmware preserves quick Escape, Control, Space, and movement access because
 - Raise keeps the six app bridges, OLED recovery, Escape, and its existing thumb/lock behaviors. The two existing Bluetooth selectors moved from V/W to Q/P and are now explicitly labeled BT0/BT1. Removed duplicate arrows, selection, Backspace, and forward Delete. V+W still clears the selected Bluetooth profile; X+G still enters the bootloader, only on Raise.
 - Numbers, adjacent Lower brackets N/I, Lower+A Ctrl+A, Lower+E comma, Base typing/combos, right-half placeholders, and battery sleep remain unchanged. The new Sofle is still confirmed on c3b6c26; this newer design requires a separate flash.
 - The user then requested removal of the Base L+J Backspace combo. It was removed without changing any layer bindings or other combos; Y+O is now the only Backspace binding on the active left half. Base L/J are ordinary letters, including when pressed together.
+- At the user's request, main was fast-forwarded to the tested `9b9d69e` revision and that exact firmware was flashed to the new Sofle (`277D64B1BE733F97`) at 15:12. Build [35319954561](https://github.com/tqmark/soflone/actions/runs/35319954561) passed. The application-only serial DFU package matched UF2 SHA-256 `217d716493dcacf6eb1d9d6b786efa61444227ce4a9ed7f20917b00b4fcaa056`; successful transfer and USB restart were verified. The old Sofle was not connected or updated.
 
 ## Decisions deliberately rejected or superseded
 
@@ -319,7 +320,7 @@ The firmware preserves quick Escape, Control, Space, and movement access because
 ## Known issues and unresolved decisions
 
 1. **Space hold on the new Mac**: the earlier nested tap dance was removed and the direct Space/Shift mod-tap has been flashed on both keyboards. Physical comfort and normal-speed typing still need user testing. Hold Sofle Space, keep holding it, tap A, and expect `A`.
-2. **Firmware identity**: the confirmed per-keyboard revisions are listed above. The Y Navigation/Media design still requires flashing. Do not infer installation merely from a successful CI build or the presence of a UF2 file.
+2. **Firmware identity**: the new Sofle is verified on `9b9d69e`; the old Sofle remains on `0b8626e` and still needs the redesign flashed. Do not infer installation merely from a successful CI build or the presence of a UF2 file.
 3. **Redesign ergonomics**: confirm pinky-held Y with H/J/K/L, O Backspace, P/F/M volume, and thumb-modified movement. Also test Lower Tab plus Shift, the Ctrl+A workflow, and leaving Lower for deletion.
 4. **Arbitrary app switching**: Cmd+Tab is disabled, and named launchers do not select every running application. A dependable one-handed general switcher has not been chosen.
 5. **Deletion comfort**: Y+O is the Backspace route. The user chose O for index-finger deletion and removed L+J, but repeated-deletion comfort has not been measured; Lower/Raise no longer contain dedicated Backspace.
