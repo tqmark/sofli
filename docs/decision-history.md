@@ -45,10 +45,10 @@ The full Sofle matrix still appears in `config/sofle.keymap`; the right-side ent
 
 Serial transfer and USB reboot were verified separately for both keyboards:
 
-- Old Sofle (serial ending `2707E`): `9b9d69e`, flashed on 2026-09-18 at 15:15 Asia/Ho_Chi_Minh. Serial DFU reported `Device programmed.` and the same serial returned as `SofleL-FlatMT` (USB `1d50:615e`). This replaces its earlier `0b8626e` firmware and includes Y Navigation/Media, the simplified layers, no L+J combo, and 15-minute battery sleep.
+- Old Sofle (serial ending `2707E`): `e9f4de5`, flashed on 2026-09-19 at 13:29 Asia/Ho_Chi_Minh. Serial DFU reported `Device programmed.` and the same serial returned as `SofleL-FlatMT` (USB `1d50:615e`). This replaces `9b9d69e`, adding Lower+G Backspace and Raise+Y browser brief while retaining Navigation/Media, simplified layers, no L+J combo, and 15-minute battery sleep.
 - New Sofle (serial ending `33F97`): `e9f4de5`, adding the Raise+Y browser-brief bridge while retaining Lower+G Backspace and the existing Navigation/Media design. Flashed on 2026-09-19 at 12:55 Asia/Ho_Chi_Minh; serial DFU reported `Device programmed.` and the same serial returned as `SofleL-FlatMT` (USB `1d50:615e`). This supersedes its earlier `7a9de84` flash; all other bindings remain unchanged.
-- The Lower+G Backspace addition is merged into main and installed on the new Sofle. The old Sofle remains on `9b9d69e` without Lower+G Backspace. Physical typing/comfort testing remains separate from transfer verification.
-- The Raise+Y browser-brief bridge (`e9f4de5`) is merged into main and flashed to the new Sofle only. Its native/Sofle Karabiner handlers and browser helper are installed on this Mac; live browser execution has not been tested.
+- Both keyboards now have identical `e9f4de5` firmware, including Lower+G Backspace and Raise+Y browser brief. The new Sofle was also reflashed and reverified at 13:27 on 2026-09-19. Physical typing/comfort testing remains separate from transfer verification.
+- The native/Sofle Karabiner handlers and browser helper are installed on this Mac. The user confirmed the shortcut worked after enabling System Events Automation permission for the current `Karabiner-Console-User-Server` entry; the separately listed lowercase entry was already enabled but did not authorize the running app. Full-brief mode was not separately confirmed.
 - Both confirmed versions and the current saved firmware enter the bootloader by holding K for Raise, then pressing X+G together.
 - Hardware fallback: double-tap the controller reset button.
 
@@ -320,6 +320,8 @@ The firmware preserves quick Escape, Control, Space, and movement access because
 - Added a cross-configuration regression check, mocked helper tests, and CI coverage. The live missing-rule check first failed with `Expected 4 browser brief handlers, got 0`, then passed after installation. Karabiner lint and AppleScript compilation passed; live browser/transcript behavior remains untested. The original personal config was backed up as `karabiner_20260919_before_browser_brief.json` before adding the two rule groups.
 - Mac-side changes are installed. At the user's request, main was fast-forwarded to tested revision `e9f4de5` on 2026-09-19. Build [35424169390](https://github.com/tqmark/soflone/actions/runs/35424169390) passed. UF2 SHA-256: `2dc0a8ec2a730ca161fb3e79a046c451f3b196e8ed7eec0c5bff503c71b13984`.
 - At 12:55 Asia/Ho_Chi_Minh, the application-only serial DFU package was flashed to the new Sofle (`277D64B1BE733F97`) on `/dev/cu.usbmodem1101`. The updater reported `Device programmed.` and the same serial returned as `SofleL-FlatMT` (USB `1d50:615e`). No bootloader or SoftDevice replacement was performed. The old Sofle remains on `9b9d69e`; actual K+Y/Shift+K+Y browser output remains a user test.
+- Subsequent live attempts reached the helper but failed at System Events access. The screenshot showed the current `Karabiner-Console-User-Server` Automation entry disabled, unlike the separate lowercase entry. After enabling the current entry, the user reported success. This was a Mac permission issue, not a firmware defect; static/mocked tests had not exercised the actual Karabiner permission context.
+- At the user's request, the same verified package was reflashed to the new Sofle at 13:27, then flashed to the old Sofle (`7DF33F115102707E`) at 13:29. For each transfer, SHA-256 verification passed, serial DFU reported `Device programmed.`, and the same serial returned as `SofleL-FlatMT`. Both now run `e9f4de5`; the old keyboard also gains the earlier Lower+G Backspace change.
 
 ## Decisions deliberately rejected or superseded
 
@@ -342,15 +344,15 @@ The firmware preserves quick Escape, Control, Space, and movement access because
 ## Known issues and unresolved decisions
 
 1. **Space hold on the new Mac**: the earlier nested tap dance was removed and the direct Space/Shift mod-tap has been flashed on both keyboards. Physical comfort and normal-speed typing still need user testing. Hold Sofle Space, keep holding it, tap A, and expect `A`.
-2. **Firmware identity**: the new Sofle is verified on `7a9de84`; the old Sofle remains on `9b9d69e`. Physical typing tests remain separate from installation verification. Do not infer future installations merely from a successful CI build or the presence of a UF2 file.
+2. **Firmware identity**: both Sofles are verified on `e9f4de5`. Physical typing tests remain separate from installation verification. Do not infer future installations merely from a successful CI build or the presence of a UF2 file.
 3. **Redesign ergonomics**: confirm pinky-held Y with H/J/K/L, P/F/M volume, and thumb-modified movement. Also test Lower Tab plus Shift, the Ctrl+A workflow, and the new X-then-G deletion gesture.
 4. **Arbitrary app switching**: Cmd+Tab is disabled, and named launchers do not select every running application. A dependable one-handed general switcher has not been chosen.
-5. **Deletion comfort**: the user did not get used to Y+O and chose X+G instead. Lower+G Backspace is flashed on the new Sofle and needs repeated-deletion testing; the old Sofle still needs this update. Y+O is retained as an alternative; L+J stays removed and Raise has no dedicated Backspace.
+5. **Deletion comfort**: the user did not get used to Y+O and chose X+G instead. Lower+G Backspace is flashed on both Sofles and needs repeated-deletion testing. Y+O is retained as an alternative; L+J stays removed and Raise has no dedicated Backspace.
 6. **Combo accidents**: Q+P and B+Y need normal-speed typing tests for false activation. Verify L/J together now type letters instead of deleting.
 7. **USB wake repeat**: an older report said the first key after about 30 seconds over USB could repeat. Cause and current status are unknown.
 8. **OLED**: it was blank during setup and recovered after settings/power experiments. Raise+I exists as a safe power-on path; continued reliability is unconfirmed.
 9. **Physical ergonomics**: finger assignments, reach, fatigue, accidental locks, missing spaces, unexpected capitals, and multi-modifier comfort need observation rather than assumption.
-10. **Browser brief**: native rules and the helper are installed, and the new Sofle has the K+Y firmware bridge; the old Sofle still needs an update. Static/mocked checks and AppleScript compilation passed without reading browser/clipboard content. Live Automation permission, transcript retrieval, and output need a deliberate user test.
+10. **Browser brief**: native rules and the helper are installed, and both Sofles have the K+Y firmware bridge. The user confirmed the shortcut worked after correcting the current Karabiner app's System Events Automation permission. Full-brief mode and operation on another Mac remain separate tests.
 
 ## Flashing decision and recovery
 
