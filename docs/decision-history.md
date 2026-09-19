@@ -45,10 +45,10 @@ The full Sofle matrix still appears in `config/sofle.keymap`; the right-side ent
 
 Serial transfer and USB reboot were verified separately for both keyboards:
 
-- Old Sofle (serial ending `2707E`): `e9f4de5`, flashed on 2026-09-19 at 13:29 Asia/Ho_Chi_Minh. Serial DFU reported `Device programmed.` and the same serial returned as `SofleL-FlatMT` (USB `1d50:615e`). This replaces `9b9d69e`, adding Lower+G Backspace and Raise+Y browser brief while retaining Navigation/Media, simplified layers, no L+J combo, and 15-minute battery sleep.
+- Old Sofle (serial ending `2707E`): `b246979`, flashed on 2026-09-19 at 13:37 Asia/Ho_Chi_Minh. Serial DFU reported `Device programmed.` and the same serial returned as `SofleL-FlatMT` (USB `1d50:615e`). This replaces `e9f4de5`, changing Lower+E from comma to Backspace while retaining Lower+G Backspace, Raise+Y browser brief, Navigation/Media, all timing, and 15-minute battery sleep.
 - New Sofle (serial ending `33F97`): `e9f4de5`, adding the Raise+Y browser-brief bridge while retaining Lower+G Backspace and the existing Navigation/Media design. Flashed on 2026-09-19 at 12:55 Asia/Ho_Chi_Minh; serial DFU reported `Device programmed.` and the same serial returned as `SofleL-FlatMT` (USB `1d50:615e`). This supersedes its earlier `7a9de84` flash; all other bindings remain unchanged.
-- Both keyboards now have identical `e9f4de5` firmware, including Lower+G Backspace and Raise+Y browser brief. The new Sofle was also reflashed and reverified at 13:27 on 2026-09-19. Physical typing/comfort testing remains separate from transfer verification.
-- The newer Lower+E Backspace change is saved on `codex/lower-e-backspace`, not merged or flashed. Both installed keyboards still send comma on Lower+E until updated.
+- Both keyboards include Lower+G Backspace and Raise+Y browser brief. The new Sofle was also reflashed and reverified on `e9f4de5` at 13:27 on 2026-09-19. Physical typing/comfort testing remains separate from transfer verification.
+- Lower+E Backspace (`b246979`) is merged into main and flashed to the old Sofle only. The new Sofle still sends comma on Lower+E until separately updated.
 - The native/Sofle Karabiner handlers and browser helper are installed on this Mac. The user confirmed the shortcut worked after enabling System Events Automation permission for the current `Karabiner-Console-User-Server` entry; the separately listed lowercase entry was already enabled but did not authorize the running app. Full-brief mode was not separately confirmed.
 - Both confirmed versions and the current saved firmware enter the bootloader by holding K for Raise, then pressing X+G together.
 - Hardware fallback: double-tap the controller reset button.
@@ -328,7 +328,8 @@ The firmware preserves quick Escape, Control, Space, and movement access because
 
 - After confirming Lower+E was comma, the user requested Backspace there. Hold X, then tap E to delete backward; in locked Lower, E alone deletes backward. Holding E on Lower can repeat deletion according to the host settings.
 - Lower+G and Navigation/Media+O Backspace remain available. Base E, the Base comma/Command thumb, all timings, modifiers, other bindings, and Raise X+G bootloader are unchanged. Comma and `<` now require Base rather than a direct Lower key.
-- The layout regression check failed with `lower_layer physical E: expected &kp BACKSPACE, got &kp COMMA` before the binding change. This saved change needs a separate merge and flash; both boards remain verified on `e9f4de5`.
+- The layout regression check failed with `lower_layer physical E: expected &kp BACKSPACE, got &kp COMMA` before the binding change, then passed. Build [35426918202](https://github.com/tqmark/soflone/actions/runs/35426918202) passed; a normalized comparison confirmed this was the only functional firmware change.
+- At the user's request, main was fast-forwarded to `b246979` and its application-only package was flashed to the old Sofle (`7DF33F115102707E`) at 13:37 Asia/Ho_Chi_Minh on `/dev/cu.usbmodem1101`. UF2 SHA-256: `7bc02cc6d42e7aaf8031363a716d3d4ea9dc33b6df0af3b466ad1abd9000bab9`. The updater reported `Device programmed.` and the same serial returned as `SofleL-FlatMT` (`1d50:615e`). The new Sofle remains on `e9f4de5`.
 
 ## Decisions deliberately rejected or superseded
 
@@ -351,10 +352,10 @@ The firmware preserves quick Escape, Control, Space, and movement access because
 ## Known issues and unresolved decisions
 
 1. **Space hold on the new Mac**: the earlier nested tap dance was removed and the direct Space/Shift mod-tap has been flashed on both keyboards. Physical comfort and normal-speed typing still need user testing. Hold Sofle Space, keep holding it, tap A, and expect `A`.
-2. **Firmware identity**: both Sofles are verified on `e9f4de5`. Physical typing tests remain separate from installation verification. Do not infer future installations merely from a successful CI build or the presence of a UF2 file.
+2. **Firmware identity**: the old Sofle is verified on `b246979`; the new Sofle remains on `e9f4de5`. Physical typing tests remain separate from installation verification. Do not infer future installations merely from a successful CI build or the presence of a UF2 file.
 3. **Redesign ergonomics**: confirm pinky-held Y with H/J/K/L, P/F/M volume, and thumb-modified movement. Also test Lower Tab plus Shift, the Ctrl+A workflow, and the new X-then-G deletion gesture.
 4. **Arbitrary app switching**: Cmd+Tab is disabled, and named launchers do not select every running application. A dependable one-handed general switcher has not been chosen.
-5. **Deletion comfort**: Lower+G Backspace is flashed on both Sofles. The user has now also requested Lower+E Backspace; that addition is saved but not flashed. Both X+E and X+G need comparative reach/repeated-deletion testing after updating. Y+O is retained as an alternative; L+J stays removed and Raise has no dedicated Backspace.
+5. **Deletion comfort**: Lower+G Backspace is flashed on both Sofles; Lower+E Backspace is flashed on the old Sofle only. Both X+E and X+G need comparative reach/repeated-deletion testing. Y+O is retained as an alternative; L+J stays removed and Raise has no dedicated Backspace.
 6. **Combo accidents**: Q+P and B+Y need normal-speed typing tests for false activation. Verify L/J together now type letters instead of deleting.
 7. **USB wake repeat**: an older report said the first key after about 30 seconds over USB could repeat. Cause and current status are unknown.
 8. **OLED**: it was blank during setup and recovered after settings/power experiments. Raise+I exists as a safe power-on path; continued reliability is unconfirmed.
