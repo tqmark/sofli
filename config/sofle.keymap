@@ -202,14 +202,15 @@
             // Bluetooth profile; X+G enters the bootloader. Do not move clear
             // onto the BT selectors. Navigation and Backspace now live on Y.
             // | BT0      | BT1    | FINDER   | UNUSED | UNUSED   | UNUSED |
-            // | BROWSER  | UNUSED | UNUSED   | UNUSED | SETTINGS | UNUSED |
+            // Y emits F18 for browser transcript; Shift+Y requests the full brief.
+            // | BROWSER  | BRIEF  | UNUSED   | UNUSED | SETTINGS | UNUSED |
             // | CHAT     | UNUSED | TERMINAL | UNUSED | UNUSED   | UNUSED |
             // | UNUSED   | UNUSED | UNUSED   | UNUSED | NOTES    | DISPLAY ON | ESC |
             //     | Z: lock / unlock | SLASH/ALT | ESC/CTRL | COMMA/CMD | SPACE/SHIFT |
 
             bindings = <
 &bt BT_SEL 0  &bt BT_SEL 1       &kp F19        &none              &none              &none                                        &trans     &trans    &trans    &trans     &trans   &trans
-&kp F13       &none              &none          &none              &kp F17            &none                                        &kp PG_UP  &trans    &kp UP    &trans     &kp N0   &trans
+&kp F13       &kp F18            &none          &none              &kp F17            &none                                        &kp PG_UP  &trans    &kp UP    &trans     &kp N0   &trans
 &kp F16       &none              &kp F14        &none              &none              &none                                        &kp PG_DN  &kp LEFT  &kp DOWN  &kp RIGHT  &kp DEL  &kp BSPC
 &none         &none              &none          &none              &kp F15            &ext_power EP_ON   &kp ESC           &trans  &trans     &trans    &trans    &trans     &trans   &trans
                                  &tog RAISE    &mt LEFT_ALT SLASH  &mt LEFT_CONTROL ESC  &mt LEFT_COMMAND COMMA  &mt LEFT_SHIFT SPACE    &trans  &trans     &trans    &trans    &trans

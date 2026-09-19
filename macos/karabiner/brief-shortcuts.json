@@ -1,0 +1,181 @@
+{
+    "title": "Browser brief — native Space+Y and Sofle K+Y",
+    "rules": [
+        {
+            "description": "Browser brief on native Space+Y / Space+Shift+Y",
+            "manipulators": [
+                {
+                    "type": "basic",
+                    "from": {
+                        "simultaneous": [
+                            {
+                                "key_code": "spacebar"
+                            },
+                            {
+                                "key_code": "y"
+                            }
+                        ],
+                        "simultaneous_options": {
+                            "detect_key_down_uninterruptedly": true,
+                            "key_down_order": "insensitive",
+                            "key_up_order": "insensitive",
+                            "key_up_when": "any"
+                        },
+                        "modifiers": {
+                            "mandatory": [
+                                "shift"
+                            ]
+                        }
+                    },
+                    "parameters": {
+                        "basic.simultaneous_threshold_milliseconds": 30
+                    },
+                    "conditions": [
+                        {
+                            "type": "device_unless",
+                            "identifiers": [
+                                {
+                                    "vendor_id": 7504,
+                                    "product_id": 24926
+                                }
+                            ]
+                        },
+                        {
+                            "type": "frontmost_application_if",
+                            "bundle_identifiers": [
+                                "^com\\.google\\.Chrome$",
+                                "^com\\.brave\\.Browser$",
+                                "^com\\.microsoft\\.edgemac$",
+                                "^company\\.thebrowser\\.Browser$"
+                            ]
+                        }
+                    ],
+                    "to": [
+                        {
+                            "shell_command": "PATH=\"/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin\" python3 ~/.config/karabiner/browser_brief.py full"
+                        }
+                    ]
+                },
+                {
+                    "type": "basic",
+                    "from": {
+                        "simultaneous": [
+                            {
+                                "key_code": "spacebar"
+                            },
+                            {
+                                "key_code": "y"
+                            }
+                        ],
+                        "simultaneous_options": {
+                            "detect_key_down_uninterruptedly": true,
+                            "key_down_order": "insensitive",
+                            "key_up_order": "insensitive",
+                            "key_up_when": "any"
+                        }
+                    },
+                    "parameters": {
+                        "basic.simultaneous_threshold_milliseconds": 30
+                    },
+                    "conditions": [
+                        {
+                            "type": "device_unless",
+                            "identifiers": [
+                                {
+                                    "vendor_id": 7504,
+                                    "product_id": 24926
+                                }
+                            ]
+                        },
+                        {
+                            "type": "frontmost_application_if",
+                            "bundle_identifiers": [
+                                "^com\\.google\\.Chrome$",
+                                "^com\\.brave\\.Browser$",
+                                "^com\\.microsoft\\.edgemac$",
+                                "^company\\.thebrowser\\.Browser$"
+                            ]
+                        }
+                    ],
+                    "to": [
+                        {
+                            "shell_command": "PATH=\"/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin\" python3 ~/.config/karabiner/browser_brief.py transcript"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "description": "Browser brief on Sofle F18 / Shift+F18 (K+Y)",
+            "manipulators": [
+                {
+                    "type": "basic",
+                    "from": {
+                        "key_code": "f18",
+                        "modifiers": {
+                            "mandatory": [
+                                "shift"
+                            ]
+                        }
+                    },
+                    "conditions": [
+                        {
+                            "type": "device_if",
+                            "identifiers": [
+                                {
+                                    "vendor_id": 7504,
+                                    "product_id": 24926
+                                }
+                            ]
+                        },
+                        {
+                            "type": "frontmost_application_if",
+                            "bundle_identifiers": [
+                                "^com\\.google\\.Chrome$",
+                                "^com\\.brave\\.Browser$",
+                                "^com\\.microsoft\\.edgemac$",
+                                "^company\\.thebrowser\\.Browser$"
+                            ]
+                        }
+                    ],
+                    "to": [
+                        {
+                            "shell_command": "PATH=\"/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin\" python3 ~/.config/karabiner/browser_brief.py full"
+                        }
+                    ]
+                },
+                {
+                    "type": "basic",
+                    "from": {
+                        "key_code": "f18"
+                    },
+                    "conditions": [
+                        {
+                            "type": "device_if",
+                            "identifiers": [
+                                {
+                                    "vendor_id": 7504,
+                                    "product_id": 24926
+                                }
+                            ]
+                        },
+                        {
+                            "type": "frontmost_application_if",
+                            "bundle_identifiers": [
+                                "^com\\.google\\.Chrome$",
+                                "^com\\.brave\\.Browser$",
+                                "^com\\.microsoft\\.edgemac$",
+                                "^company\\.thebrowser\\.Browser$"
+                            ]
+                        }
+                    ],
+                    "to": [
+                        {
+                            "shell_command": "PATH=\"/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin\" python3 ~/.config/karabiner/browser_brief.py transcript"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

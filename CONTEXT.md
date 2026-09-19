@@ -33,7 +33,7 @@ A temporary return from locked Lower to Base while the physical X position is he
 _Avoid_: Temporary unlock
 
 **Bridge key**:
-An unused F13-F19 key emitted by ZMK and consumed by Karabiner to open a macOS application. It is an internal signal, not a user-facing function key.
+An F13-F19 key emitted by ZMK and consumed by Karabiner to open a macOS application or run a browser action. F18 carries the browser transcript/full-brief action. It is an internal signal, not a user-facing function key.
 _Avoid_: Function key shortcut
 
 **Saved firmware**:

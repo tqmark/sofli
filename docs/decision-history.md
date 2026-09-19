@@ -48,6 +48,7 @@ Serial transfer and USB reboot were verified separately for both keyboards:
 - Old Sofle (serial ending `2707E`): `9b9d69e`, flashed on 2026-09-18 at 15:15 Asia/Ho_Chi_Minh. Serial DFU reported `Device programmed.` and the same serial returned as `SofleL-FlatMT` (USB `1d50:615e`). This replaces its earlier `0b8626e` firmware and includes Y Navigation/Media, the simplified layers, no L+J combo, and 15-minute battery sleep.
 - New Sofle (serial ending `33F97`): `7a9de84`, adding Lower+G Backspace to the existing Navigation/Media design. Flashed on 2026-09-19 at 12:15 Asia/Ho_Chi_Minh; serial DFU reported `Device programmed.` and the same serial returned as `SofleL-FlatMT` (USB `1d50:615e`). This supersedes its earlier `9b9d69e` flash; Y+O and all other bindings remain unchanged.
 - The Lower+G Backspace addition is merged into main and installed on the new Sofle. The old Sofle remains on `9b9d69e` without Lower+G Backspace. Physical typing/comfort testing remains separate from transfer verification.
+- The newer Raise+Y browser-brief bridge is saved on `codex/browser-brief-shortcuts`, not merged or flashed. Its native/Sofle Karabiner handlers and browser helper are installed on this Mac; live browser execution has not been tested.
 - Both confirmed versions and the current saved firmware enter the bootloader by holding K for Raise, then pressing X+G together.
 - Hardware fallback: double-tap the controller reset button.
 
@@ -108,7 +109,7 @@ Hold K for temporary access. Hold K, tap Z, and release K to lock it.
 
 ```text
 BT0       BT1     Finder   unused  unused    unused
-Browser   unused  unused   unused  Settings  unused
+Browser   Brief   unused   unused  Settings  unused
 Chat      unused  Ghostty  unused  unused    unused
 unused    unused  unused   unused  Notes     OLED on   Esc
 
@@ -117,6 +118,7 @@ unused    unused  unused   unused  Notes     OLED on   Esc
 
 - Q/P select ZMK Bluetooth profiles 0/1, respectively. These are the same physical positions that produce 1/2 on Lower, and the same saved profiles previously labeled BT1/BT2. Individual V/W bindings are now unused.
 - Hold K+B/T/C/F/N/S to open Browser, Ghostty, the Telegram/Slack toggle, Finder, Notes, or Settings. F still emits the existing Finder bridge F19, so Karabiner needs no change.
+- Hold K and tap Y for the active browser's YouTube transcript. Add the Shift thumb for the full brief. Y emits F18 on Raise; Karabiner handles F18/Shift+F18 only from the Sofle and only in supported browsers. Base Y Navigation/Media is unchanged. This bridge needs the newly built firmware, not just the Karabiner update.
 - Duplicate arrows, Shift+arrow selection, Backspace, and forward Delete were removed from Raise. Navigation and Backspace now belong to Y; use its Shift thumb for selection in supporting apps. Forward Delete was explicitly rejected. The earlier Home/End and direct Ghostty layout macros remain removed. Freed positions stay unused.
 - Raise+I turns external power on to recover the OLED.
 - Physical K on Raise taps Escape immediately. Z is the only Raise exit.
@@ -153,7 +155,7 @@ The benign combos are scoped to Base because ZMK combos follow physical position
 
 ## macOS integration decisions
 
-These files are intentionally not copied into this firmware repository; this section records the contract between them and ZMK.
+The complete personal configuration files are intentionally not copied into this firmware repository. The reusable browser-brief rule fragment and wrapper are versioned under `macos/karabiner/`; this section records their contract and the other integrations with ZMK.
 
 ### Karabiner-Elements
 
@@ -162,7 +164,9 @@ Live configuration: `~/.config/karabiner/karabiner.json`; launcher script: `~/.c
 - On the native Mac keyboard, Caps Lock taps Escape and holds Control with a 200 ms alone timeout.
 - Right Option maps to Left Control.
 - Native Space+B/T/N/C/S/F simultaneous chords open Browser, terminal, Notes, the Slack/Telegram toggle, Settings, and Finder. Space+M remains normal typing. The chords use a 30 ms window and explicitly exclude the Sofle device (VID `0x1d50`, PID `0x615e`) plus Ghostty and Apple Terminal.
-- The Sofle emits F13-F17 and F19 from Raise. Karabiner maps them to Browser, Ghostty/Terminal, Notes, the Slack/Telegram toggle, Settings, and Finder. F18 is unused. This keeps application launching away from F1-F12 and avoids Space/Shift ambiguity on the Sofle.
+- The Sofle emits F13-F17 and F19 from Raise. Karabiner maps them to Browser, Ghostty/Terminal, Notes, the Slack/Telegram toggle, Settings, and Finder. Raise+Y now emits F18 for the browser transcript action; Shift+F18 requests a full brief. These internal bridges keep actions away from user-facing F1-F12 and avoid Space/Shift ambiguity on the Sofle.
+- Native Space+Y / Shift+Space+Y run transcript / full brief in Chrome, Brave, Edge, and Arc. They use a 30 ms simultaneous window like the existing native app launchers and exclude the Sofle; F18 handlers require the Sofle device. No global Space hold behavior was added.
+- Both brief front-ends call `~/.config/karabiner/browser_brief.py`, which reads the active supported browser tab via AppleScript and passes an explicit validated YouTube URL to the existing `~/.local/bin/brief` (`-t` for transcript). It does not type `yy` or read the clipboard. The existing brief tool writes its result to the clipboard. macOS Automation approval may be required on first deliberate use.
 - C is the only chat shortcut. When Slack is frontmost, it opens Telegram; when Telegram is frontmost, it opens Slack; when neither is frontmost, it opens Telegram if installed and otherwise Slack. K+C uses it on the Sofle and native Space+C uses it on the Mac keyboard. Apple Messages is not used.
 - Ctrl+N/P becomes Down/Up outside Ghostty and Apple Terminal.
 - Left Option+H/L focuses the previous/next macOS window in the current Space.
@@ -308,6 +312,14 @@ The firmware preserves quick Escape, Control, Space, and movement access because
 - Y+O remains available, L+J remains removed, Lower+K remains backtick, and all other layers, timing, thumb modifiers, Bluetooth actions, and recovery combos remain unchanged. In particular, X+G on Raise is still bootloader, not Backspace.
 - At the user's request, main was fast-forwarded to tested revision `7a9de84` and the exact application was flashed to the new Sofle (`277D64B1BE733F97`) at 12:15. Build [35423210707](https://github.com/tqmark/soflone/actions/runs/35423210707) passed; UF2 SHA-256 is `ae23ec460b9c13e5510929d524907fb137406004e7751ae4af655dbb71bc6f68`. Serial DFU reported `Device programmed.` and the same serial returned as `SofleL-FlatMT`. The old Sofle was not updated and remains on `9b9d69e`.
 
+### 2026-09-19: restore browser brief on native and Sofle keyboards
+
+- The user identified a missing Space+Y shortcut. The active Karabiner profile contained no Y/brief action and Raise+Y was unused. Older backups documented transcript mode on Space+Y and full brief on Shift+Space+Y. The `brief` helper was still installed.
+- Added Raise+Y F18 and browser/device-scoped Karabiner rules for F18/Shift+F18 plus native Space+Y/Shift+Space+Y. All other firmware bindings, hold timing, recovery gestures, app bridges, and existing Karabiner rules were preserved.
+- Replaced the old Vimium `yy` plus clipboard-delay sequence with a small wrapper that reads the active browser URL, validates a YouTube host, and invokes the existing brief tool with an explicit URL. This avoids typing into the page and stale clipboard fallback. The existing transcript-fetching tool was not modified or executed during testing.
+- Added a cross-configuration regression check, mocked helper tests, and CI coverage. The live missing-rule check first failed with `Expected 4 browser brief handlers, got 0`, then passed after installation. Karabiner lint and AppleScript compilation passed; live browser/transcript behavior remains untested. The original personal config was backed up as `karabiner_20260919_before_browser_brief.json` before adding the two rule groups.
+- Mac-side changes are installed, but neither keyboard has the new F18 firmware bridge yet. This work is not merged into main.
+
 ## Decisions deliberately rejected or superseded
 
 - Reconnecting or depending on the right half: conflicts with the physical requirement.
@@ -337,6 +349,7 @@ The firmware preserves quick Escape, Control, Space, and movement access because
 7. **USB wake repeat**: an older report said the first key after about 30 seconds over USB could repeat. Cause and current status are unknown.
 8. **OLED**: it was blank during setup and recovered after settings/power experiments. Raise+I exists as a safe power-on path; continued reliability is unconfirmed.
 9. **Physical ergonomics**: finger assignments, reach, fatigue, accidental locks, missing spaces, unexpected capitals, and multi-modifier comfort need observation rather than assumption.
+10. **Browser brief**: native rules and the helper are installed; Sofle K+Y needs the new firmware flashed. Static/mocked checks and AppleScript compilation passed without reading browser/clipboard content. Live Automation permission, transcript retrieval, and output need a deliberate user test.
 
 ## Flashing decision and recovery
 
@@ -369,3 +382,4 @@ Never copy a personal SSH private key into this repository or into firmware arti
 13. On battery, leave the keyboard untouched for just over 15 minutes, then press a matrix key and confirm Bluetooth reconnects and normal typing resumes. Separately confirm USB-powered operation stays awake past the same timeout.
 14. Hold X and test H for Tab, Shift thumb+H for Shift+Tab, and V for backslash (Shift+V gives pipe). Test A then Q/P/F at a clean Ghostty shell prompt for leader 1/2/3; do not invoke those layouts inside Neovim. Verify N/I send `[`/`]` (Shift gives `{`/`}`), E sends comma, K sends backtick, G sends Backspace, and D/W send nothing.
 15. In a normal macOS text field, hold Y for 200 ms, hold the Shift thumb, and tap/repeat H/J/K/L to select in each direction. Test Option/Command modified movement separately and release all keys to check for stuck modifiers. Verify the four modifier thumbs retain Base tap outputs. Test Neovim separately, where behavior is editor-dependent.
+16. With a public YouTube video open in a supported browser, test native Space+Y and Shift+Space+Y, then Sofle K+Y and K+Shift+Y after flashing. Expect transcript/full-brief output on the clipboard, no typed `yy`, no trigger outside the supported browsers, and normal Base Y/navigation behavior. Grant macOS Automation access only when deliberately invoking the shortcut.

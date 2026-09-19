@@ -62,7 +62,7 @@ def validate(source):
     raise_keys = dict(THUMBS)
     raise_keys.update({
         "Q": "&bt BT_SEL 0", "P": "&bt BT_SEL 1", "B": "&kp F13", "T": "&kp F14",
-        "N": "&kp F15", "C": "&kp F16", "S": "&kp F17", "F": "&kp F19",
+        "N": "&kp F15", "C": "&kp F16", "S": "&kp F17", "F": "&kp F19", "Y": "&kp F18",
         "I": "&ext_power EP_ON", "K": "&kp ESC", "Z": "&tog RAISE",
     })
 
