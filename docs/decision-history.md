@@ -1,6 +1,6 @@
 # Left-only Sofle: current setup and decision history
 
-This is the durable record of the decisions made while adapting the Sofle and the surrounding macOS tools for a programmer who uses only the left hand. It records the current saved design, why it exists, what was superseded, what is known to be physically flashed, and what remains unresolved. Keymap snapshot updated on 2026-09-18.
+This is the durable record of the decisions made while adapting the Sofle and the surrounding macOS tools for a programmer who uses only the left hand. It records the current saved design, why it exists, what was superseded, what is known to be physically flashed, and what remains unresolved. Keymap snapshot updated on 2026-09-19.
 
 ## Accessibility goal and design rules
 
@@ -47,7 +47,7 @@ Serial transfer and USB reboot were verified separately for both keyboards:
 
 - Old Sofle (serial ending `2707E`): `9b9d69e`, flashed on 2026-09-18 at 15:15 Asia/Ho_Chi_Minh. Serial DFU reported `Device programmed.` and the same serial returned as `SofleL-FlatMT` (USB `1d50:615e`). This replaces its earlier `0b8626e` firmware and includes Y Navigation/Media, the simplified layers, no L+J combo, and 15-minute battery sleep.
 - New Sofle (serial ending `33F97`): `9b9d69e`, with Y Navigation/Media, leaner Lower/Raise, BT0/BT1 on Q/P, and no L+J combo. Flashed on 2026-09-18 at 15:12 Asia/Ho_Chi_Minh; serial DFU reported `Device programmed.` and the same serial returned as `SofleL-FlatMT` (USB `1d50:615e`). This supersedes its earlier `c3b6c26` flash.
-- The design below is merged into main and installed on both Sofles at firmware revision `9b9d69e`; physical typing/comfort tests on the new version are still pending.
+- Both Sofles have the merged Navigation/Media design at `9b9d69e`. The newer Lower+G Backspace addition described below is saved on `codex/lower-g-backspace`, not yet merged or flashed. Physical typing/comfort testing remains separate from transfer verification.
 - Both confirmed versions and the current saved firmware enter the bootloader by holding K for Raise, then pressing X+G together.
 - Hardware fallback: double-tap the controller reset button.
 
@@ -81,23 +81,24 @@ X/Lower  G            V  W  N  I  K/Raise
 Hold X for temporary access. Hold X, tap Z, and release X to lock it.
 
 ```text
-1          2       3  4       5  6
-7          8       9  0       -  =
-'          unused  ;  Tab     ,  Ctrl+A
-\ / Base   unused  \  unused  [  ]       `
+1          2          3  4       5  6
+7          8          9  0       -  =
+'          unused     ;  Tab     ,  Ctrl+A
+\ / Base   Backspace  \  unused  [  ]       `
 
            Z-toggle   /-Option   Esc-Control   Period-Command   Enter-Shift
 ```
 
 - Digits are arranged in reading order, making Ctrl+1 through Ctrl+5 and Cmd+1 through Cmd+6 available from one hand.
-- Lower+D is unused; Backspace is Y+O and the L+J combo has been removed entirely. For deletion, release temporary Lower before holding Y and tapping O. If Lower is locked, tap Z to exit first (or hold X for Base peek); pressing Y directly on Lower types `8`.
+- Lower+G is Backspace: from Base, hold X first and tap G. X resolves to Lower when G is pressed, without Y's deliberate 200 ms dwell. With Lower locked, G alone is Backspace. Lower+D remains unused and L+J remains removed. Y+O is retained as an alternative from Base; Y directly on Lower still types `8`.
+- Raise X+G remains the bootloader combo. Leave Raise with Z before using the Base-to-Lower X-then-G deletion gesture; no combo or recovery action has moved.
 - The physical X position taps backslash. While Lower is locked, holding it temporarily reveals Base; release it to return to Lower. This is the route to Base letters and a normal Space without unlocking.
 - The comma thumb taps period and holds Command on Lower. The Space thumb taps Enter and holds Shift. A direct Lower Space was removed.
 - Apostrophe, semicolon, brackets, backslash, slash, comma, period, and grave are directly available.
 - Shift-generated variants such as `+`, `_`, colon, double quote, braces, question mark, and tilde are not duplicated as dedicated keys.
 - Lower+H is Tab. Add the Shift thumb for Shift+Tab; the dedicated Lower+W Shift+Tab was removed and W is unused.
 - Lower+A sends Ctrl+A, matching the physical A position. In Ghostty, hold X, tap A and then Q/P/F for leader 1/2/3. For pane movement, hold X, tap A, release X, then tap Base H/J/K/L. Outside Ghostty this sends ordinary Ctrl+A and follows the active application's binding.
-- Lower+V is backslash; Shift gives pipe. It is reachable while X remains held, unlike the backslash on the X position itself. Slash remains on the Option thumb. Lower+N/I supply adjacent brackets (`[` and `]`); Shift gives `{` and `}`. Lower+E supplies comma. Lower+G is unused.
+- Lower+V is backslash; Shift gives pipe. It is reachable while X remains held, unlike the backslash on the X position itself. Slash remains on the Option thumb. Lower+N/I supply adjacent brackets (`[` and `]`); Shift gives `{` and `}`. Lower+E supplies comma, and Lower+K retains backtick.
 
 For Ctrl+1, hold X, hold the Esc/Control thumb, and tap physical Q. Ctrl+2 through Ctrl+6 use P, F, M, L, and J. The same positions work with the Command thumb.
 
@@ -300,6 +301,13 @@ The firmware preserves quick Escape, Control, Space, and movement access because
 - At the user's request, main was fast-forwarded to the tested `9b9d69e` revision and that exact firmware was flashed to the new Sofle (`277D64B1BE733F97`) at 15:12. Build [35319954561](https://github.com/tqmark/soflone/actions/runs/35319954561) passed. The application-only serial DFU package matched UF2 SHA-256 `217d716493dcacf6eb1d9d6b786efa61444227ce4a9ed7f20917b00b4fcaa056`; successful transfer and USB restart were verified. The old Sofle was not connected or updated.
 - At 15:15, the user connected the old Sofle (`7DF33F115102707E`) in bootloader mode and requested the same firmware. The identical `9b9d69e` application was programmed over `/dev/cu.usbmodem1101`; `Device programmed.` and the return of the same serial as `SofleL-FlatMT` were verified. Both keyboards now have the same tested firmware; no pairings were cleared or bootloader updates requested.
 
+### 2026-09-19: add Backspace to the familiar X-held layer
+
+- The user reported not getting used to Y+O. After discussing E/A alternatives and X+K, the user chose X+G: Lower+G was unused, so no punctuation or other action needed moving.
+- Lower+G now sends Backspace. The gesture is hold X first, then tap G, using the existing hold-preferred Lower behavior. This also makes deletion available while typing numbers without leaving Lower. In locked Lower, G alone deletes backward.
+- Y+O remains available, L+J remains removed, Lower+K remains backtick, and all other layers, timing, thumb modifiers, Bluetooth actions, and recovery combos remain unchanged. In particular, X+G on Raise is still bootloader, not Backspace.
+- This addition has not been flashed to either keyboard; both are confirmed on `9b9d69e`.
+
 ## Decisions deliberately rejected or superseded
 
 - Reconnecting or depending on the right half: conflicts with the physical requirement.
@@ -322,9 +330,9 @@ The firmware preserves quick Escape, Control, Space, and movement access because
 
 1. **Space hold on the new Mac**: the earlier nested tap dance was removed and the direct Space/Shift mod-tap has been flashed on both keyboards. Physical comfort and normal-speed typing still need user testing. Hold Sofle Space, keep holding it, tap A, and expect `A`.
 2. **Firmware identity**: both Sofles are verified on `9b9d69e` through successful serial transfer and USB restart. Physical typing tests remain separate from installation verification. Do not infer future installations merely from a successful CI build or the presence of a UF2 file.
-3. **Redesign ergonomics**: confirm pinky-held Y with H/J/K/L, O Backspace, P/F/M volume, and thumb-modified movement. Also test Lower Tab plus Shift, the Ctrl+A workflow, and leaving Lower for deletion.
+3. **Redesign ergonomics**: confirm pinky-held Y with H/J/K/L, P/F/M volume, and thumb-modified movement. Also test Lower Tab plus Shift, the Ctrl+A workflow, and the new X-then-G deletion gesture.
 4. **Arbitrary app switching**: Cmd+Tab is disabled, and named launchers do not select every running application. A dependable one-handed general switcher has not been chosen.
-5. **Deletion comfort**: Y+O is the Backspace route. The user chose O for index-finger deletion and removed L+J, but repeated-deletion comfort has not been measured; Lower/Raise no longer contain dedicated Backspace.
+5. **Deletion comfort**: the user did not get used to Y+O and chose X+G instead. The new Lower+G Backspace needs flashing and repeated-deletion testing. Y+O is retained as an alternative; L+J stays removed and Raise has no dedicated Backspace.
 6. **Combo accidents**: Q+P and B+Y need normal-speed typing tests for false activation. Verify L/J together now type letters instead of deleting.
 7. **USB wake repeat**: an older report said the first key after about 30 seconds over USB could repeat. Cause and current status are unknown.
 8. **OLED**: it was blank during setup and recovered after settings/power experiments. Raise+I exists as a safe power-on path; continued reliability is unconfirmed.
@@ -353,11 +361,11 @@ Never copy a personal SSH private key into this repository or into firmware arti
 5. Hold Y for at least 200 ms and tap H/J/K/L: expect Left/Down/Up/Right. Release Y and verify the same keys work as Base letters (K still holds Raise). K+F should open Finder.
 6. Lock Raise with K+Z and leave with Z. Verify physical K and the Esc thumb both send Escape without delay.
 7. Test Ctrl+1 through Ctrl+5, Cmd+1 through Cmd+6, Ctrl+Shift, Space-as-Shift, X+Space Enter, and X+comma period.
-8. Test Y+O, including held-O repeat. Base L/J pressed together should type letters, never Backspace. Lower+D/W and Raise+J/A should do nothing. From Lower, release X (or exit the lock with Z) before using Y+O; then re-enter Lower for numbers.
+8. Hold X first, tap G: expect Backspace, with no leaked `x` or `g`. Keep X held and hold G to test repeat. Lock Lower, then tap G: expect Backspace; unlock and verify G types `g`. Y+O must still work. Base L/J together should type letters, never Backspace. Lower+D/W and Raise+J/A should do nothing. Only test Raise X+G when ready to enter the bootloader.
 9. Type quick Y rolls, including `yo`, `yp`, `yf`, `ym`, `yh`, `yj`, `yk`, and `yl`, without holding Y 200 ms: expect letters, not commands. Then hold Y for 200 ms and test P/F/M for Volume Down/Up/Mute.
 10. Test Q+P, B+Y, and V+W deliberately and during fast ordinary typing.
 11. Hold K and test Q/P for BT0/BT1 selection (the same saved profiles, now on Lower's 1/2 positions). V/W alone should do nothing. Test USB wake, OLED power-on, and all six app bridge keys.
 12. Test Bluetooth clear and bootloader only when prepared for their destructive or disruptive effects.
 13. On battery, leave the keyboard untouched for just over 15 minutes, then press a matrix key and confirm Bluetooth reconnects and normal typing resumes. Separately confirm USB-powered operation stays awake past the same timeout.
-14. Hold X and test H for Tab, Shift thumb+H for Shift+Tab, and V for backslash (Shift+V gives pipe). Test A then Q/P/F at a clean Ghostty shell prompt for leader 1/2/3; do not invoke those layouts inside Neovim. Verify N/I send `[`/`]` (Shift gives `{`/`}`), E sends comma, and G/D/W send nothing.
+14. Hold X and test H for Tab, Shift thumb+H for Shift+Tab, and V for backslash (Shift+V gives pipe). Test A then Q/P/F at a clean Ghostty shell prompt for leader 1/2/3; do not invoke those layouts inside Neovim. Verify N/I send `[`/`]` (Shift gives `{`/`}`), E sends comma, K sends backtick, G sends Backspace, and D/W send nothing.
 15. In a normal macOS text field, hold Y for 200 ms, hold the Shift thumb, and tap/repeat H/J/K/L to select in each direction. Test Option/Command modified movement separately and release all keys to check for stuck modifiers. Verify the four modifier thumbs retain Base tap outputs. Test Neovim separately, where behavior is editor-dependent.
