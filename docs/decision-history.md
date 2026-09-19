@@ -46,8 +46,8 @@ The full Sofle matrix still appears in `config/sofle.keymap`; the right-side ent
 Serial transfer and USB reboot were verified separately for both keyboards:
 
 - Old Sofle (serial ending `2707E`): `9b9d69e`, flashed on 2026-09-18 at 15:15 Asia/Ho_Chi_Minh. Serial DFU reported `Device programmed.` and the same serial returned as `SofleL-FlatMT` (USB `1d50:615e`). This replaces its earlier `0b8626e` firmware and includes Y Navigation/Media, the simplified layers, no L+J combo, and 15-minute battery sleep.
-- New Sofle (serial ending `33F97`): `9b9d69e`, with Y Navigation/Media, leaner Lower/Raise, BT0/BT1 on Q/P, and no L+J combo. Flashed on 2026-09-18 at 15:12 Asia/Ho_Chi_Minh; serial DFU reported `Device programmed.` and the same serial returned as `SofleL-FlatMT` (USB `1d50:615e`). This supersedes its earlier `c3b6c26` flash.
-- Both Sofles have the merged Navigation/Media design at `9b9d69e`. The newer Lower+G Backspace addition described below is saved on `codex/lower-g-backspace`, not yet merged or flashed. Physical typing/comfort testing remains separate from transfer verification.
+- New Sofle (serial ending `33F97`): `7a9de84`, adding Lower+G Backspace to the existing Navigation/Media design. Flashed on 2026-09-19 at 12:15 Asia/Ho_Chi_Minh; serial DFU reported `Device programmed.` and the same serial returned as `SofleL-FlatMT` (USB `1d50:615e`). This supersedes its earlier `9b9d69e` flash; Y+O and all other bindings remain unchanged.
+- The Lower+G Backspace addition is merged into main and installed on the new Sofle. The old Sofle remains on `9b9d69e` without Lower+G Backspace. Physical typing/comfort testing remains separate from transfer verification.
 - Both confirmed versions and the current saved firmware enter the bootloader by holding K for Raise, then pressing X+G together.
 - Hardware fallback: double-tap the controller reset button.
 
@@ -306,7 +306,7 @@ The firmware preserves quick Escape, Control, Space, and movement access because
 - The user reported not getting used to Y+O. After discussing E/A alternatives and X+K, the user chose X+G: Lower+G was unused, so no punctuation or other action needed moving.
 - Lower+G now sends Backspace. The gesture is hold X first, then tap G, using the existing hold-preferred Lower behavior. This also makes deletion available while typing numbers without leaving Lower. In locked Lower, G alone deletes backward.
 - Y+O remains available, L+J remains removed, Lower+K remains backtick, and all other layers, timing, thumb modifiers, Bluetooth actions, and recovery combos remain unchanged. In particular, X+G on Raise is still bootloader, not Backspace.
-- This addition has not been flashed to either keyboard; both are confirmed on `9b9d69e`.
+- At the user's request, main was fast-forwarded to tested revision `7a9de84` and the exact application was flashed to the new Sofle (`277D64B1BE733F97`) at 12:15. Build [35423210707](https://github.com/tqmark/soflone/actions/runs/35423210707) passed; UF2 SHA-256 is `ae23ec460b9c13e5510929d524907fb137406004e7751ae4af655dbb71bc6f68`. Serial DFU reported `Device programmed.` and the same serial returned as `SofleL-FlatMT`. The old Sofle was not updated and remains on `9b9d69e`.
 
 ## Decisions deliberately rejected or superseded
 
@@ -329,10 +329,10 @@ The firmware preserves quick Escape, Control, Space, and movement access because
 ## Known issues and unresolved decisions
 
 1. **Space hold on the new Mac**: the earlier nested tap dance was removed and the direct Space/Shift mod-tap has been flashed on both keyboards. Physical comfort and normal-speed typing still need user testing. Hold Sofle Space, keep holding it, tap A, and expect `A`.
-2. **Firmware identity**: both Sofles are verified on `9b9d69e` through successful serial transfer and USB restart. Physical typing tests remain separate from installation verification. Do not infer future installations merely from a successful CI build or the presence of a UF2 file.
+2. **Firmware identity**: the new Sofle is verified on `7a9de84`; the old Sofle remains on `9b9d69e`. Physical typing tests remain separate from installation verification. Do not infer future installations merely from a successful CI build or the presence of a UF2 file.
 3. **Redesign ergonomics**: confirm pinky-held Y with H/J/K/L, P/F/M volume, and thumb-modified movement. Also test Lower Tab plus Shift, the Ctrl+A workflow, and the new X-then-G deletion gesture.
 4. **Arbitrary app switching**: Cmd+Tab is disabled, and named launchers do not select every running application. A dependable one-handed general switcher has not been chosen.
-5. **Deletion comfort**: the user did not get used to Y+O and chose X+G instead. The new Lower+G Backspace needs flashing and repeated-deletion testing. Y+O is retained as an alternative; L+J stays removed and Raise has no dedicated Backspace.
+5. **Deletion comfort**: the user did not get used to Y+O and chose X+G instead. Lower+G Backspace is flashed on the new Sofle and needs repeated-deletion testing; the old Sofle still needs this update. Y+O is retained as an alternative; L+J stays removed and Raise has no dedicated Backspace.
 6. **Combo accidents**: Q+P and B+Y need normal-speed typing tests for false activation. Verify L/J together now type letters instead of deleting.
 7. **USB wake repeat**: an older report said the first key after about 30 seconds over USB could repeat. Cause and current status are unknown.
 8. **OLED**: it was blank during setup and recovered after settings/power experiments. Raise+I exists as a safe power-on path; continued reliability is unconfirmed.
