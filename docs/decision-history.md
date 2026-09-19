@@ -48,7 +48,7 @@ Serial transfer and USB reboot were verified separately for both keyboards:
 - Old Sofle (serial ending `2707E`): `9b9d69e`, flashed on 2026-09-18 at 15:15 Asia/Ho_Chi_Minh. Serial DFU reported `Device programmed.` and the same serial returned as `SofleL-FlatMT` (USB `1d50:615e`). This replaces its earlier `0b8626e` firmware and includes Y Navigation/Media, the simplified layers, no L+J combo, and 15-minute battery sleep.
 - New Sofle (serial ending `33F97`): `7a9de84`, adding Lower+G Backspace to the existing Navigation/Media design. Flashed on 2026-09-19 at 12:15 Asia/Ho_Chi_Minh; serial DFU reported `Device programmed.` and the same serial returned as `SofleL-FlatMT` (USB `1d50:615e`). This supersedes its earlier `9b9d69e` flash; Y+O and all other bindings remain unchanged.
 - The Lower+G Backspace addition is merged into main and installed on the new Sofle. The old Sofle remains on `9b9d69e` without Lower+G Backspace. Physical typing/comfort testing remains separate from transfer verification.
-- The newer Raise+Y browser-brief bridge is saved on `codex/browser-brief-shortcuts`, not merged or flashed. Its native/Sofle Karabiner handlers and browser helper are installed on this Mac; live browser execution has not been tested.
+- The newer Raise+Y browser-brief bridge (`e9f4de5`) is merged into main, but not flashed to either keyboard. Its native/Sofle Karabiner handlers and browser helper are installed on this Mac; live browser execution has not been tested.
 - Both confirmed versions and the current saved firmware enter the bootloader by holding K for Raise, then pressing X+G together.
 - Hardware fallback: double-tap the controller reset button.
 
@@ -318,7 +318,7 @@ The firmware preserves quick Escape, Control, Space, and movement access because
 - Added Raise+Y F18 and browser/device-scoped Karabiner rules for F18/Shift+F18 plus native Space+Y/Shift+Space+Y. All other firmware bindings, hold timing, recovery gestures, app bridges, and existing Karabiner rules were preserved.
 - Replaced the old Vimium `yy` plus clipboard-delay sequence with a small wrapper that reads the active browser URL, validates a YouTube host, and invokes the existing brief tool with an explicit URL. This avoids typing into the page and stale clipboard fallback. The existing transcript-fetching tool was not modified or executed during testing.
 - Added a cross-configuration regression check, mocked helper tests, and CI coverage. The live missing-rule check first failed with `Expected 4 browser brief handlers, got 0`, then passed after installation. Karabiner lint and AppleScript compilation passed; live browser/transcript behavior remains untested. The original personal config was backed up as `karabiner_20260919_before_browser_brief.json` before adding the two rule groups.
-- Mac-side changes are installed, but neither keyboard has the new F18 firmware bridge yet. This work is not merged into main.
+- Mac-side changes are installed, but neither keyboard has the new F18 firmware bridge yet. At the user's request, main was fast-forwarded to tested revision `e9f4de5` on 2026-09-19. Build [35424169390](https://github.com/tqmark/soflone/actions/runs/35424169390) passed. UF2 SHA-256: `2dc0a8ec2a730ca161fb3e79a046c451f3b196e8ed7eec0c5bff503c71b13984`. The application-only serial DFU package is prepared; flashing awaits the connected keyboard entering its bootloader.
 
 ## Decisions deliberately rejected or superseded
 
